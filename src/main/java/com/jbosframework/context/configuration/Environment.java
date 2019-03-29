@@ -1,4 +1,4 @@
-package com.jbosframework.context;
+package com.jbosframework.context.configuration;
 /**
  * Environment
  * @author youfu.wang

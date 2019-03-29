@@ -3,10 +3,8 @@ import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.AnnotationBeanFactory;
-import com.jbosframework.context.Environment;
+import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.ApplicationContextFactory;
-import com.jbosframework.boot.autoconfig.DataSourceConfig;
-import com.jbosframework.orm.mybatis.SqlSessionFactoryBean;
 
 /**
  * AnnotationApplicationContext
@@ -37,18 +35,23 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	}
 
 	/**
-	 * 设置上下文环境
+	 * 设置上下文配置
 	 * @return
 	 */
-	public void setEnvironment(Environment environment){
-		this.beanFactory.setEnvironment(environment);
+	public void setContextConfiguration(Configuration configuration){
+		if(beanFactory!=null){
+			this.beanFactory.setContextConfiguration(configuration);
+		}
 	}
 	/**
-	 * 得到上下文环境
+	 * 得到上下文配置
 	 * @return
 	 */
-	public Environment getEnvironment() {
-		return this.beanFactory.getEnvironment();
+	public Configuration getContextConfiguration() {
+		if(beanFactory!=null){
+			return this.beanFactory.getContextConfiguration();
+		}
+		return null;
 	}
 	/**
 	 * 注册Bean
@@ -80,7 +83,10 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public boolean containsBean(String name) {
-		return beanFactory.containsBean(name);
+		if(beanFactory!=null){
+			return beanFactory.containsBean(name);
+		}
+		return false;
 	}
 	/**
 	 * 根据名称得到Bean定义
@@ -88,7 +94,10 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public BeanDefinition getBeanDefinition(String name){
-		return beanFactory.getBeanDefinition(name);
+		if(beanFactory!=null){
+			return beanFactory.getBeanDefinition(name);
+		}
+		return null;
 	}
 	/**
 	 * 根据名称得到Bean对象
@@ -96,7 +105,10 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public Object getBean(String name) {
-		return beanFactory.getBean(name);
+		if(beanFactory!=null){
+			return beanFactory.getBean(name);
+		}
+		return null;
 	}
 	/**
 	 * 根据名称得到Bean对象
@@ -105,7 +117,10 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public <T> T getBean(String name,Class<T> requiredType){
-		return beanFactory.getBean(name, requiredType);
+		if(beanFactory!=null){
+			return beanFactory.getBean(name, requiredType);
+		}
+		return null;
 	}
 	/**
 	 * 是否Prototype类型Bean
@@ -113,7 +128,10 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public boolean isPrototype(String name) {
-		return beanFactory.isPrototype(name);
+		if(beanFactory!=null){
+			return beanFactory.isPrototype(name);
+		}
+		return false;
 	}
 	/**
 	 * 是否Singleton类型Bean
@@ -121,13 +139,18 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @return
 	 */
 	public boolean isSingleton(String name) {
-		return beanFactory.isSingleton(name);
+		if(beanFactory!=null){
+			return beanFactory.isSingleton(name);
+		}
+		return false;
 	}
 	/**
 	 * 销毁Bean对象
 	 */
 	public void destroy(){
-		beanFactory.destroy();
+		if(beanFactory!=null) {
+			beanFactory.destroy();
+		}
 	}
 	/**
 	 * 设置Bean对象
@@ -135,14 +158,8 @@ public class AnnotationApplicationContext implements ApplicationContext{
 	 * @param obj
 	 */
 	public void putBean(String name,Object obj){
-		this.beanFactory.putBean(name,obj);
-	}
-	/**
-	 * 得到上下文属性
-	 * @param name
-	 * @return
-	 */
-	public String getContextProperty(String name){
-		return beanFactory.getContextProperty(name);
+		if(beanFactory!=null) {
+			this.beanFactory.putBean(name,obj);
+		}
 	}
 }

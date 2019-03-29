@@ -2,6 +2,7 @@ package com.jbosframework.beans.factory;
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.AspectProxySupport;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.context.configuration.Configuration;
 
 /**
  * AnnotationScanFactory
@@ -37,6 +38,20 @@ public class AnnotationBeanFactory implements BeanFactory{
 		annotationScanFactory=new AnnotationScanFactory();
 		annotationScanFactory.scan(clses);
 		annotationScanFactory.autowired();
+	}
+	/**
+	 * 设置上下文配置
+	 * @return
+	 */
+	public void setContextConfiguration(Configuration configuration){
+		this.annotationScanFactory.setContextConfiguration(configuration);
+	}
+	/**
+	 * 得到上下文配置
+	 * @return
+	 */
+	public Configuration getContextConfiguration() {
+		return this.annotationScanFactory.getContextConfiguration();
 	}
 	public boolean containsBean(String name) {
 		return annotationScanFactory.containsBean(name);
@@ -100,4 +115,5 @@ public class AnnotationBeanFactory implements BeanFactory{
 	public void putBean(String name,Object obj){
 		this.annotationScanFactory.putBean(name,obj);
 	}
+
 }

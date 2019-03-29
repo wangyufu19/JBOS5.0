@@ -1,6 +1,5 @@
 package com.jbosframework.context;
 import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.context.support.ApplicationResourceContext;
 
 /**
  * ApplicationContext

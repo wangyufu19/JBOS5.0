@@ -3,7 +3,7 @@ import com.jbosframework.beans.annotation.*;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.beans.factory.AnnotationScanFactory;
 import com.jbosframework.beans.factory.BeanUriUtils;
-import com.jbosframework.context.Environment;
+import com.jbosframework.context.configuration.Environment;
 import com.jbosframework.context.annotation.Profile;
 import com.jbosframework.core.utils.StringUtils;
 import com.jbosframework.web.mvc.annotation.Controller;
@@ -38,7 +38,7 @@ public class AnnotationBeanRegister {
         Profile profile=cls.getAnnotation(Profile.class);
         //读取指定配置文件的Bean对象
         if(profile!=null) {
-            Environment environment=this.annotationScanFactory.getApplicationResourceContext().getEnvironment();
+            Environment environment=this.annotationScanFactory.getContextConfiguration().getEnvironment();
             if(!environment.getActiveProfiles().equals(profile.value())) {
                 bool=false;
             }
@@ -141,7 +141,7 @@ public class AnnotationBeanRegister {
                     annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                     Profile profile=methods[i].getAnnotation(Profile.class);
                     if(profile!=null) {
-                        Environment environment=this.annotationScanFactory.getApplicationResourceContext().getEnvironment();
+                        Environment environment=this.annotationScanFactory.getContextConfiguration().getEnvironment();
                         if(!environment.getActiveProfiles().equals(profile.value())) {
                             continue;
                         }

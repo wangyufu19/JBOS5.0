@@ -1,5 +1,4 @@
 package com.jbosframework.beans.factory;
-import com.jbosframework.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.beans.support.BeanReader;
 import com.jbosframework.context.annotation.*;
 import com.jbosframework.core.JBOSClassloader;
@@ -15,7 +14,6 @@ import com.jbosframework.beans.support.AnnotationClassSupport;
 public class AnnotationScanFactory extends ContextBeanFactory{
 	private BeanReader beanReader;
 	private AnnotationFilter annotationFilter=new AnnotationFilter();
-	private AspectProxyBeanContext aspectProxyBeanContext=new AspectProxyBeanContext();
 
 	/**
 	 * 构造方法
@@ -45,13 +43,10 @@ public class AnnotationScanFactory extends ContextBeanFactory{
 		//切面自动代理
 		EnableAspectJAutoProxy enableAspectJAutoProxy=cls.getAnnotation(EnableAspectJAutoProxy.class);
 		if(enableAspectJAutoProxy!=null){
-			this.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+			this.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
 		}
 		//扫描注解Bean
 		this.scanComponent(cls);
-	}
-	public AspectProxyBeanContext getAspectProxyBeanContext(){
-		return this.aspectProxyBeanContext;
 	}
 	/**
 	 * 扫描注解Bean

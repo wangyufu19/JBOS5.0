@@ -1,7 +1,7 @@
 package com.jbosframework.orm.mybatis;
 import java.io.IOException;
+import java.util.Map;
 import javax.sql.DataSource;
-import com.jbosframework.boot.autoconfig.DataSourceConfig;
 import com.jbosframework.context.ApplicationContext;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -16,16 +16,9 @@ public class SqlSessionFactoryBean {
 	private String id;
 	private String packageName;
 	private ApplicationContext ctx;
-	private DataSourceConfig dataSourceConfig;
 	private DataSource dataSource;
 	private SqlSessionFactory sqlSessionFactory;
-	/**
-	 * 构造方法
-	 * @param ctx
-	 */
-	public SqlSessionFactoryBean(ApplicationContext ctx){
-		this.ctx=ctx;
-	}
+
 	public String getId() {
 		return id;
 	}
@@ -52,11 +45,9 @@ public class SqlSessionFactoryBean {
 	 * @return
 	 * @throws IOException
 	 */
-	public SqlSessionFactory build() {
-		this.id=ctx.getContextProperty("mybatis.environment.id");
-		this.packageName=ctx.getContextProperty("mybatis.packageName");
-		this.dataSourceConfig=ctx.getBean(DataSourceConfig.dataSourceConfigBean,DataSourceConfig.class);
-		this.dataSource=this.dataSourceConfig.getDataSource();
+	public SqlSessionFactory build(Map<String,String> contextProperties) {
+		this.id=contextProperties.get("mybatis.environment.id");
+		this.packageName=contextProperties.get("mybatis.packageName");
 		this.sqlSessionFactory=SqlSessionFactoryHolder.build(this.getId(),this.getDataSource(),this.getPackageName());
 		return this.sqlSessionFactory;
 	}

@@ -50,7 +50,7 @@ public class AnnotationBeanReaderImpl implements BeanReader{
 		//注册Bean到上下文
 		annotationBeanRegister.registerBean(cls);
 		//注册切面Bean到上下文
-		if(this.annotationScanFactory.getApplicationResourceContext().getEnableAspectJAutoProxy()){
+		if(this.annotationScanFactory.getContextConfiguration().getEnableAspectJAutoProxy()){
 			AspectProxyBeanRegister aspectProxyBeanRegister=new AspectProxyBeanRegister(this.annotationScanFactory.getAspectProxyBeanContext());
 			aspectProxyBeanRegister.registerBean(cls);
 		}

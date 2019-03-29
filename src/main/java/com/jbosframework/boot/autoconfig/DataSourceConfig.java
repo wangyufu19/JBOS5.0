@@ -1,5 +1,5 @@
 package com.jbosframework.boot.autoconfig;
-import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.jdbc.datasource.DriverManagerDataSource;
 import com.jbosframework.jdbc.datasource.JndiNamingDataSource;
 import org.apache.commons.logging.Log;
@@ -33,23 +33,23 @@ public class DataSourceConfig {
 
 	private String jndiName;
 
-	private ApplicationContext ctx;
+	private Configuration configuration;
 
 	/**
 	 * 构造方法
-	 * @param ctx
+	 * @param configuration
 	 */
-	public DataSourceConfig(ApplicationContext ctx){
-		this.ctx=ctx;
+	public DataSourceConfig(Configuration configuration){
+		this.configuration=configuration;
 		this.init();
 	}
 	private void init(){
-		this.type=ctx.getContextProperty("jbos.datasource.type");
-		this.driverClass=ctx.getContextProperty("jbos.datasource.driverClass");
-		this.url=ctx.getContextProperty("jbos.datasource.url");
-		this.username=ctx.getContextProperty("jbos.datasource.username");
-		this.password=ctx.getContextProperty("jbos.datasource.password");
-		this.jndiName=ctx.getContextProperty("jbos.datasource.jndiName");
+		this.type=configuration.getContextProperty("jbos.datasource.type");
+		this.driverClass=configuration.getContextProperty("jbos.datasource.driverClass");
+		this.url=configuration.getContextProperty("jbos.datasource.url");
+		this.username=configuration.getContextProperty("jbos.datasource.username");
+		this.password=configuration.getContextProperty("jbos.datasource.password");
+		this.jndiName=configuration.getContextProperty("jbos.datasource.jndiName");
 	}
 	/**
 	 * 得到数据源对象

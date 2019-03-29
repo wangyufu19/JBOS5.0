@@ -9,6 +9,7 @@ import java.util.Map;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.boot.autoconfig.DataSourceConfig;
 import com.jbosframework.context.support.ContextInitializer;
 import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
@@ -29,6 +30,16 @@ public class ContextBeanFactory extends ContextInitializer{
 	//XML and Annotation IoC Bean 
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 
+	/**
+	 * 构造方法
+	 */
+	public ContextBeanFactory(){
+		DataSourceConfig dataSourceConfig=new DataSourceConfig(this.getContextConfiguration());
+		this.putBean(DataSourceConfig.dataSourceConfigBean,dataSourceConfig);
+		SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
+		sqlSessionFactoryBean.setDataSource(dataSourceConfig.getDataSource());
+		this.putBean(SqlSessionFactoryBean.sqlSessionFactoryBean,sqlSessionFactoryBean.build(this.getContextConfiguration().getContextProperties()));
+	}
 	/**
 	 * 注入定义Bean对象
 	 * @param beanDefinition
@@ -132,6 +143,7 @@ public class ContextBeanFactory extends ContextInitializer{
 //				if(SqlSessionBeanUtils.isSqlSessionBean(this.getBean(SqlSessionFactoryBean.sqlSessionFactoryBean))){
 //
 //				}
+				log.info("******fieldValue: "+fieldValue);
 				ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
 				proxyFactoryBean.setAutoProxy("true");
 				proxyFactoryBean.setTarget(fieldValue);
@@ -144,7 +156,7 @@ public class ContextBeanFactory extends ContextInitializer{
 			//判断值引用JEPL表达式的值
 			if(JEPL.matches(s1)){
 				s1=s1.replace(JEPL.JEPL_PATTERN_PREFIX, "").replace(JEPL.JEPL_PATTERN_SUFFIX, "");
-				fieldValue=this.getContextProperty(s1);
+				fieldValue=this.getContextConfiguration().getContextProperty(s1);
 			}
 		}
 		return fieldValue;

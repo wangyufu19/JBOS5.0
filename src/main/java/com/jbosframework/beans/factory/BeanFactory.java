@@ -1,7 +1,6 @@
 package com.jbosframework.beans.factory;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.context.Environment;
-
+import com.jbosframework.context.configuration.Configuration;
 /**
  * BeanFactory
  * @author youfu.wang
@@ -9,10 +8,10 @@ import com.jbosframework.context.Environment;
  */
 public interface BeanFactory {
 
-	public void setEnvironment(Environment environment);
+	public void setContextConfiguration(Configuration configuration);
 
-	public Environment getEnvironment();
-	
+	public Configuration getContextConfiguration();
+
 	public void destroy();
 	
 	public boolean containsBean(String name);
@@ -28,6 +27,4 @@ public interface BeanFactory {
 	public boolean isPrototype(String name);
 
 	public void putBean(String name,Object obj);
-
-	public String getContextProperty(String name);
 }
