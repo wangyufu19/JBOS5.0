@@ -33,7 +33,7 @@ public class JBOSApplication {
                 ctx.scan(cls.getPackage().getName());
             }
         }else{
-            ctx.register(JBOSBootApplication.class);
+            ctx.register(cls);
         }
         return ctx;
     }

@@ -7,7 +7,7 @@
   <select id="getUserList" resultType="map">
     select id from jbos_t_user
   </select>
-  <select id="getUserById" resultType="map">
+  <select id="getUserById" resultType="com.application.examples.pojo.User">
     select id from jbos_t_user where id = #{id} 
   </select>
 </mapper>

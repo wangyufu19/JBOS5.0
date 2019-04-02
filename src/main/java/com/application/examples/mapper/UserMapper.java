@@ -1,4 +1,6 @@
 package com.application.examples.mapper;
+import com.application.examples.pojo.User;
+
 import java.util.List;
 import java.util.Map;
 /**
@@ -8,5 +10,5 @@ import java.util.Map;
  */
 public interface UserMapper{
 	public List getUserList();
-	public Map getUserById(String id);
+	public User getUserById(String id);
 }
