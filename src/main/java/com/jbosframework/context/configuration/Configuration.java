@@ -24,7 +24,7 @@ public class Configuration {
     private boolean enableAspectJAutoProxy=false;
 
     static{
-        defaultConfigLocation="application.properties";
+        defaultConfigLocation="jbosContext.properties";
     }
 
     /**

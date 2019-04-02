@@ -30,14 +30,14 @@ public class SqlSessionFactoryBean {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	public String getPackageName() {
 		return packageName;
 	}

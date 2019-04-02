@@ -129,7 +129,7 @@ public class ContextBeanFactory extends ContextInitializer{
 		}
 	}
 
-	/**
+	/**SqlSessionFactoryBean
 	 * 得到Bean字段值
 	 * @param field
 	 * @param annotation

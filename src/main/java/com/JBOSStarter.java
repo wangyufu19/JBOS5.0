@@ -13,7 +13,7 @@ public class JBOSStarter {
 		JBOSApplication jbosApplication=new JBOSApplication();
 		ApplicationContext ctx=jbosApplication.start(JBOSStarter.class);
 		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
-
+		userMgrController.getUserList();
 	}
 
 }
