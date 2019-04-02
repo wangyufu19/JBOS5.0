@@ -21,7 +21,6 @@ public class UserMgrController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(json);
 		return list;
 	}
 }

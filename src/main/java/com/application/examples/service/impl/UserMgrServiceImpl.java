@@ -13,15 +13,8 @@ public class UserMgrServiceImpl implements UserMgrService{
 
     public List getUserList() {
         List list=null;
-//        try {
-//            userMapper=this.openSession().getMapper(com.application.examples.mapper.UserMapper.class);
-//            userMapper=null;
-//            list=userMapper.getUserList();
-//        }catch(Exception e) {
-//            e.printStackTrace();
-//        }finally {
-//            this.closeSession();
-//        }
+        list=userMapper.getUserList();
+        System.out.println("******list: "+list);
         return list;
     }
 }

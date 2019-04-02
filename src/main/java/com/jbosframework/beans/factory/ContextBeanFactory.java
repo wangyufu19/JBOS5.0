@@ -16,6 +16,9 @@ import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
 import com.jbosframework.orm.mybatis.SqlSessionFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.binding.MapperProxy;
+import org.apache.ibatis.binding.MapperProxyFactory;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
  * ContextBeanFactory
@@ -140,15 +143,10 @@ public class ContextBeanFactory extends ContextInitializer{
 		if(annotation instanceof Autowired) {
 			fieldValue=this.getSingletonBean(field.getName());
 			if(field.getType().isInterface()) {
-//				if(SqlSessionBeanUtils.isSqlSessionBean(this.getBean(SqlSessionFactoryBean.sqlSessionFactoryBean))){
-//
-//				}
-				log.info("******fieldValue: "+fieldValue);
-				ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
-				proxyFactoryBean.setAutoProxy("true");
-				proxyFactoryBean.setTarget(fieldValue);
-				proxyFactoryBean.setProxyInterface(field.getType().getName());
-				fieldValue=proxyFactoryBean.getProxyBean();
+				if(SqlSessionBeanUtils.isMapperBean((SqlSessionFactory)this.getSingletonBean(SqlSessionFactoryBean.sqlSessionFactoryBean),field.getType())){
+					MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(field.getType());
+					fieldValue=mapperProxyFactory.newInstance(((SqlSessionFactory) this.getSingletonBean(SqlSessionFactoryBean.sqlSessionFactoryBean)).openSession());
+				}
 			}
 		}else if(annotation instanceof Value) {
 			Value valueAnnotation=(Value)annotation;

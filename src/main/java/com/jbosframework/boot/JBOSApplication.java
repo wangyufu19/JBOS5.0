@@ -29,7 +29,6 @@ public class JBOSApplication {
             //自动扫描配置
             AutoConfiguration autoConfiguration=JBOSBootApplication.class.getAnnotation(AutoConfiguration.class);
             if(autoConfiguration!=null){
-                System.out.println("******packages: "+cls.getPackage().getName());
                 ctx.setContextConfiguration(configuration);
                 ctx.scan(cls.getPackage().getName());
             }

@@ -3,8 +3,13 @@ import java.io.IOException;
 import java.util.Map;
 import javax.sql.DataSource;
 import com.jbosframework.context.ApplicationContext;
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+
 /**
  * SqlSessionFactoryBean
  * @author youfu.wang
@@ -17,7 +22,7 @@ public class SqlSessionFactoryBean {
 	private String packageName;
 	private ApplicationContext ctx;
 	private DataSource dataSource;
-	private SqlSessionFactory sqlSessionFactory;
+	private static SqlSessionFactory sqlSessionFactory=null;
 
 	public String getId() {
 		return id;
@@ -48,7 +53,17 @@ public class SqlSessionFactoryBean {
 	public SqlSessionFactory build(Map<String,String> contextProperties) {
 		this.id=contextProperties.get("mybatis.environment.id");
 		this.packageName=contextProperties.get("mybatis.packageName");
-		this.sqlSessionFactory=SqlSessionFactoryHolder.build(this.getId(),this.getDataSource(),this.getPackageName());
+		if(sqlSessionFactory==null){
+			synchronized (SqlSessionFactory.class) {
+				if(sqlSessionFactory==null){
+					TransactionFactory transactionFactory = new JdbcTransactionFactory();
+					Environment environment = new Environment(id, transactionFactory, dataSource);
+					Configuration configuration = new Configuration(environment);
+					configuration.addMappers(packageName);
+					sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+				}
+			}
+		}
 		return this.sqlSessionFactory;
 	}
 	public Configuration getConfiguration(){

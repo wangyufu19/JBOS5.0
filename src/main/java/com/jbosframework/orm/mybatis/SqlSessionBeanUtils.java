@@ -13,12 +13,12 @@ public class SqlSessionBeanUtils {
      * @param sqlSessionFactory
      * @return
      */
-    public static boolean isSqlSessionBean(SqlSessionFactory sqlSessionFactory,Object obj){
+    public static boolean isMapperBean(SqlSessionFactory sqlSessionFactory,Class<?> cls){
         boolean bool=false;
-        if(sqlSessionFactory==null||obj==null){
+        if(sqlSessionFactory==null||cls==null){
             return bool;
         }
-        if(sqlSessionFactory.getConfiguration().getMapperRegistry().hasMapper(obj.getClass())){
+        if(sqlSessionFactory.getConfiguration().getMapperRegistry().hasMapper(cls)){
             bool=true;
         }
         return bool;
