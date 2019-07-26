@@ -1,8 +1,6 @@
 package com.jbosframework.orm.mybatis;
 import java.io.IOException;
-import java.util.Map;
 import javax.sql.DataSource;
-import com.jbosframework.context.ApplicationContext;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,7 +18,6 @@ public class SqlSessionFactoryBean {
 	public static final String sqlSessionFactoryBean="sqlSessionFactoryBean";
 	private String id;
 	private String packageName;
-	private ApplicationContext ctx;
 	private DataSource dataSource;
 	private static SqlSessionFactory sqlSessionFactory=null;
 
@@ -50,9 +47,7 @@ public class SqlSessionFactoryBean {
 	 * @return
 	 * @throws IOException
 	 */
-	public SqlSessionFactory build(Map<String,String> contextProperties) {
-		this.id=contextProperties.get("mybatis.environment.id");
-		this.packageName=contextProperties.get("mybatis.packageName");
+	public SqlSessionFactory build() {
 		if(sqlSessionFactory==null){
 			synchronized (SqlSessionFactory.class) {
 				if(sqlSessionFactory==null){

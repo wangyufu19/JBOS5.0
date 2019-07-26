@@ -13,7 +13,7 @@ public class BeanUriUtils {
 	 */
 	public static String getBeanUri(String parentUri,String uri){
 		String retUri="";
-		if("".equals(parentUri)){
+		if(parentUri==null||"".equals(parentUri)){
 			retUri=uri;
 		}else{
 			if(parentUri.endsWith("/")&&uri.startsWith("/")){

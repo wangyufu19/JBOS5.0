@@ -15,6 +15,7 @@ public class UserMgrController {
 	@RequestMapping("/user/getUserList")
 	public List getUserList() {
         ObjectMapper mapper = new ObjectMapper();
+        System.out.println("*******userMgrService: "+userMgrService);
 		List list=userMgrService.getUserList();
 		String json= null;
 		try {
@@ -24,7 +25,7 @@ public class UserMgrController {
 		}
 		return list;
 	}
-	@RequestMapping("/user/getUserList")
+	@RequestMapping("/user/getUserInfo")
 	public User getUserInfo(String id) {
 		ObjectMapper mapper = new ObjectMapper();
 		User user=userMgrService.getUserById(id);

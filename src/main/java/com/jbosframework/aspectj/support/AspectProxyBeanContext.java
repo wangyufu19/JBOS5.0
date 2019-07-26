@@ -1,6 +1,5 @@
 package com.jbosframework.aspectj.support;
 import com.jbosframework.aspectj.metadata.Metadata;
-import com.jbosframework.context.annotation.EnableAspectJAutoProxy;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

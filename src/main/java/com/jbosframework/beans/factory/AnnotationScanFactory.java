@@ -1,5 +1,6 @@
 package com.jbosframework.beans.factory;
 import com.jbosframework.beans.support.BeanReader;
+import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.*;
 import com.jbosframework.core.JBOSClassloader;
 import com.jbosframework.beans.support.AnnotationBeanReaderImpl;
@@ -11,22 +12,17 @@ import com.jbosframework.beans.support.AnnotationClassSupport;
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationScanFactory extends ContextBeanFactory{
+public class AnnotationScanFactory {
+	private ApplicationContext ctx;
 	private BeanReader beanReader;
 	private AnnotationFilter annotationFilter=new AnnotationFilter();
 
 	/**
 	 * 构造方法
 	 */
-	public AnnotationScanFactory() {
-		beanReader=new AnnotationBeanReaderImpl(this);
-	}
-	/**
-	 * 得到AnnotationFilter
-	 * @return
-	 */
-	public AnnotationFilter getAnnotationFilter() {
-		return this.annotationFilter;
+	public AnnotationScanFactory(ApplicationContext ctx) {
+		this.ctx=ctx;
+		beanReader=new AnnotationBeanReaderImpl(ctx);
 	}
 	/**
 	 * 扫描注解Bean
@@ -43,7 +39,7 @@ public class AnnotationScanFactory extends ContextBeanFactory{
 		//切面自动代理
 		EnableAspectJAutoProxy enableAspectJAutoProxy=cls.getAnnotation(EnableAspectJAutoProxy.class);
 		if(enableAspectJAutoProxy!=null){
-			this.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+			this.ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
 		}
 		//扫描注解Bean
 		this.scanComponent(cls);
@@ -97,6 +93,7 @@ public class AnnotationScanFactory extends ContextBeanFactory{
 		if(allClasses==null) {
 			return;
 		}
+		beanReader.setAnnotationFilter(annotationFilter);
 		for(int i=0;i<allClasses.size();i++) {
 			try {
 				this.beanReader.loadBeanDefinition(JBOSClassloader.loadClass(allClasses.get(i)));

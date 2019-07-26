@@ -1,10 +1,14 @@
 package com.jbosframework.beans.support;
+
+import com.jbosframework.beans.annotation.AnnotationFilter;
+
 /**
  * BeanReader
  * @author youfu.wang
  * @version 1.0
  */
 public interface BeanReader {
+	public void setAnnotationFilter(AnnotationFilter annotationFilter);
 
 	/**
 	    * 加载Bean定义

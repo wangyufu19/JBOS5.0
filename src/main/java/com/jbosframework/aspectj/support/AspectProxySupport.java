@@ -1,7 +1,6 @@
 package com.jbosframework.aspectj.support;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aspectj.metadata.Metadata;
-import com.jbosframework.aspectj.support.AspectCglibProxy;
 import java.lang.reflect.Method;
 
 /**
@@ -45,6 +44,9 @@ public class AspectProxySupport {
             if(methods==null){
                 return null;
             }
+        }
+        if(methods==null){
+            return null;
         }
         for(Method method:methods){
             String pointcut=obj.getClass().getName()+"."+method.getName();

@@ -9,6 +9,33 @@ import java.lang.reflect.Method;
 public class JBOSClassCaller {
 	/**
 	 * 调用类的方法
+	 * @param obj
+	 * @param method
+	 * @return
+	 */
+	public static Object call(Object obj,String method){
+		Object result=null;
+		Method methodObj;
+		try {
+			if(obj!=null){
+				methodObj = obj.getClass().getMethod(method);
+				result=methodObj.invoke(obj);
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	/**
+	 * 调用类的方法
 	 * @param cls
 	 * @param method
 	 * @return

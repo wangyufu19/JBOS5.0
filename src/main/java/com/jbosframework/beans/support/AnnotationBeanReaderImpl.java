@@ -1,20 +1,23 @@
 package com.jbosframework.beans.support;
-import com.jbosframework.beans.factory.AnnotationScanFactory;
 import com.jbosframework.aspectj.support.AspectProxyBeanRegister;
+import com.jbosframework.beans.annotation.AnnotationFilter;
+import com.jbosframework.context.ApplicationContext;
+
 /**
  * AnnotationBeanReaderImpl
  * @author youfu.wang
  * @version 1.0
  */
 public class AnnotationBeanReaderImpl implements BeanReader{
-	private AnnotationScanFactory annotationScanFactory;
+	private ApplicationContext ctx;
+	private AnnotationFilter annotationFilter;
 	
 	/**
 	 * 构造方法
-	 * @param annotationScanFactory
+	 * @param ctx
 	 */
-	public AnnotationBeanReaderImpl(AnnotationScanFactory annotationScanFactory) {
-		this.annotationScanFactory=annotationScanFactory;
+	public AnnotationBeanReaderImpl(ApplicationContext ctx) {
+		this.ctx=ctx;
 	}
 	
 	/**
@@ -39,19 +42,22 @@ public class AnnotationBeanReaderImpl implements BeanReader{
 			this.loadBeanDefinition(clses[i]);
 		}
 	}
-
+	public void setAnnotationFilter(AnnotationFilter annotationFilter){
+		this.annotationFilter=annotationFilter;
+	}
 	
 	/**
 	 * 注入注解Bean
 	 * @param cls
 	 */
 	private void loadAnnotationBean(Class<?> cls){
-		AnnotationBeanRegister annotationBeanRegister=new AnnotationBeanRegister(this.annotationScanFactory);
+		AnnotationBeanRegistry annotationBeanRegister=new AnnotationBeanRegistry(this.ctx);
+		annotationBeanRegister.setAnnotationFilter(annotationFilter);
 		//注册Bean到上下文
 		annotationBeanRegister.registerBean(cls);
 		//注册切面Bean到上下文
-		if(this.annotationScanFactory.getContextConfiguration().getEnableAspectJAutoProxy()){
-			AspectProxyBeanRegister aspectProxyBeanRegister=new AspectProxyBeanRegister(this.annotationScanFactory.getAspectProxyBeanContext());
+		if(this.ctx.getContextConfiguration().getEnableAspectJAutoProxy()){
+			AspectProxyBeanRegister aspectProxyBeanRegister=new AspectProxyBeanRegister(this.ctx.getAspectProxyBeanContext());
 			aspectProxyBeanRegister.registerBean(cls);
 		}
 	}	
