@@ -35,7 +35,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 * 注册Bean
 	 * @param cls
 	 */
-	public void register(Class<?> cls) {
+	public void registry(Class<?> cls) {
 		this.beanFactory=new AnnotationBeanFactory(this,cls);
 		this.afterProperties();
 		ApplicationContextFactory.setApplicationContext(this);
@@ -44,17 +44,8 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 * 注册Bean
 	 * @param clses
 	 */
-	public void register(Class<?>[] clses) {
+	public void registry(Class<?>[] clses) {
 		this.beanFactory=new AnnotationBeanFactory(this,clses);
-		this.afterProperties();
-		ApplicationContextFactory.setApplicationContext(this);
-	}
-	/**
-	 * 扫描注解Bean
-	 * @param basePackages
-	 */
-	public void scan(String basePackages) {
-		this.beanFactory=new AnnotationBeanFactory(this,basePackages);
 		this.afterProperties();
 		ApplicationContextFactory.setApplicationContext(this);
 	}

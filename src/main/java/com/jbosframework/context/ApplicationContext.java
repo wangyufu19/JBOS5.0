@@ -13,17 +13,12 @@ public interface ApplicationContext extends BeanFactory{
 	 * 注册Bean
 	 * @param cls
 	 */
-	public void register(Class<?> cls);
+	public void registry(Class<?> cls);
 	/**
 	 * 注册Bean
 	 * @param clses
 	 */
-	public void register(Class<?>[] clses);
-	/**
-	 * 扫描注解Bean
-	 * @param basePackages
-	 */
-	public void scan(String basePackages);
+	public void registry(Class<?>[] clses);
 
 	/**
 	 * 设置上下文配置

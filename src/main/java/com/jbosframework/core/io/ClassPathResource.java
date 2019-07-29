@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import com.jbosframework.core.JBOSClassloader;
-import com.jbosframework.core.io.AbstractResource;
+
 /**
  * ClassPathResource
  * @author youfu.wang

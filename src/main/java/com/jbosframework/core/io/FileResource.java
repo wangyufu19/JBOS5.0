@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-
-import com.jbosframework.core.io.AbstractResource;
 /**
  * @author youfu.wang
  * @version 1.0

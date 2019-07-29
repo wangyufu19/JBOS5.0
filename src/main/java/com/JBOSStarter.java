@@ -8,7 +8,6 @@ import com.jbosframework.context.ApplicationContext;
 import java.io.IOException;
 import com.jbosframework.boot.JBOSApplication;
 import org.apache.ibatis.session.SqlSessionFactory;
-
 @JBOSBootApplication
 public class JBOSStarter {
 

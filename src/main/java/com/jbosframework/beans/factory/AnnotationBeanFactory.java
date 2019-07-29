@@ -10,16 +10,6 @@ import com.jbosframework.context.ApplicationContext;
 public class AnnotationBeanFactory implements BeanFactory{
 	private ApplicationContext ctx;
 	private AnnotationScanFactory annotationScanFactory;
-
-	/**
-	 * 构造方法
-	 * @param basePackages
-	 */
-	public AnnotationBeanFactory(ApplicationContext ctx,String basePackages) {
-		this.ctx=ctx;
-		annotationScanFactory=new AnnotationScanFactory(ctx);
-		annotationScanFactory.scan(basePackages);
-	}
 	/**
 	 * 构造方法
 	 * @param cls

@@ -1,7 +1,7 @@
 package com.jbosframework.beans.factory;
 import com.jbosframework.beans.support.BeanReader;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.annotation.*;
+import com.jbosframework.context.annotation.ComponentScan;
 import com.jbosframework.core.JBOSClassloader;
 import com.jbosframework.beans.support.AnnotationBeanReaderImpl;
 import java.util.List;
@@ -13,7 +13,6 @@ import com.jbosframework.beans.support.AnnotationClassSupport;
  * @version 1.0
  */
 public class AnnotationScanFactory {
-	private ApplicationContext ctx;
 	private BeanReader beanReader;
 	private AnnotationFilter annotationFilter=new AnnotationFilter();
 
@@ -21,7 +20,6 @@ public class AnnotationScanFactory {
 	 * 构造方法
 	 */
 	public AnnotationScanFactory(ApplicationContext ctx) {
-		this.ctx=ctx;
 		beanReader=new AnnotationBeanReaderImpl(ctx);
 	}
 	/**
@@ -32,15 +30,6 @@ public class AnnotationScanFactory {
 		if(cls==null) {
 			return;
 		}
-		Configuration configuration=cls.getAnnotation(Configuration.class);
-		if(configuration==null) {
-			return;
-		}
-		//切面自动代理
-		EnableAspectJAutoProxy enableAspectJAutoProxy=cls.getAnnotation(EnableAspectJAutoProxy.class);
-		if(enableAspectJAutoProxy!=null){
-			this.ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-		}
 		//扫描注解Bean
 		this.scanComponent(cls);
 	}
@@ -49,24 +38,16 @@ public class AnnotationScanFactory {
 	 * @param cls
 	 */
 	private void scanComponent(Class<?> cls){
-		String[] basePackages=null;
-		AutoConfiguration autoConfiguration=cls.getAnnotation(AutoConfiguration.class);
-		if(autoConfiguration!=null){
-			basePackages=new String[1];
-			basePackages[0]=cls.getPackage().getName();
-		}else{
-			ComponentScan componentScan=cls.getAnnotation(ComponentScan.class);
-			if(componentScan!=null) {
-				basePackages=componentScan.basePackages();
-				Class<?>[] include=componentScan.include();
-				annotationFilter.setInclude(include);
-			}
+		String[] basePackages=new String[1];
+		basePackages[0]=cls.getPackage().getName();
+		ComponentScan componentScan=cls.getAnnotation(ComponentScan.class);
+		if(componentScan!=null) {
+			basePackages=componentScan.basePackages();
+			Class<?>[] include=componentScan.include();
+			annotationFilter.setInclude(include);
 		}
-		if(basePackages==null){
-			return;
-		}
-		for(int i=0;i<basePackages.length;i++) {
-			this.scan(basePackages[i]);
+		for(String basePackage:basePackages) {
+			this.scan(basePackage);
 		}
 	}
 	/**
@@ -85,7 +66,7 @@ public class AnnotationScanFactory {
 	 * 扫描注解Bean
 	 * @param basePackages
 	 */
-	public void scan(String basePackages) {
+	private void scan(String basePackages) {
 		if(basePackages==null||"".equals(basePackages)) {
 			return;
 		}

@@ -1,5 +1,4 @@
 package com.jbosframework.orm.mybatis;
-import java.io.IOException;
 import javax.sql.DataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -45,7 +44,6 @@ public class SqlSessionFactoryBean {
 	/**
 	 * 构建SqlSessionFactory
 	 * @return
-	 * @throws IOException
 	 */
 	public SqlSessionFactory build() {
 		if(sqlSessionFactory==null){
@@ -59,11 +57,11 @@ public class SqlSessionFactoryBean {
 				}
 			}
 		}
-		return this.sqlSessionFactory;
+		return sqlSessionFactory;
 	}
 	public Configuration getConfiguration(){
-		if(this.sqlSessionFactory!=null){
-			return this.sqlSessionFactory.getConfiguration();
+		if(sqlSessionFactory!=null){
+			return sqlSessionFactory.getConfiguration();
 		}
 		return null;
 	}

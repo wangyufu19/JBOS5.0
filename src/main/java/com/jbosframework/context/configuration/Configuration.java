@@ -22,6 +22,7 @@ public class Configuration {
     protected static Map<String,String> contextProperties= Collections.synchronizedMap(new LinkedHashMap<String,String>());
     private Environment environment=new Environment();
     private boolean enableAspectJAutoProxy=false;
+    private boolean enableAutoConfiguration=false;
 
     static{
         defaultConfigLocation="jbosContext.properties";
@@ -62,7 +63,6 @@ public class Configuration {
     }
     /**
      * 设置上下文环境
-     * @return
      */
     public void setEnvironment(Environment environment){
         this.environment=environment;
@@ -91,6 +91,21 @@ public class Configuration {
         return this.enableAspectJAutoProxy;
     }
 
+    /**
+     * 设置启用自动配置
+     * @param enableAutoConfiguration
+     */
+    public void setEnableAutoConfiguration(boolean enableAutoConfiguration){
+        this.enableAutoConfiguration=enableAutoConfiguration;
+    }
+
+    /**
+     * 得到启用自动配置
+     * @return
+     */
+    public boolean getEnableAutoConfiguration(){
+        return this.enableAutoConfiguration;
+    }
     /**
      * 注入上下文属性
      * @param name

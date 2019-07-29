@@ -1,5 +1,6 @@
 package com.jbosframework.boot.autoconfig;
-import com.jbosframework.context.annotation.AutoConfiguration;
+import com.jbosframework.context.annotation.ComponentScan;
+import com.jbosframework.context.annotation.EnableAutoConfiguration;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.EnableAspectJAutoProxy;
 import java.lang.annotation.*;
@@ -9,7 +10,8 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Inherited
 @Configuration
-@AutoConfiguration
+@ComponentScan
+@EnableAutoConfiguration
 @EnableAspectJAutoProxy
 public @interface JBOSBootApplication {
 
