@@ -4,9 +4,9 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.annotation.EnableAutoConfiguration;
 import com.jbosframework.context.annotation.EnableAspectJAutoProxy;
+import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.ComponentScan;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
-import com.jbosframework.context.configuration.Configuration;
 /**
  * JBOSApplication
  * @author youfu.wang
@@ -37,12 +37,12 @@ public class JBOSApplication {
         }
         JBOSBootApplication jbosBootApplication=cls.getAnnotation(JBOSBootApplication.class);
         if(jbosBootApplication!=null){
-            if(JBOSBootApplication.class.getAnnotation(com.jbosframework.context.annotation.Configuration.class)==null||JBOSBootApplication.class.getAnnotation(ComponentScan.class)==null) {
+            if(JBOSBootApplication.class.getAnnotation(Configuration.class)==null||JBOSBootApplication.class.getAnnotation(ComponentScan.class)==null) {
                 return ctx;
             }
             this.initConfiguration(JBOSBootApplication.class);
         }else{
-            if(cls.getAnnotation(com.jbosframework.context.annotation.Configuration.class)==null||cls.getAnnotation(ComponentScan.class)==null) {
+            if(cls.getAnnotation(Configuration.class)==null||cls.getAnnotation(ComponentScan.class)==null) {
                 return ctx;
             }
             this.initConfiguration(cls);
