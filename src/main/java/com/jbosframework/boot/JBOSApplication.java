@@ -40,13 +40,11 @@ public class JBOSApplication {
             if(JBOSBootApplication.class.getAnnotation(Configuration.class)==null||JBOSBootApplication.class.getAnnotation(ComponentScan.class)==null) {
                 return ctx;
             }
-            //初始化配置
             this.initConfiguration(JBOSBootApplication.class);
         }else{
             if(cls.getAnnotation(Configuration.class)==null||cls.getAnnotation(ComponentScan.class)==null) {
                 return ctx;
             }
-            //初始化配置
             this.initConfiguration(cls);
         }
         ctx.registry(cls);
