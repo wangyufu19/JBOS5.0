@@ -31,6 +31,13 @@ public class JBOSApplication {
             ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
         }
     }
+
+    /**
+     * 启动应用
+     * @param cls
+     * @return
+     * @throws IOException
+     */
     public ApplicationContext start(Class<?> cls) throws IOException {
         if(cls==null){
             return ctx;
