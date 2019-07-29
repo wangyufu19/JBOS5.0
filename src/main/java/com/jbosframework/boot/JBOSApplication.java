@@ -31,7 +31,6 @@ public class JBOSApplication {
             ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
         }
     }
-
     /**
      * 启动应用
      * @param cls
