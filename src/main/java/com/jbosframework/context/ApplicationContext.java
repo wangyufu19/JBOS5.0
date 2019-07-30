@@ -19,13 +19,6 @@ public interface ApplicationContext extends BeanFactory{
 	 * @param clses
 	 */
 	public void registry(Class<?>[] clses);
-
-	/**
-	 * 设置上下文配置
-	 * @param configuration
-	 */
-	public void setContextConfiguration(Configuration configuration);
-
 	/**
 	 * 得到上下文配置
 	 * @return

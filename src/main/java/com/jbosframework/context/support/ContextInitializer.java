@@ -15,9 +15,6 @@ public class ContextInitializer {
     public ContextInitializer(){
         configuration.init();
     }
-    public void setContextConfiguration(Configuration configuration){
-        this.configuration=configuration;
-    }
     public Configuration getContextConfiguration(){
         return configuration;
     }
