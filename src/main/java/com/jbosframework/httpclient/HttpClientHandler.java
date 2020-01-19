@@ -64,8 +64,6 @@ public class HttpClientHandler {
         String body = null;  
         try {  
             body = EntityUtils.toString(entity);             
-        } catch (ParseException e) {  
-            e.printStackTrace();  
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,15 +84,24 @@ public class HttpClientHandler {
 	 * 执行post请求
 	 * @param data
 	 */
-	public void doPost(String data) throws Exception{
+	public void doPost(String data) {
 		HttpPost httpPost = new HttpPost(url);
 		for(Map.Entry<String,String> entry:headers.entrySet()){
 			httpPost.setHeader(entry.getKey(),entry.getValue());
 		}
-		StringEntity se = new StringEntity(data,charset);
-        httpPost.setEntity(se);
-        HttpResponse httpResponse = null;  
-        httpResponse=httpClient.execute(httpPost);
+		StringEntity se = null;
+		try {
+			se = new StringEntity(data,charset);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		httpPost.setEntity(se);
+        HttpResponse httpResponse = null;
+		try {
+			httpResponse=httpClient.execute(httpPost);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.handleHttpResponse(httpResponse);	
 	}
 	/**
@@ -161,7 +168,7 @@ public class HttpClientHandler {
 	 * @return
 	 */
 	private HttpPost getPostForm(String url, Map<String, Object> params){
-		HttpPost httpost = new HttpPost(url);  
+		HttpPost httpost = new HttpPost(url);
         List<NameValuePair> nvps = new ArrayList <NameValuePair>();  
         Set<String> keySet = params.keySet();  
         for(String key : keySet) {  
