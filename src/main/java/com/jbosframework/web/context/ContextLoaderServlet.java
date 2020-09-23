@@ -18,6 +18,7 @@ public class ContextLoaderServlet extends HttpServlet{
 	public ContextLoaderServlet(){
 		defaultAppConfig="com.AppConfig";		
 	}
+
 	public void destory(){		
 		ApplicationContextFactory.getApplicationContext().destroy();
 	}

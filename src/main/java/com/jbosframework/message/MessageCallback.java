@@ -1,5 +1,5 @@
 package com.jbosframework.message;
-import com.jbosframework.httpclient.ResponseBody;
+import com.jbosframework.common.httpclient.ResponseBody;
 /**
  * 消息回调类
  * @author youfu.wang

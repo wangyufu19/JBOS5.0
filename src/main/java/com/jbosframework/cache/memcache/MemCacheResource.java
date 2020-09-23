@@ -6,8 +6,8 @@ import org.jdom.Element;
 import com.jbosframework.core.io.Resource;
 import com.jbosframework.core.jdom.DocumentFactory;
 import com.jbosframework.core.jdom.JDOMDocumentFactory;
-import com.jbosframework.core.utils.NumberUtils;
-import com.jbosframework.core.utils.StringUtils;
+import com.jbosframework.common.utils.NumberUtils;
+import com.jbosframework.common.utils.StringUtils;
 
 /**
  * MemCache Resource

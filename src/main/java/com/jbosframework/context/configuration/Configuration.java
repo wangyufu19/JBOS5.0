@@ -1,7 +1,7 @@
 package com.jbosframework.context.configuration;
 import com.jbosframework.core.io.ClassPathResource;
 import com.jbosframework.core.io.Resource;
-import com.jbosframework.core.utils.StringUtils;
+import com.jbosframework.common.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.io.IOException;

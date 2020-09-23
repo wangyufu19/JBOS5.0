@@ -6,7 +6,7 @@ import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.Profile;
 import com.jbosframework.context.configuration.Environment;
-import com.jbosframework.core.utils.StringUtils;
+import com.jbosframework.common.utils.StringUtils;
 import com.jbosframework.web.mvc.annotation.RequestMapping;
 import com.jbosframework.web.mvc.annotation.RequestUri;
 import java.lang.annotation.Annotation;

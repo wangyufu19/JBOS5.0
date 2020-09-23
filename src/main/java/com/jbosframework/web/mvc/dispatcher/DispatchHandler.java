@@ -11,9 +11,8 @@ import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.web.mvc.ModelAndView;
 import com.jbosframework.web.mvc.data.Represention;
-import com.jbosframework.web.mvc.dispatcher.Dispatcher;
 import com.jbosframework.core.JBOSClassloader;
-import com.jbosframework.core.utils.TypeConverter;
+import com.jbosframework.common.utils.TypeConverter;
 /**
  * DispatchHandler
  * @author youfu.wang

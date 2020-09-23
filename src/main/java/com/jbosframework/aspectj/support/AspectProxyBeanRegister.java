@@ -3,11 +3,11 @@ import com.jbosframework.aspectj.annotation.Aspect;
 import com.jbosframework.aspectj.annotation.Pointcut;
 import com.jbosframework.aspectj.annotation.Before;
 import com.jbosframework.aspectj.annotation.After;
-import com.jbosframework.core.utils.StringUtils;
+import com.jbosframework.common.utils.StringUtils;
 import com.jbosframework.aspectj.metadata.Metadata;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import com.jbosframework.aspectj.support.AspectProxyBeanContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /**

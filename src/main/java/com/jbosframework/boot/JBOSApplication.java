@@ -14,46 +14,51 @@ import com.jbosframework.boot.autoconfig.JBOSBootApplication;
  */
 public class JBOSApplication {
     private ApplicationContext ctx=new AnnotationApplicationContext();
+    public Class<?> jbosBootClass;
 
     /**
-     * 初始化配置
-     * @param cls
+     * 构造方法
+     * @param jbosBootClass
      */
-    private void initConfiguration(Class<?> cls){
+    public JBOSApplication(Class<?> jbosBootClass){
+        this.jbosBootClass=jbosBootClass;
+    }
+    /**
+     * 初始化配置
+     * @param jbosBootApplication
+     */
+    private void initConfiguration(Class<?> jbosBootApplication,String... args){
         //开启自动配置
-        EnableAutoConfiguration enableAutoConfiguration=cls.getAnnotation(EnableAutoConfiguration.class);
+        EnableAutoConfiguration enableAutoConfiguration=jbosBootApplication.getAnnotation(EnableAutoConfiguration.class);
         if(enableAutoConfiguration!=null) {
             ctx.getContextConfiguration().setEnableAutoConfiguration(true);
         }
         //开启切面自动代理
-        EnableAspectJAutoProxy enableAspectJAutoProxy=cls.getAnnotation(EnableAspectJAutoProxy.class);
+        EnableAspectJAutoProxy enableAspectJAutoProxy=jbosBootApplication.getAnnotation(EnableAspectJAutoProxy.class);
         if(enableAspectJAutoProxy!=null){
             ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
         }
     }
     /**
      * 启动应用
-     * @param cls
+     * @param args
      * @return
      * @throws IOException
      */
-    public ApplicationContext start(Class<?> cls) throws IOException {
-        if(cls==null){
+    public ApplicationContext start(String... args) throws IOException {
+        if(jbosBootClass==null){
             return ctx;
         }
-        JBOSBootApplication jbosBootApplication=cls.getAnnotation(JBOSBootApplication.class);
+        JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
         if(jbosBootApplication!=null){
-            if(JBOSBootApplication.class.getAnnotation(Configuration.class)==null||JBOSBootApplication.class.getAnnotation(ComponentScan.class)==null) {
-                return ctx;
-            }
-            this.initConfiguration(JBOSBootApplication.class);
+            this.initConfiguration(JBOSBootApplication.class,args);
         }else{
-            if(cls.getAnnotation(Configuration.class)==null||cls.getAnnotation(ComponentScan.class)==null) {
+            if(jbosBootClass.getAnnotation(Configuration.class)==null||jbosBootClass.getAnnotation(ComponentScan.class)==null) {
                 return ctx;
             }
-            this.initConfiguration(cls);
+            this.initConfiguration(jbosBootClass,args);
         }
-        ctx.registry(cls);
+        ctx.registry(jbosBootClass);
         return ctx;
     }
 }

@@ -11,21 +11,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Clob;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jbosframework.jdbc.core.JdbcTmplt;
 import com.jbosframework.jdbc.datasource.JDBCDataSource;
 import com.jbosframework.jdbc.datasource.DataSourceUtils;
 import com.jbosframework.jdbc.support.JdbcUtils;
 import com.jbosframework.jdbc.support.SqlAutowireFactory;
 import com.jbosframework.jdbc.object.RowObjectFactory;
 import com.jbosframework.cache.provider.CacheProvider;
-import com.jbosframework.core.utils.TypeConverter;
+import com.jbosframework.common.utils.TypeConverter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,6 +1,6 @@
 package com.jbosframework.message;
 import java.lang.Thread;
-import com.jbosframework.httpclient.HttpClientHandler;
+import com.jbosframework.common.httpclient.HttpClientHandler;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import java.util.concurrent.BlockingQueue;
