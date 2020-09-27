@@ -1,13 +1,11 @@
 package com.jbosframework.beans.config;
-import com.jbosframework.aop.AopProxyFactory;
-import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Value;
-import com.jbosframework.beans.factory.BeanAopProxyFactory;
 import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperProxyFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import java.lang.annotation.Annotation;
@@ -19,6 +17,7 @@ import java.lang.reflect.Modifier;
  * @author youfu.wang
  * @version 1.0
  */
+@Slf4j
 public class BeanPropertySetter {
     private BeanFactoryContext beanFactoryContext;
 

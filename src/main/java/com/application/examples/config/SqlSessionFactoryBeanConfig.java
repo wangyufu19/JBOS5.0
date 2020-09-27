@@ -4,6 +4,7 @@ import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.orm.mybatis.SqlSessionFactoryBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import javax.sql.DataSource;
 
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @Bean("sqlSessionFactoryBeanConfig")
+@Slf4j
 public class SqlSessionFactoryBeanConfig {
     @Value("${mybatis.environment.id}")
     private String id;
@@ -24,6 +26,7 @@ public class SqlSessionFactoryBeanConfig {
 
     @Bean("sqlSessionFactoryBean")
     public SqlSessionFactory getSqlSessionFactoryBean(){
+        log.info("******init getSqlSessionFactoryBean");
         SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(defaultDataSource);
         sqlSessionFactoryBean.setId(id);

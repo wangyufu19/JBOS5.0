@@ -4,8 +4,7 @@ import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.jdbc.datasource.DriverManagerDataSource;
 import com.jbosframework.jdbc.datasource.JndiNamingDataSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import javax.sql.DataSource;
 
 /**
@@ -14,9 +13,8 @@ import javax.sql.DataSource;
  * @version 1.0
  */
 @Configuration
-@Bean("dataSourceConfig")
+@Slf4j
 public class DataSourceConfig {
-	public static final Log log= LogFactory.getLog(DataSourceConfig.class);
 
 	public static final String DATASOURCE_TYPE_JDBC="jdbc";
 
@@ -41,6 +39,7 @@ public class DataSourceConfig {
 	 */
 	@Bean("defaultDataSource")
 	public DataSource getDataSource() {
+		log.info("******init datasource");
 		if(DataSourceConfig.DATASOURCE_TYPE_JDBC.equals(type)){
 			DriverManagerDataSource dataSource=new DriverManagerDataSource();
 			dataSource.setDriverClass(driverClass);

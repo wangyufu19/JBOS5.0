@@ -6,6 +6,28 @@ package com.jbosframework.common.utils;
  */
 public class StringUtils {
 	/**
+	 * 判断是空值
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNUll(String str){
+		if(null==str||"null".equals(str)||"".equals(str)){
+			return true;
+		}else
+			return false;
+	}
+	/**
+	 * 判断是空值
+	 * @param obj
+	 * @return
+	 */
+	public static boolean isNUll(Object obj){
+		if(null==obj){
+			return true;
+		}else
+			return false;
+	}
+	/**
 	 * 替换空指针
 	 * @param str
 	 * @return

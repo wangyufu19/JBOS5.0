@@ -147,7 +147,7 @@ public class BeanFactoryContext extends ContextInitializer{
 		Object obj=null;
 		BeanDefinition beanDefinition=beanDefinitions.get(name);
 		if(beanDefinition==null){
-			return obj;
+			return null;
 		}
 		BeanDefinition parentBeanDefinition=beanDefinitions.get(beanDefinition.getParentName());
 		Object parentObj=this.getBean(parentBeanDefinition.getName());
@@ -219,10 +219,10 @@ public class BeanFactoryContext extends ContextInitializer{
 			return obj;
 		}
 		if(AopProxyUtils.isAopProxyBean(obj)){
-			//判断判断是否AOP代理Bean
+			//判断是否AOP代理Bean
 			obj= AopProxyUtils.getAopProxy(obj);
 		}else if(AspectProxySupport.isAspectPointcut(this.getAspectProxyBeanContext(),obj)){
-			//判断判断是否切面AOP代理Bean
+			//判断是否切面AOP代理Bean
 			obj=AspectProxySupport.getAspectAopProxy(this.getAspectProxyBeanContext(),obj);
 		}
 		return obj;

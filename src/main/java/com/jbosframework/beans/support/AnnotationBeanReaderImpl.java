@@ -60,6 +60,5 @@ public class AnnotationBeanReaderImpl implements BeanReader{
 			AspectProxyBeanRegister aspectProxyBeanRegister=new AspectProxyBeanRegister(this.ctx.getAspectProxyBeanContext());
 			aspectProxyBeanRegister.registerBean(cls);
 		}
-	}	
-
+	}
 }
