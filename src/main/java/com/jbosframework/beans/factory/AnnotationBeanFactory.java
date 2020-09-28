@@ -2,6 +2,8 @@ package com.jbosframework.beans.factory;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.context.ApplicationContext;
 
+import java.util.Map;
+
 /**
  * AnnotationScanFactory
  * @author youfu.wang
@@ -44,7 +46,12 @@ public class AnnotationBeanFactory implements BeanFactory{
 	public <T> T getBean(String name,Class<T> requiredType){
 		return ctx.getBean(name,requiredType);
 	}
-	
+	public <T> T getBean(Class<T> requiredType){
+		return ctx.getBean(requiredType);
+	}
+	public <T> Map<String, T> getBeansOfType(Class<T> requiredType){
+		return ctx.getBeansOfType(requiredType);
+	}
 	public boolean isPrototype(String name) {
 		return ctx.isPrototype(name);
 	}
@@ -67,5 +74,10 @@ public class AnnotationBeanFactory implements BeanFactory{
 	public void putBeanDefinition(BeanDefinition beanDefinition){
 		this.ctx.putBeanDefinition(beanDefinition);
 	}
-
+	/**
+	 * 设置接口的实现Bean的定义
+	 */
+	public void putBeanNameOfType(String interfaceName,BeanDefinition beanDefinition){
+		this.ctx.putBeanNameOfType(interfaceName,beanDefinition);
+	}
 }

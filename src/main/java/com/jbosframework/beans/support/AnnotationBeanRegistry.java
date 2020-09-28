@@ -49,10 +49,8 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         annotationBean.setId(id);
         annotationBean.setName(id);
         annotationBean.setClassName(cls.getName());
-        //设置Scope注解
-        this.setBeanScope(cls, annotationBean);
         //注入注解Bean
-        this.registryBean(annotationBean);
+        this.registryBean(cls,annotationBean);
         //注入类方法注解
         this.loadClassMethodAnnotation(cls,annotationBean);
     }
@@ -69,10 +67,10 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         annotationBean.setId(StringUtils.replaceNull(bean.value()));
         annotationBean.setName(StringUtils.replaceNull(bean.value()));
         annotationBean.setClassName(cls.getName());
-        //设置Scope注解
-        this.setBeanScope(cls, annotationBean);
         //注入注解Bean
-        this.registryBean(annotationBean);
+        this.registryBean(cls,annotationBean);
+        //注册Bean的接口
+        this.registryBeanInterfaces(cls,annotationBean);
     }
     /**
      * 加载Controller注解
@@ -91,10 +89,8 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             annotationBean.setName(StringUtils.replaceNull(requestMapping.value()));
             annotationBean.setRequestMethod(StringUtils.replaceNull(requestMapping.method()));
             annotationBean.setClassMethod(DEFAULT_REQUEST_MAPPING);
-            //设置Scope注解
-            this.setBeanScope(cls, annotationBean);
             //注入注解Bean
-            this.registryBean(annotationBean);
+            this.registryBean(cls,annotationBean);
         }
         //注入类方法注解
         this.loadClassMethodAnnotation(cls,annotationBean);
@@ -116,10 +112,10 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         annotationBean.setId(id);
         annotationBean.setName(id);
         annotationBean.setClassName(cls.getName());
-        //设置Scope注解
-        this.setBeanScope(cls, annotationBean);
         //注入注解Bean
-        this.registryBean(annotationBean);
+        this.registryBean(cls,annotationBean);
+        //注册Bean的接口
+        this.registryBeanInterfaces(cls,annotationBean);
     }
     /**
      * 加载Repository注解
@@ -138,10 +134,10 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         annotationBean.setId(id);
         annotationBean.setName(id);
         annotationBean.setClassName(cls.getName());
-        //设置Scope注解
-        this.setBeanScope(cls, annotationBean);
         //注入注解Bean
-        this.registryBean(annotationBean);
+        this.registryBean(cls,annotationBean);
+        //注册Bean的接口
+        this.registryBeanInterfaces(cls,annotationBean);
     }
     /**
      * 加载类方法注解
@@ -161,29 +157,29 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             AnnotationBean annotationBean=new AnnotationBean();
             annotationBean.setClassName(cls.getName());
             annotationBean.setParentName(parent.getName());
+            annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
             //加载Bean注解
             Bean bean=methods[i].getAnnotation(Bean.class);
             if(bean!=null){
                 String id=bean.value();
                 if(StringUtils.isNUll(id)) {
-                    id=methods[i].getReturnType().getSimpleName();
+                    id=methods[i].getReturnType().getName();
                 }
                 annotationBean.setId(id);
                 annotationBean.setName(id);
                 annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                 annotationBean.setIsMethodBean(true);
-                //注入注解Bean
-                this.registryBean(annotationBean);
             }
             //加载RequestMapping注解
             RequestMapping requestMapping=methods[i].getAnnotation(RequestMapping.class);
             if(requestMapping!=null){
+                annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(requestMapping.value())));
                 annotationBean.setName(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(requestMapping.value())));
                 annotationBean.setRequestMethod(StringUtils.replaceNull(requestMapping.method()));
                 annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
-                //注入注解Bean
-                this.registryBean(annotationBean);
             }
+            //注入注解Bean
+            this.registryBean(methods[i].getClass(),annotationBean);
         }
     }
     /**

@@ -1,8 +1,12 @@
 package com;
 
+import com.application.examples.service.UserMgrService;
+import com.application.examples.service.impl.UserMgrServiceImpl;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import java.io.IOException;
+import java.util.Map;
+
 import com.jbosframework.boot.JBOSApplication;
 import com.application.examples.controller.UserMgrController;
 
@@ -15,6 +19,9 @@ public class JBOSStarter {
 		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
 		userMgrController.getUserList();
 //		System.out.println("******bean: "+(SqlSessionFactory)ctx.getBean("sqlSessionFactoryBean"));
+		Map<String, UserMgrService> beanMap= ctx.getBeansOfType(UserMgrService.class);
+        System.out.println("******i: "+ beanMap);
+
 	}
 
 }

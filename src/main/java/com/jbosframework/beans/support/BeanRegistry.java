@@ -24,7 +24,7 @@ public class BeanRegistry {
      * @param annClass
      * @param annotationBean
      */
-    public void setBeanScope(Class<?> annClass,AnnotationBean annotationBean){
+    private void setBeanScope(Class<?> annClass,AnnotationBean annotationBean){
         Scope scope=annClass.getAnnotation(Scope.class);
         if(scope!=null){
             annotationBean.setScope(scope.value());
@@ -34,9 +34,20 @@ public class BeanRegistry {
      * 注册Bean
      * @param annotationBean
      */
-    public void registryBean(AnnotationBean annotationBean){
+    public void registryBean(Class<?> annClass,AnnotationBean annotationBean){
         if(!"".equals(StringUtils.replaceNull(annotationBean.getId()))||!"".equals(StringUtils.replaceNull(annotationBean.getName()))){
+            this.setBeanScope(annClass,annotationBean);
             this.ctx.putBeanDefinition(annotationBean);
+        }
+    }
+    //注册Bean的接口
+    public void registryBeanInterfaces(Class<?> cls,AnnotationBean annotationBean){
+        Class<?>[] interfaces=cls.getInterfaces();
+        if(interfaces==null){
+            return;
+        }
+        for(Class interfaceCls:interfaces){
+            this.ctx.putBeanNameOfType(interfaceCls.getName(),annotationBean);
         }
     }
 }

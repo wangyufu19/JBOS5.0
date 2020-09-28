@@ -1,7 +1,6 @@
 package com.jbosframework.context.support;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.AspectProxySupport;
 import com.jbosframework.beans.config.BeanDefinition;
@@ -9,6 +8,7 @@ import com.jbosframework.beans.config.BeanPropertySetter;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.core.JBOSClassCaller;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -18,18 +18,41 @@ import org.apache.commons.logging.LogFactory;
  * @version 1.0
  * @date 2016-11-14
  */
+@Slf4j
 public class BeanFactoryContext extends ContextInitializer{
-	protected static Log log=LogFactory.getLog(BeanFactoryContext.class);
+
 	//XML and Annotation IoC Bean Singleton Instance
 	protected static Map<String,Object> singletonInstances=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
 	//XML and Annotation IoC Bean 
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
+	//Bean Interface Map
+	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
 
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
 
+	}
+
+	/**
+	 * 设置接口的实现Bean的定义
+	 */
+	public void putBeanNameOfType(String interfaceName,BeanDefinition beanDefinition){
+		List<BeanDefinition> beanDefinitions=null;
+		if(beanDefinition==null) {
+			return;
+		}
+		if(beanInterfaces.containsKey(interfaceName)){
+			beanDefinitions=(List<BeanDefinition>)beanInterfaces.get(interfaceName);
+		}else{
+			beanDefinitions=new ArrayList<BeanDefinition>();
+		}
+		if(beanDefinitions!=null){
+			beanDefinitions.add(beanDefinition);
+			beanInterfaces.remove(interfaceName);
+			beanInterfaces.put(interfaceName,beanDefinitions);
+		}
 	}
 	/**
 	 * 注入定义Bean对象
@@ -113,10 +136,9 @@ public class BeanFactoryContext extends ContextInitializer{
 	 */
 	public Object getSingletonBean(String name){		
 		Object obj=null;
-		if(singletonInstances.containsKey(name)){			
-			obj=singletonInstances.get(name);			
-		}else
-			return null;
+		if(singletonInstances.containsKey(name)){
+			obj=singletonInstances.get(name);
+		}
 		return obj;
 	}
 	/**
@@ -136,7 +158,7 @@ public class BeanFactoryContext extends ContextInitializer{
 		}
 		return obj;
 	}
-	public boolean isMethodBean(String name){
+	private boolean isMethodBean(String name){
 		BeanDefinition beanDefinition=beanDefinitions.get(name);
 		if(beanDefinition!=null){
 			return beanDefinition.isMethodBean();
@@ -201,22 +223,28 @@ public class BeanFactoryContext extends ContextInitializer{
 	public void putBean(String name,Object obj){
 		this.singletonInstances.put(name,obj);
 	}
-
+	private Object getBeanObject(String name){
+		Object obj = null;
+		if (this.isSingleton(name)) {
+			obj = this.getSingletonBean(name);
+		} else if (this.isPrototype(name)) {
+			obj = this.getPrototypeBean(name);
+		}
+		if(obj==null){
+			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + name + "' available");
+			ex.printStackTrace();
+		}
+		return obj;
+	}
 	/**
 	 * 根据名称得到Bean对象
 	 * @param name
 	 * @return
 	 */
 	public Object getBean(String name) {
-		Object obj = null;
-		if (this.isSingleton(name)) {
-			obj = this.getSingletonBean(name);
-		} else if (this.isPrototype(name)) {
-			obj = this.getPrototypeBean(name);
-		} else
-			return null;
+		Object obj = getBeanObject(name);
 		if(obj==null){
-			return obj;
+			return null;
 		}
 		if(AopProxyUtils.isAopProxyBean(obj)){
 			//判断是否AOP代理Bean
@@ -242,5 +270,50 @@ public class BeanFactoryContext extends ContextInitializer{
 			}
 		}
 		return (T)obj;
+	}
+	public <T> T getBean(Class<T> requiredType){
+		Object obj=null;
+		if(requiredType==null){
+			return null;
+		}
+		obj=this.getBean(requiredType.getSimpleName());
+		return (T)obj;
+	}
+	public <T> Map<String, T> getBeansOfType(Class<T> requiredType){
+		Map<String, T> beansTypesMap=new HashMap<String, T>();
+		if(requiredType==null){
+			return null;
+		}
+		if(beanInterfaces.containsKey(requiredType.getName())){
+			List<BeanDefinition> beanDefinitions=beanInterfaces.get(requiredType.getName());
+			if(beanDefinitions==null){
+				return null;
+			}else{
+				for(BeanDefinition beanDefinition:beanDefinitions){
+					Object obj=getBeanObject(beanDefinition.getName());
+					if(obj!=null){
+						beansTypesMap.put(beanDefinition.getName(),(T)obj);
+					}
+				}
+			}
+		}
+		return beansTypesMap;
+	}
+	public <T> Map<String, BeanDefinition> getBeanNamesOfType(Class<T> requiredType){
+		Map<String, BeanDefinition> beansTypesMap=new HashMap<String, BeanDefinition>();
+		if(requiredType==null){
+			return null;
+		}
+		if(beanInterfaces.containsKey(requiredType.getName())){
+			List<BeanDefinition> beanDefinitions=beanInterfaces.get(requiredType.getName());
+			if(beanDefinitions==null){
+				return null;
+			}else{
+				for(BeanDefinition beanDefinition:beanDefinitions){
+					beansTypesMap.put(beanDefinition.getName(),beanDefinition);
+				}
+			}
+		}
+		return beansTypesMap;
 	}
 }

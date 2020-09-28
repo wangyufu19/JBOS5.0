@@ -6,7 +6,7 @@ import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
 import java.util.List;
 
-@Service("userMgrService")
+@Service
 public class UserMgrServiceImpl implements UserMgrService{
     @Mapper
     private UserMapper userMapper;

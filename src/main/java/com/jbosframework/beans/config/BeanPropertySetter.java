@@ -2,6 +2,7 @@ package com.jbosframework.beans.config;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Value;
+import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
@@ -11,6 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
  * BeanPropertySetter
@@ -64,6 +66,13 @@ public class BeanPropertySetter {
             if(annotations==null||annotations.length<=0) {
                 continue;
             }
+            //校验autowired注解是否用在了static方法上
+            if (Modifier.isStatic(fields[i].getModifiers())) {
+                if (log.isWarnEnabled()) {
+                    log.warn("Autowired annotation is not supported on static fields: " + fields[i].getName());
+                }
+                return;
+            }
             for(int j=0;j<annotations.length;j++) {
                 //得到Bean字段值
                 fieldValue=this.getBeanFieldValue(fields[i],annotations[j]);
@@ -73,7 +82,7 @@ public class BeanPropertySetter {
         }
     }
 
-    /**SqlSessionFactoryBean
+    /**
      * 得到Bean字段值
      * @param field
      * @param annotation
@@ -83,10 +92,16 @@ public class BeanPropertySetter {
         Object fieldValue=null;
         String s1="";
         if(annotation instanceof Autowired) {
-            if(this.beanFactoryContext.isMethodBean(field.getName())){
-                fieldValue=this.beanFactoryContext.getMethodBean(field.getName());
+            if(field.getType().isInterface()){
+                Map<String, BeanDefinition> beansTypesMap=this.beanFactoryContext.getBeanNamesOfType(field.getType());
+                log.info("********i ="+beansTypesMap);
+                for(Map.Entry<String,BeanDefinition> entry:beansTypesMap.entrySet()){
+                    log.info("********i ="+entry.getValue().getName());
+                    fieldValue=this.beanFactoryContext.getBean(entry.getValue().getName());
+                    break;
+                }
             }else{
-                fieldValue=this.beanFactoryContext.getBean(field.getName());
+                fieldValue=this.beanFactoryContext.getBean(field.getType().getSimpleName());
             }
         }else if(annotation instanceof Value) {
             Value valueAnnotation=(Value)annotation;

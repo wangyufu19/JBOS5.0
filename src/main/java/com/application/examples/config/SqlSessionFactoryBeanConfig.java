@@ -14,7 +14,6 @@ import javax.sql.DataSource;
  * @version 1.0
  */
 @Configuration
-@Bean("sqlSessionFactoryBeanConfig")
 @Slf4j
 public class SqlSessionFactoryBeanConfig {
     @Value("${mybatis.environment.id}")
@@ -26,7 +25,7 @@ public class SqlSessionFactoryBeanConfig {
 
     @Bean("sqlSessionFactoryBean")
     public SqlSessionFactory getSqlSessionFactoryBean(){
-        log.info("******init getSqlSessionFactoryBean");
+//        log.info("******init getSqlSessionFactoryBean");
         SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(defaultDataSource);
         sqlSessionFactoryBean.setId(id);

@@ -77,7 +77,12 @@ public class AnnotationScanFactory {
 		beanReader.setAnnotationFilter(annotationFilter);
 		for(int i=0;i<allClasses.size();i++) {
 			try {
-				this.beanReader.loadBeanDefinition(JBOSClassloader.loadClass(allClasses.get(i)));
+				Class beanCls=JBOSClassloader.loadClass(allClasses.get(i));
+				//判断类型是否为接口，如果不是接口则就加载Bean定义对象
+				if(!beanCls.isInterface()){
+					//加载类的Bean定义对象
+					this.beanReader.loadBeanDefinition(beanCls);
+				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
