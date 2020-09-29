@@ -44,7 +44,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         AnnotationBean annotationBean=new AnnotationBean();
         String id=configuration.value();
         if(StringUtils.isNUll(id)) {
-            id=cls.getSimpleName();
+            id=cls.getName();
         }
         annotationBean.setId(id);
         annotationBean.setName(id);
@@ -64,8 +64,12 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             return;
         }
         AnnotationBean annotationBean=new AnnotationBean();
-        annotationBean.setId(StringUtils.replaceNull(bean.value()));
-        annotationBean.setName(StringUtils.replaceNull(bean.value()));
+        String id=bean.value();
+        if(StringUtils.isNUll(id)) {
+            id=cls.getName();
+        }
+        annotationBean.setId(id);
+        annotationBean.setName(id);
         annotationBean.setClassName(cls.getName());
         //注入注解Bean
         this.registryBean(cls,annotationBean);
@@ -107,7 +111,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         AnnotationBean annotationBean=new AnnotationBean();
         String id=service.value();
         if(StringUtils.isNUll(id)) {
-            id=cls.getSimpleName();
+            id=cls.getName();
         }
         annotationBean.setId(id);
         annotationBean.setName(id);
@@ -129,7 +133,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         AnnotationBean annotationBean=new AnnotationBean();
         String id=repository.value();
         if(StringUtils.isNUll(id)) {
-            id=cls.getSimpleName();
+            id=cls.getName();
         }
         annotationBean.setId(id);
         annotationBean.setName(id);
@@ -157,7 +161,6 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             AnnotationBean annotationBean=new AnnotationBean();
             annotationBean.setClassName(cls.getName());
             annotationBean.setParentName(parent.getName());
-            annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
             //加载Bean注解
             Bean bean=methods[i].getAnnotation(Bean.class);
             if(bean!=null){
@@ -169,6 +172,10 @@ public class AnnotationBeanRegistry extends BeanRegistry{
                 annotationBean.setName(id);
                 annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                 annotationBean.setIsMethodBean(true);
+                annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
+                if(methods[i].getReturnType().isInterface()){
+                   this.registryBeanInterfaces(methods[i].getReturnType().getName(),annotationBean);
+                }
             }
             //加载RequestMapping注解
             RequestMapping requestMapping=methods[i].getAnnotation(RequestMapping.class);

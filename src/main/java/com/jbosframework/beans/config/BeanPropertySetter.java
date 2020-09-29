@@ -94,9 +94,8 @@ public class BeanPropertySetter {
         if(annotation instanceof Autowired) {
             if(field.getType().isInterface()){
                 Map<String, BeanDefinition> beansTypesMap=this.beanFactoryContext.getBeanNamesOfType(field.getType());
-                log.info("********i ="+beansTypesMap);
+//                log.info("********i ="+beansTypesMap+"; name: "+field.getType());
                 for(Map.Entry<String,BeanDefinition> entry:beansTypesMap.entrySet()){
-                    log.info("********i ="+entry.getValue().getName());
                     fieldValue=this.beanFactoryContext.getBean(entry.getValue().getName());
                     break;
                 }

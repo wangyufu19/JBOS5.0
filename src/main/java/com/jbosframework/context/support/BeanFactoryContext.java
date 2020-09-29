@@ -101,7 +101,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	/**
 	 * 拼装Bean对象
 	 */
-	public void afterProperties(Object obj,BeanDefinition beanDefinition){
+	private void afterProperties(Object obj,BeanDefinition beanDefinition){
 		if(beanDefinition==null){
 			return;
 		}

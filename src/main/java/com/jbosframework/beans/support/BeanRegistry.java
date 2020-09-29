@@ -50,4 +50,8 @@ public class BeanRegistry {
             this.ctx.putBeanNameOfType(interfaceCls.getName(),annotationBean);
         }
     }
+    //注册Bean的接口
+    public void registryBeanInterfaces(String interfaceName,AnnotationBean annotationBean){
+        this.ctx.putBeanNameOfType(interfaceName,annotationBean);
+    }
 }
