@@ -18,10 +18,6 @@ public class JBOSStarter {
 		ApplicationContext ctx=jbosApplication.start(args);
 		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
 		userMgrController.getUserList();
-//		System.out.println("******bean: "+(SqlSessionFactory)ctx.getBean("sqlSessionFactoryBean"));
-		Map<String, UserMgrService> beanMap= ctx.getBeansOfType(UserMgrService.class);
-        System.out.println("******i: "+ beanMap);
-
 	}
 
 }

@@ -5,9 +5,9 @@
 <mapper namespace="com.application.examples.mapper.UserMapper">
   
   <select id="getUserList" resultType="map">
-    select id from jbos_t_user
+    select id from jbos_user_auth
   </select>
   <select id="getUserById" resultType="com.application.examples.pojo.User">
-    select id from jbos_t_user where id = #{id} 
+    select id from jbos_user_auth where id = #{id}
   </select>
 </mapper>

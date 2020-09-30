@@ -12,42 +12,37 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
- * BeanPropertySetter
+ * BeanPropertyInjection
  * @author youfu.wang
  * @version 1.0
  */
 @Slf4j
-public class BeanPropertySetter {
+public class BeanPropertyInjection {
     private BeanFactoryContext beanFactoryContext;
 
     /**
      * 构造方法
      * @param beanFactoryContext
      */
-    public BeanPropertySetter(BeanFactoryContext beanFactoryContext){
+    public BeanPropertyInjection(BeanFactoryContext beanFactoryContext){
         this.beanFactoryContext=beanFactoryContext;
     }
     /**
-     * 设置Bean对象属性
-     * @param obj
-     * @param beanDefinition
-     */
-    public void putBeanProperties(Object obj,BeanDefinition beanDefinition){
-        if(beanDefinition.isSingleton()){
-            this.putBeanField(obj);
-        }
-    }
-    /**
-     * 设置Bean字段
+     * 注入Bean对象属性
      * @param obj
      */
-    private void putBeanField(Object obj) {
+    public void inject(Object obj){
         Class<?> cls=null;
         cls=obj.getClass();
         Field[] fields=cls.getDeclaredFields();
+        if(fields==null) {
+            return;
+        }
         this.putBeanField(obj,fields);
     }
     /**
@@ -56,9 +51,7 @@ public class BeanPropertySetter {
      * @param fields 字段属性
      */
     private void putBeanField(Object obj,Field[] fields) {
-        if(fields==null) {
-            return;
-        }
+
         Object fieldValue=null;
 
         for(int i=0;i<fields.length;i++){
@@ -66,10 +59,10 @@ public class BeanPropertySetter {
             if(annotations==null||annotations.length<=0) {
                 continue;
             }
-            //校验autowired注解是否用在了static方法上
+            //校验字段注解是否用在了static方法上
             if (Modifier.isStatic(fields[i].getModifiers())) {
                 if (log.isWarnEnabled()) {
-                    log.warn("Autowired annotation is not supported on static fields: " + fields[i].getName());
+                    log.warn("Field annotation is not supported on static fields: " + fields[i].getName());
                 }
                 return;
             }
@@ -94,11 +87,18 @@ public class BeanPropertySetter {
         if(annotation instanceof Autowired) {
             if(field.getType().isInterface()){
                 Map<String, BeanDefinition> beansTypesMap=this.beanFactoryContext.getBeanNamesOfType(field.getType());
-//                log.info("********i ="+beansTypesMap+"; name: "+field.getType());
+                List<BeanDefinition> beanNames=new ArrayList<BeanDefinition>();
+                String beanNameClass="";
                 for(Map.Entry<String,BeanDefinition> entry:beansTypesMap.entrySet()){
-                    fieldValue=this.beanFactoryContext.getBean(entry.getValue().getName());
-                    break;
+                    beanNameClass+=entry.getValue().getName()+",";
+                    beanNames.add(entry.getValue());
                 }
+                if(beanNames.size()>1){
+                    BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + field.getType() + "' available:找到多个实现Bean["+beanNameClass+"]");
+                    ex.printStackTrace();
+                    return null;
+                }
+                fieldValue=this.beanFactoryContext.getBean(beanNames.get(0).getName());
             }else{
                 fieldValue=this.beanFactoryContext.getBean(field.getType().getSimpleName());
             }

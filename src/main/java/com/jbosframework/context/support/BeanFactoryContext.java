@@ -4,13 +4,11 @@ import java.util.*;
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.AspectProxySupport;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.BeanPropertySetter;
+import com.jbosframework.beans.config.BeanPropertyInjection;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.core.JBOSClassCaller;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * BeanFactoryContext
@@ -27,7 +25,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
-
+	protected BeanPropertyInjection beanPropertyInjection=new BeanPropertyInjection(this);
 	/**
 	 * 构造方法
 	 */
@@ -86,13 +84,14 @@ public class BeanFactoryContext extends ContextInitializer{
 	 * 拼装Bean对象
 	 */
 	public void afterProperties(){
-		BeanPropertySetter beanPropertySetter=new BeanPropertySetter(this);
 		for (Map.Entry<String, BeanDefinition> entry : beanDefinitions.entrySet()) {
 			BeanDefinition beanDefinition=entry.getValue();
 			Object obj=null;
-			if(beanDefinition.isSingleton())
+			//注入Bean依赖对象或属性值
+			if(beanDefinition.isSingleton()){
 				obj=this.getSingletonBean(entry.getKey());
-			beanPropertySetter.putBeanProperties(obj,beanDefinition);
+				beanPropertyInjection.inject(obj);
+			}
 			if(singletonInstances.containsKey(entry.getKey()))
 				singletonInstances.remove(entry.getKey());
 			singletonInstances.put(entry.getKey(), obj);
@@ -105,8 +104,9 @@ public class BeanFactoryContext extends ContextInitializer{
 		if(beanDefinition==null){
 			return;
 		}
-		BeanPropertySetter beanPropertySetter=new BeanPropertySetter(this);
-		beanPropertySetter.putBeanProperties(obj,beanDefinition);
+		if(beanDefinition.isSingleton()){
+			beanPropertyInjection.inject(obj);
+		}
 		if(singletonInstances.containsKey(beanDefinition.getName()))
 			singletonInstances.remove(beanDefinition.getName());
 		singletonInstances.put(beanDefinition.getName(), obj);
@@ -117,6 +117,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	public void destroy(){
 		singletonInstances.clear();
 		beanDefinitions.clear();
+		beanInterfaces.clear();
 	}
 	/**
 	 * 得到Bean定义

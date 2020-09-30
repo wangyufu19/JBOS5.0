@@ -2,9 +2,9 @@ package com.jbosframework.beans.config;
 import java.util.Map;
 import java.util.LinkedHashMap;
 /**
- * 
+ * BeanPropertyAccessor
  * @author youfu.wang
- * @version 1.0
+ * @date 2016-12-12
  */
 public class BeanPropertyAccessor{
 
