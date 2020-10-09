@@ -4,7 +4,7 @@ import java.util.*;
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.AspectProxySupport;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.BeanPropertyInjection;
+import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.core.JBOSClassCaller;
@@ -25,7 +25,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
-	protected BeanPropertyInjection beanPropertyInjection=new BeanPropertyInjection(this);
+	private BeanPropertyAutowiredProcessor propertyAutowiredProcessor=new BeanPropertyAutowiredProcessor(this);
 	/**
 	 * 构造方法
 	 */
@@ -90,11 +90,9 @@ public class BeanFactoryContext extends ContextInitializer{
 			//注入Bean依赖对象或属性值
 			if(beanDefinition.isSingleton()){
 				obj=this.getSingletonBean(entry.getKey());
-				beanPropertyInjection.inject(obj);
+				propertyAutowiredProcessor.autowire(obj);
 			}
-			if(singletonInstances.containsKey(entry.getKey()))
-				singletonInstances.remove(entry.getKey());
-			singletonInstances.put(entry.getKey(), obj);
+			putBean(entry.getKey(),obj);
 		}
 	}
 	/**
@@ -105,11 +103,9 @@ public class BeanFactoryContext extends ContextInitializer{
 			return;
 		}
 		if(beanDefinition.isSingleton()){
-			beanPropertyInjection.inject(obj);
+			propertyAutowiredProcessor.autowire(obj);
 		}
-		if(singletonInstances.containsKey(beanDefinition.getName()))
-			singletonInstances.remove(beanDefinition.getName());
-		singletonInstances.put(beanDefinition.getName(), obj);
+		putBean(beanDefinition.getName(),obj);
 	}
 	/**
 	 * 销毁Bean对象内存
@@ -222,8 +218,16 @@ public class BeanFactoryContext extends ContextInitializer{
 	 * @param obj
 	 */
 	public void putBean(String name,Object obj){
+		if(singletonInstances.containsKey(name))
+			singletonInstances.remove(name);
 		this.singletonInstances.put(name,obj);
 	}
+
+	/**
+	 * 根据名称得到Bean对象
+	 * @param name
+	 * @return
+	 */
 	private Object getBeanObject(String name){
 		Object obj = null;
 		if (this.isSingleton(name)) {
