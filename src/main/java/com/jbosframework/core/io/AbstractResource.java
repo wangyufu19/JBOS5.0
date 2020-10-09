@@ -14,8 +14,13 @@ import com.jbosframework.core.io.Resource;
 public class AbstractResource implements Resource{
 
 	
-	public boolean exists() throws IOException {	
-		File file=this.getFile();
+	public boolean exists() {
+		File file= null;
+		try {
+			file = this.getFile();
+		} catch (IOException e) {
+			return false;
+		}
 		if(file==null) return false;
 		if(file.exists()) return true;
 		return false;

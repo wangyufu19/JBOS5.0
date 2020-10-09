@@ -1,14 +1,7 @@
 package com.jbosframework.context.configuration;
-import com.jbosframework.core.io.ClassPathResource;
-import com.jbosframework.core.io.Resource;
-import com.jbosframework.common.utils.StringUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Configuration
@@ -17,22 +10,18 @@ import java.util.Properties;
  */
 public class Configuration {
     private static Log log= LogFactory.getLog(Configuration.class);
-    private static String defaultConfigLocation;
     private String configLocation;
-    protected static Map<String,String> contextProperties= Collections.synchronizedMap(new LinkedHashMap<String,String>());
+    private YamlConfig yamlConfig=new YamlConfig();
     private Environment environment=new Environment();
     private boolean enableAspectJAutoProxy=false;
     private boolean enableAutoConfiguration=false;
 
-    static{
-        defaultConfigLocation="jbosContext.properties";
-    }
 
     /**
      * 构造方法
      */
     public Configuration(){
-        configLocation=defaultConfigLocation;
+        configLocation="jbosContext.yml";
     }
 
     /**
@@ -43,23 +32,10 @@ public class Configuration {
         this.configLocation=configLocation;
     }
     /**
-     * 初始化资源
+     * 加载配置属性
      */
-    public void init(){
-        Resource resource=new ClassPathResource(configLocation);
-        Properties pros=new Properties();
-        try {
-            pros.load(resource.getInputStream());
-            for(Map.Entry<Object,Object> pro:pros.entrySet()){
-                String name= StringUtils.replaceNull(pro.getKey());
-                String value=StringUtils.replaceNull(pro.getValue());
-                if(!"".equals(value)){
-                    this.putContextProperty(name,value);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void load() {
+        yamlConfig.load(configLocation);
     }
     /**
      * 设置上下文环境
@@ -112,7 +88,7 @@ public class Configuration {
      * @param value
      */
     public void putContextProperty(String name,String value){
-        contextProperties.put(name,value);
+
     }
 
     /**
@@ -120,15 +96,16 @@ public class Configuration {
      * @param name
      * @return
      */
-    public String getContextProperty(String name){
-        return contextProperties.get(name);
+    public Object getContextProperty(String name){
+        Object value=null;
+        value=yamlConfig.getValue(name);
+        return value;
     }
 
     /**
-     * 得到上下文属性
-     * @return
+     * 清除属性内存
      */
-    public Map<String,String> getContextProperties(){
-        return contextProperties;
+    public void clear(){
+        yamlConfig.clear();
     }
 }

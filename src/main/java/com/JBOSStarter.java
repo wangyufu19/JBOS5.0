@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.jbosframework.boot.JBOSApplication;
 import com.application.examples.controller.UserMgrController;
+import com.jbosframework.context.configuration.YamlConfig;
 
 @JBOSBootApplication
 public class JBOSStarter {

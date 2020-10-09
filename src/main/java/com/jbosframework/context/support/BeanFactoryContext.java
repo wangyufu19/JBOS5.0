@@ -114,6 +114,7 @@ public class BeanFactoryContext extends ContextInitializer{
 		singletonInstances.clear();
 		beanDefinitions.clear();
 		beanInterfaces.clear();
+		getContextConfiguration().clear();
 	}
 	/**
 	 * 得到Bean定义

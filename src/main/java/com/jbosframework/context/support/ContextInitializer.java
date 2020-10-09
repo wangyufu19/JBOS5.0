@@ -13,7 +13,7 @@ public class ContextInitializer {
      * 构造方法
      */
     public ContextInitializer(){
-        configuration.init();
+        configuration.load();
     }
     public Configuration getContextConfiguration(){
         return configuration;
