@@ -21,7 +21,7 @@ public class Configuration {
      * 构造方法
      */
     public Configuration(){
-        configLocation="jbosContext.yml";
+        configLocation="jbosContext";
     }
 
     /**
@@ -87,8 +87,8 @@ public class Configuration {
      * @param name
      * @param value
      */
-    public void putContextProperty(String name,String value){
-
+    public void putContextProperty(String name,Object value){
+        yamlConfig.setValue(name,value);
     }
 
     /**

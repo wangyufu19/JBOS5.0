@@ -1,3 +1,12 @@
+server:
+  application: jbos
+  webcontainer:
+    name: tomcat
+    port: 9080
+    conextPath: jbos
+jbos:
+  profiles:
+    active: dev
 #MyBatis配置
 mybatis:
   environment:

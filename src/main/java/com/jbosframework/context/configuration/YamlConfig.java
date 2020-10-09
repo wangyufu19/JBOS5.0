@@ -24,7 +24,7 @@ public class YamlConfig {
      * 构造方法
      */
     public YamlConfig(){
-        configLocation="jbosContext.yml";
+        configLocation="jbosContext";
     }
     /**
      * 构造方法
@@ -46,10 +46,9 @@ public class YamlConfig {
      */
     public void load(String configLocation){
         try {
-            Resource resource=new ClassPathResource(configLocation);
+            Resource resource=new ClassPathResource(configLocation+".yml");
             Yaml yaml = new Yaml();
             properties=yaml.loadAs(resource.getInputStream(), LinkedHashMap.class);
-            log.info("*****properties: "+properties.get("mybatis"));
         } catch (IOException e) {
             e.printStackTrace();
         }
