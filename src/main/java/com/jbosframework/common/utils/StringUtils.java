@@ -1,5 +1,7 @@
 package com.jbosframework.common.utils;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -10,6 +12,13 @@ import java.util.StringTokenizer;
  * @version 1.0
  */
 public class StringUtils {
+	public static boolean hasLength(@Nullable CharSequence str) {
+		return str != null && str.length() > 0;
+	}
+
+	public static boolean hasLength(@Nullable String str) {
+		return str != null && !str.isEmpty();
+	}
 	/**
 	 * 判断是空值
 	 * @param str
@@ -98,5 +107,32 @@ public class StringUtils {
 	}
 	public static String[] toStringArray(Collection collection) {
 		return collection == null ? null : (String[])((String[])collection.toArray(new String[collection.size()]));
+	}
+	public static String replace(String inString, String oldPattern, @Nullable String newPattern) {
+		if (hasLength(inString) && hasLength(oldPattern) && newPattern != null) {
+			int index = inString.indexOf(oldPattern);
+			if (index == -1) {
+				return inString;
+			} else {
+				int capacity = inString.length();
+				if (newPattern.length() > oldPattern.length()) {
+					capacity += 16;
+				}
+
+				StringBuilder sb = new StringBuilder(capacity);
+				int pos = 0;
+
+				for(int patLen = oldPattern.length(); index >= 0; index = inString.indexOf(oldPattern, pos)) {
+					sb.append(inString.substring(pos, index));
+					sb.append(newPattern);
+					pos = index + patLen;
+				}
+
+				sb.append(inString.substring(pos));
+				return sb.toString();
+			}
+		} else {
+			return inString;
+		}
 	}
 }

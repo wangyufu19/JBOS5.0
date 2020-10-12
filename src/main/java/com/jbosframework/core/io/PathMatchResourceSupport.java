@@ -2,6 +2,7 @@ package com.jbosframework.core.io;
 
 import com.jbosframework.common.utils.AntPathMatcher;
 import com.jbosframework.common.utils.PathMatcher;
+import com.jbosframework.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -34,19 +35,22 @@ public class PathMatchResourceSupport {
             path=location.substring(1);
         }
         String rootDirPath=path.substring(0,path.indexOf("/"));
+        String subPattern=path.substring(path.indexOf("/"));
         Resource resource=new ClassPathResource(rootDirPath);
-        if(resource.getFile().exists()){
-            this.putClassPathResources(resource.getFile(),resources);
+        if(resource.getFile().isDirectory()){
+            String fullPattern=StringUtils.replace(resource.getFile().getAbsolutePath(),File.separator,"/")+subPattern;
+            this.putClassPathResources(fullPattern,resource.getFile(),resources);
         }
         return resources.toArray(new FileResource[resources.size()]);
     }
-    private void putClassPathResources(File file, List<Resource> resources) throws IOException {
+    private void putClassPathResources(String fullPattern,File file, List<Resource> resources) throws IOException {
         if(file.isDirectory()){
             for(File dirFile:file.listFiles()){
-                putClassPathResources(dirFile,resources);
+                putClassPathResources(fullPattern,dirFile,resources);
             }
         }else{
-            if(file.getName().endsWith(".xml")){
+            String path=StringUtils.replace(file.getAbsolutePath(),File.separator,"/");
+            if(this.pathMatcher.match(fullPattern,path)){
                 Resource resource=new FileResource(file.getPath());
                 resources.add(resource);
             }

@@ -3,6 +3,8 @@ package com;
 import com.application.examples.service.UserMgrService;
 import com.application.examples.service.impl.UserMgrServiceImpl;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
+import com.jbosframework.common.utils.AntPathMatcher;
+import com.jbosframework.common.utils.PathMatcher;
 import com.jbosframework.context.ApplicationContext;
 import java.io.IOException;
 import java.util.Map;

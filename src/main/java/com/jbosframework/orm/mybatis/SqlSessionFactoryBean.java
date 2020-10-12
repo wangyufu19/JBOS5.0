@@ -5,7 +5,6 @@ import com.jbosframework.core.io.PathMatchResourceSupport;
 import com.jbosframework.core.io.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,7 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import java.io.IOException;
-import java.io.InputStream;
+
 
 /**
  * SqlSessionFactoryBean
@@ -58,7 +57,6 @@ public class SqlSessionFactoryBean {
 					Resource[] resources=pathMatchResourceSupport.getResources(mapperLocations);
 					if(resources!=null){
 						for(Resource resource:resources){
-							log.info("******resource: "+resource);
 							XMLMapperBuilder mapperParser = new XMLMapperBuilder(resource.getInputStream(), configuration, resource.getFileName(), configuration.getSqlFragments());
 							mapperParser.parse();
 						}
