@@ -6,13 +6,13 @@ package com.jbosframework.context.configuration;
  */
 public class Environment {
 
-	private String activeProfiles="dev";
+	private String activeProfile="dev";
 
-	public String getActiveProfiles() {
-		return activeProfiles;
+	public String getActiveProfile() {
+		return activeProfile;
 	}
 
-	public void setActiveProfiles(String activeProfiles) {
-		this.activeProfiles = activeProfiles;
+	public void setActiveProfile(String activeProfile) {
+		this.activeProfile = activeProfile;
 	}
 }

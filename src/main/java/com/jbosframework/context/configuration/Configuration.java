@@ -15,7 +15,7 @@ public class Configuration {
     private Environment environment=new Environment();
     private boolean enableAspectJAutoProxy=false;
     private boolean enableAutoConfiguration=false;
-
+    public static final String CTX_PROPERTY_PROFILES_ACTIVE="jbos.profiles.active";
 
     /**
      * 构造方法
@@ -35,6 +35,7 @@ public class Configuration {
      * 加载配置属性
      */
     public void load() {
+        yamlConfig.setEnvironment(environment);
         yamlConfig.load(configLocation);
     }
     /**

@@ -19,12 +19,25 @@ import java.util.Map;
 public class YamlConfig {
     private String configLocation;
     private static Map<String, Object> properties=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
-
+    private Environment environment;
     /**
      * 构造方法
      */
     public YamlConfig(){
         configLocation="jbosContext";
+    }
+    /**
+     * 设置上下文环境
+     */
+    public void setEnvironment(Environment environment){
+        this.environment=environment;
+    }
+    /**
+     * 得到上下文环境
+     * @return
+     */
+    public Environment getEnvironment() {
+        return this.environment;
     }
     /**
      * 构造方法
@@ -36,24 +49,54 @@ public class YamlConfig {
     /**
      * 加载配置属性
      */
-    public void load(){
-        this.load(configLocation);
+    public void load(String configLocation){
+        //加载主配置
+        Resource resource=new ClassPathResource(configLocation+".yml");
+        properties=this.getConfigProperties(resource);
+        String activeProfile="";
+        if(this.getValue(Configuration.CTX_PROPERTY_PROFILES_ACTIVE)!=null){
+            activeProfile=String.valueOf(this.getValue(Configuration.CTX_PROPERTY_PROFILES_ACTIVE));
+        }
+        this.environment.setActiveProfile(activeProfile);
+        //加载Profile配置
+        this.loadProfileConfig(activeProfile);
     }
 
     /**
-     * 加载配置属性
-     * @param configLocation
+     * 得到配置属性
+     * @param resource
      */
-    public void load(String configLocation){
+    private Map<String, Object> getConfigProperties(Resource resource){
+        Map<String, Object> configPros=new LinkedHashMap<String,Object>();
         try {
-            Resource resource=new ClassPathResource(configLocation+".yml");
             Yaml yaml = new Yaml();
-            properties=yaml.loadAs(resource.getInputStream(), LinkedHashMap.class);
+            configPros=yaml.loadAs(resource.getInputStream(), LinkedHashMap.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return configPros;
     }
 
+    /**
+     * 加载Profile配置
+     * @param activeProfile
+     */
+    private void loadProfileConfig(String activeProfile){
+        Resource resource=new ClassPathResource(configLocation+"-"+activeProfile+".yml");
+        Map<String, Object> profileConfigPros=this.getConfigProperties(resource);
+        if(profileConfigPros!=null){
+            for(Map.Entry<String,Object> entry:profileConfigPros.entrySet()){
+                if(properties.containsKey(entry.getKey())){
+                    Map<String, Object> mainConfigPros=(Map<String, Object>)properties.get(entry.getKey());
+                    Map<String, Object> subConfigPros=(Map<String, Object>)entry.getValue();
+                    for(Map.Entry<String,Object> sub:subConfigPros.entrySet()){
+                        mainConfigPros.put(sub.getKey(),sub.getValue());
+                        properties.put(entry.getKey(),mainConfigPros);
+                    }
+                }
+            }
+        }
+    }
     /**
      * 设置属性值
      * @param key

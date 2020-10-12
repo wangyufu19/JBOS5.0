@@ -20,15 +20,16 @@ public class PathMatchResourceSupport {
     private PathMatcher pathMatcher=new AntPathMatcher();
 
     public Resource[] getResources(String locationPattern) throws IOException {
+        log.info("******locationPattern: "+locationPattern);
         if(locationPattern.startsWith("classpath")){
             String path=locationPattern.substring("classpath:".length());
             if(pathMatcher.isPattern(path)){
-                return getClassPathResources(path);
+                return getPathMatchResources(path);
             }
         }
         return null;
     }
-    private Resource[] getClassPathResources(String location) throws IOException {
+    private Resource[] getPathMatchResources(String location) throws IOException {
         List<Resource> resources=new ArrayList<Resource>();
         String path=location;
         if(location.startsWith("/")){
