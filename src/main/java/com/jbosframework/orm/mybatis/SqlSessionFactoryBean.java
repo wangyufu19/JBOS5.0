@@ -1,11 +1,19 @@
 package com.jbosframework.orm.mybatis;
 import javax.sql.DataSource;
+
+import com.jbosframework.core.io.PathMatchResourceSupport;
+import com.jbosframework.core.io.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * SqlSessionFactoryBean
@@ -13,19 +21,13 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
  * @version 1.0
  * @date 2019-01-07
  */
+@Slf4j
 public class SqlSessionFactoryBean {
-	public static final String sqlSessionFactoryBean="sqlSessionFactoryBean";
-	private String id;
-	private String packageName;
+	//development和work
+	private String id="work";
+	private String mapperLocations;
 	private DataSource dataSource;
 	private static SqlSessionFactory sqlSessionFactory=null;
-
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public DataSource getDataSource() {
 		return dataSource;
@@ -34,25 +36,33 @@ public class SqlSessionFactoryBean {
 		this.dataSource = dataSource;
 	}
 
-	public String getPackageName() {
-		return packageName;
+	public String getMapperLocations() {
+		return mapperLocations;
 	}
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setMapperLocations(String mapperLocations) {
+		this.mapperLocations = mapperLocations;
 	}
 
 	/**
 	 * 构建SqlSessionFactory
 	 * @return
 	 */
-	public SqlSessionFactory build() {
+	public SqlSessionFactory build() throws IOException {
 		if(sqlSessionFactory==null){
 			synchronized (SqlSessionFactory.class) {
 				if(sqlSessionFactory==null){
 					TransactionFactory transactionFactory = new JdbcTransactionFactory();
 					Environment environment = new Environment(id, transactionFactory, dataSource);
 					Configuration configuration = new Configuration(environment);
-					configuration.addMappers(packageName);
+					PathMatchResourceSupport pathMatchResourceSupport=new PathMatchResourceSupport();
+					Resource[] resources=pathMatchResourceSupport.getResources(mapperLocations);
+					if(resources!=null){
+						for(Resource resource:resources){
+							log.info("******resource: "+resource);
+							XMLMapperBuilder mapperParser = new XMLMapperBuilder(resource.getInputStream(), configuration, resource.getFileName(), configuration.getSqlFragments());
+							mapperParser.parse();
+						}
+					}
 					sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 				}
 			}

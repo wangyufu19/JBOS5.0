@@ -1,4 +1,5 @@
 package com.application.examples.service.impl;
+import com.application.examples.mapper.EmpMapper;
 import com.application.examples.mapper.UserMapper;
 import com.application.examples.pojo.User;
 import com.application.examples.service.UserMgrService;
@@ -10,11 +11,15 @@ import java.util.List;
 public class UserMgrServiceImpl implements UserMgrService{
     @Mapper
     private UserMapper userMapper;
+    @Mapper
+    private EmpMapper empMapper;
 
     public List getUserList() {
         List list=null;
         list=userMapper.getUserList();
-        System.out.println("******list: "+list);
+        List emp=empMapper.getEmpList();
+        System.out.println("******user: "+list);
+        System.out.println("******emp: "+emp);
         return list;
     }
     public User getUserById(String id){

@@ -1,4 +1,9 @@
 package com.jbosframework.common.utils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.StringTokenizer;
+
 /**
  * 字符串帮助类
  * @author youfu.wang
@@ -63,34 +68,35 @@ public class StringUtils {
 		}
 		return str;		
 	}
-	/**
-	 * 拆分字符串
-	 * @param s
-	 * @param ch
-	 * @return
-	 */
-	public static String[] split(String s,char ch){
-		String[] strArray=null;	
-		if(s==null||"".equals(s)) return strArray;				
-		if(s.indexOf(ch)!=-1){		
-			int num=0;		
-			for(int i=0;i<s.length();i++){
-				if(s.charAt(i)==ch){
-					num++;
-				}
-			}					
-			strArray=new String[num];						
-			for(int i=0;i<strArray.length;i++){		
-				if(s.indexOf(ch)!=-1){
-					strArray[i]=s.substring(0, s.indexOf(ch));						
-					s=s.substring(s.indexOf(ch)+1, s.length());			
-				}else
-					strArray[i]=s.substring(0, s.length());
+	public static String[] tokenizeToStringArray(String str, String delimiters) {
+		return tokenizeToStringArray(str, delimiters, true, true);
+	}
+
+	public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {
+		if (str == null) {
+			return null;
+		} else {
+			StringTokenizer st = new StringTokenizer(str, delimiters);
+			ArrayList tokens = new ArrayList();
+
+			while(true) {
+				String token;
+				do {
+					if (!st.hasMoreTokens()) {
+						return toStringArray(tokens);
+					}
+
+					token = st.nextToken();
+					if (trimTokens) {
+						token = token.trim();
+					}
+				} while(ignoreEmptyTokens && token.length() <= 0);
+
+				tokens.add(token);
 			}
-		}else{
-			strArray=new String[1];
-			strArray[0]=s.substring(0, s.length());
 		}
-		return strArray;
+	}
+	public static String[] toStringArray(Collection collection) {
+		return collection == null ? null : (String[])((String[])collection.toArray(new String[collection.size()]));
 	}
 }

@@ -16,7 +16,7 @@ public class SqlSessionBeanUtils {
     public static boolean isMapperBean(SqlSessionFactory sqlSessionFactory,Class<?> cls){
         boolean bool=false;
         if(sqlSessionFactory==null||cls==null){
-            return bool;
+            return false;
         }
         if(sqlSessionFactory.getConfiguration().getMapperRegistry().hasMapper(cls)){
             bool=true;

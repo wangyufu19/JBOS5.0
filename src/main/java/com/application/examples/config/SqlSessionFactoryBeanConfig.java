@@ -7,6 +7,7 @@ import com.jbosframework.orm.mybatis.SqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import javax.sql.DataSource;
+import java.io.IOException;
 
 /**
  * DataSourceConfig
@@ -16,20 +17,16 @@ import javax.sql.DataSource;
 @Configuration
 @Slf4j
 public class SqlSessionFactoryBeanConfig {
-    @Value("${mybatis.environment.id}")
-    private String id;
-    @Value("${mybatis.packageName}")
-    private String packageName;
+    @Value("${jbos.mybatis.mapperLocations}")
+    private String mapperLocations;
     @Autowired
     private DataSource defaultDataSource;
 
     @Bean("sqlSessionFactoryBean")
-    public SqlSessionFactory getSqlSessionFactoryBean(){
-//        log.info("******init getSqlSessionFactoryBean");
+    public SqlSessionFactory getSqlSessionFactoryBean() throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(defaultDataSource);
-        sqlSessionFactoryBean.setId(id);
-        sqlSessionFactoryBean.setPackageName(packageName);
+        sqlSessionFactoryBean.setMapperLocations(mapperLocations);
         return sqlSessionFactoryBean.build();
     }
 }
