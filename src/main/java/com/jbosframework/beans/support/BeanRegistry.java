@@ -3,7 +3,7 @@ package com.jbosframework.beans.support;
 import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.common.utils.StringUtils;
+import com.jbosframework.utils.StringUtils;
 /**
  * BeanRegistry
  * @author youfu.wang

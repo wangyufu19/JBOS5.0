@@ -23,7 +23,7 @@ import com.jbosframework.jdbc.support.JdbcUtils;
 import com.jbosframework.jdbc.support.SqlAutowireFactory;
 import com.jbosframework.jdbc.object.RowObjectFactory;
 import com.jbosframework.cache.provider.CacheProvider;
-import com.jbosframework.common.utils.TypeConverter;
+import com.jbosframework.utils.TypeConverter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

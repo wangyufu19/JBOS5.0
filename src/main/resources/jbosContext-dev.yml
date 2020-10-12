@@ -1,10 +1,10 @@
 #数据源配置
-#jbos.datasource.driverClass=oracle.jdbc.driver.OracleDriver
-#jbos.datasource.url=jdbc:oracle:thin:@127.0.0.1:1521:orcl
 jbos:
   datasource:
     driverClass: com.mysql.cj.jdbc.Driver
+    #oracle.jdbc.driver.OracleDriver
     url: jdbc:mysql://127.0.0.1:3306/jbos?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
+    #jdbc:oracle:thin:@127.0.0.1:1521:orcl
     username: jbos
     password: jbos
     jndiName: java:comp/env/jbos

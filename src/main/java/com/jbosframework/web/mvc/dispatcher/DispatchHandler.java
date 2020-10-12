@@ -12,7 +12,7 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.web.mvc.ModelAndView;
 import com.jbosframework.web.mvc.data.Represention;
 import com.jbosframework.core.JBOSClassloader;
-import com.jbosframework.common.utils.TypeConverter;
+import com.jbosframework.utils.TypeConverter;
 /**
  * DispatchHandler
  * @author youfu.wang

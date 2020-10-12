@@ -3,7 +3,7 @@ import com.jbosframework.beans.annotation.*;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.common.utils.StringUtils;
+import com.jbosframework.utils.StringUtils;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.web.mvc.annotation.Controller;
 import com.jbosframework.web.mvc.annotation.RequestMapping;

@@ -2,7 +2,7 @@ package com.jbosframework.web.mvc.data;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import javax.servlet.http.HttpServletRequest;
-import com.jbosframework.common.utils.CoderUtils;
+import com.jbosframework.utils.CoderUtils;
 
 /**
  * MultipartForm

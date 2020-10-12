@@ -1,8 +1,8 @@
 package com.jbosframework.core.io;
 
-import com.jbosframework.common.utils.AntPathMatcher;
-import com.jbosframework.common.utils.PathMatcher;
-import com.jbosframework.common.utils.StringUtils;
+import com.jbosframework.utils.AntPathMatcher;
+import com.jbosframework.utils.PathMatcher;
+import com.jbosframework.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -20,7 +20,6 @@ public class PathMatchResourceSupport {
     private PathMatcher pathMatcher=new AntPathMatcher();
 
     public Resource[] getResources(String locationPattern) throws IOException {
-        log.info("******locationPattern: "+locationPattern);
         if(locationPattern.startsWith("classpath")){
             String path=locationPattern.substring("classpath:".length());
             if(pathMatcher.isPattern(path)){
