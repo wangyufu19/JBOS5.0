@@ -13,6 +13,6 @@ import javax.servlet.ServletContext;
 public class JBOSServletInitializer implements WebInitializer {
 
     public void onStartup(ServletContext servletContext) {
-        servletContext.addServlet("dispatcherServlet", new DispatcherServlet());
+        servletContext.addServlet(DispatcherServlet.class.getSimpleName(), new DispatcherServlet());
     }
 }

@@ -39,7 +39,7 @@ public class DataSourceConfig {
 	 */
 	@Bean("defaultDataSource")
 	public DataSource getDataSource() {
-		log.info("******init datasource");
+//		log.info("******init datasource");
 		if(DataSourceConfig.DATASOURCE_TYPE_JDBC.equals(type)){
 			DriverManagerDataSource dataSource=new DriverManagerDataSource();
 			dataSource.setDriverClass(driverClass);

@@ -2,6 +2,7 @@ package com.jbosframework.boot.web;
 
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.web.context.ContextLoaderServlet;
+import com.jbosframework.web.servlet.DispatcherServlet;
 import com.jbosframework.web.servlet.WebInitializer;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleEvent;
@@ -23,11 +24,12 @@ public class JBOSWebApplicationContext {
     private ApplicationContext applicationContext;
     private WebServer webServer;
     private Context ctx;
+    private int port=8080;
+
     public JBOSWebApplicationContext(ApplicationContext applicationContext){
         this.applicationContext=applicationContext;
     }
     public void onStartup(){
-        int port=8080;
         String contextPath="";
         String classPath=applicationContext.getContextConfiguration().getConfigClassPath();
         Tomcat tomcat=new Tomcat();
@@ -37,7 +39,6 @@ public class JBOSWebApplicationContext {
         if(applicationContext.getContextConfiguration().getContextProperty(CTX_PROPERTY_SERVER_TOMCAT_CONTEXTPATH)!=null) {
             contextPath=String.valueOf(applicationContext.getContextConfiguration().getContextProperty(CTX_PROPERTY_SERVER_TOMCAT_CONTEXTPATH));
         }
-
         tomcat.setPort(port);
         tomcat.setBaseDir(classPath);
         ctx=tomcat.addContext("",classPath);
@@ -49,7 +50,7 @@ public class JBOSWebApplicationContext {
                     WebInitializer webInitializer=new JBOSServletInitializer();
                     ctx.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,applicationContext);
                     webInitializer.onStartup(ctx.getServletContext());
-                    ctx.addServletMappingDecoded(finalContextPath+"/*", "dispatcherServlet");
+                    ctx.addServletMappingDecoded(finalContextPath+"/*", DispatcherServlet.class.getSimpleName());
                     onstartup=true;
                     ctx.removeLifecycleListener(this);
                 }
@@ -57,6 +58,7 @@ public class JBOSWebApplicationContext {
         });
         webServer=new TomcatWebServer(tomcat);
         try{
+            logger.info("Tomcat started on port:"+this.port+" with context path '"+contextPath+"'");
             webServer.start();
         }catch (Exception e) {
             e.printStackTrace();

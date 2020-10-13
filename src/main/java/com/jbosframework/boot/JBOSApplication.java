@@ -2,7 +2,6 @@ package com.jbosframework.boot;
 import java.io.IOException;
 
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
-import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.annotation.EnableAutoConfiguration;
@@ -10,12 +9,16 @@ import com.jbosframework.context.annotation.EnableAspectJAutoProxy;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.ComponentScan;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * JBOSApplication
  * @author youfu.wang
  * @version 1.0
  */
 public class JBOSApplication {
+    public static final Log logger= LogFactory.getLog(JBOSApplication.class);
     private ApplicationContext ctx=new AnnotationApplicationContext();
     public Class<?> jbosBootClass;
 
@@ -49,6 +52,8 @@ public class JBOSApplication {
      * @throws IOException
      */
     public ApplicationContext start(String... args) throws IOException {
+        long stime=System.currentTimeMillis();
+        long etime=System.currentTimeMillis();
         if(jbosBootClass==null){
             return ctx;
         }
@@ -62,9 +67,13 @@ public class JBOSApplication {
             this.initConfiguration(jbosBootClass,args);
         }
         ctx.registry(jbosBootClass);
+        etime=System.currentTimeMillis();
+        logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(etime-stime)/1000+" seconds");
         //初始化和启动Web容器
         JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
         jbosWebApplicationContext.onStartup();
+
+
         return ctx;
     }
 }
