@@ -42,10 +42,10 @@ public class Dispatcher {
 	/**
 	 * 处理响应
 	 * @param requestUri
-	 * @param invokeMehtod
+	 * @param invokeMethod
 	 * @param ret
 	 */
-	public void doDispatch(String requestUri, Method invokeMehtod, Object ret) throws IOException, ServletException {
+	public void doDispatch(String requestUri, Method invokeMethod, Object ret) throws IOException, ServletException {
 		if(ret instanceof ModelAndView){
 			doDispatch(requestUri,(ModelAndView)ret);
 		}else{
@@ -54,7 +54,7 @@ public class Dispatcher {
 			}else{
 				String contentType=APPLICATION_TEXT_HTML;
 				String resContent="";
-				ResponseBody responseBody=invokeMehtod.getAnnotation(ResponseBody.class);
+				ResponseBody responseBody=invokeMethod.getAnnotation(ResponseBody.class);
 				if(responseBody!=null){
 					contentType=APPLICATION_JSON;
 				}
@@ -98,7 +98,7 @@ public class Dispatcher {
 		}
 		doDispatcher(s1);
     }
-	private void doPrintWriter(String contentType,String s) throws IOException, ServletException{
+	private void doPrintWriter(String contentType,String s){
 		try {
 			response.setContentType(contentType+";charset=\""+Charset.UTF8+"\"");
 			PrintWriter out = response.getWriter();
