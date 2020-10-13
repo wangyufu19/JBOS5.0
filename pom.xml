@@ -11,7 +11,7 @@
         <!--Maven Charset Encoding-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <tomcat.version>8.5.37</tomcat.version>
+        <tomcat.version>9.0.39</tomcat.version>
         <yaml.version>1.23</yaml.version>
         <mysql.version>8.0.11</mysql.version>
         <ojdbc.version>12.1.0.2.0</ojdbc.version>
