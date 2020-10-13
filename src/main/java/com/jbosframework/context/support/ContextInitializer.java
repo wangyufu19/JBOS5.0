@@ -1,6 +1,9 @@
 package com.jbosframework.context.support;
 import com.jbosframework.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.context.configuration.Configuration;
+
+import java.io.IOException;
+
 /**
  * ContextInitializer
  * @author youfu.wang
@@ -12,7 +15,7 @@ public class ContextInitializer {
     /**
      * 构造方法
      */
-    public ContextInitializer(){
+    public ContextInitializer() {
         configuration.load();
     }
     public Configuration getContextConfiguration(){

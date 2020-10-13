@@ -7,11 +7,13 @@ import com.jbosframework.web.mvc.annotation.Controller;
 import com.jbosframework.web.mvc.annotation.RequestMapping;
 import java.util.List;
 import com.application.examples.service.UserMgrService;
+import com.jbosframework.web.mvc.annotation.ResponseBody;
+
 @Controller
 public class UserMgrController {
 	@Autowired
 	private UserMgrService userMgrService;
-	
+	@ResponseBody
 	@RequestMapping("/user/getUserList")
 	public List getUserList() {
         ObjectMapper mapper = new ObjectMapper();
@@ -24,6 +26,7 @@ public class UserMgrController {
 		}
 		return list;
 	}
+	@ResponseBody
 	@RequestMapping("/user/getUserInfo")
 	public User getUserInfo(String id) {
 		ObjectMapper mapper = new ObjectMapper();

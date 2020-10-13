@@ -1,6 +1,5 @@
 package com.jbosframework.web.mvc.dispatcher;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,21 +8,26 @@ import com.jbosframework.beans.access.Setter;
 import com.jbosframework.beans.access.BeanFactory;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.web.mvc.ModelAndView;
+import com.jbosframework.core.JBOSClassCaller;
 import com.jbosframework.web.mvc.data.Represention;
 import com.jbosframework.core.JBOSClassloader;
 import com.jbosframework.utils.TypeConverter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * DispatchHandler
  * @author youfu.wang
  * @version 1.0
  */
-public class DispatchHandler {	
+public class DispatchHandler {
+	public static final Log logger= LogFactory.getLog(DispatchHandler.class);
 	public static final String DEFAULT_REQUEST_MAPPING="handleRequest";
 	private ApplicationContext applicationContext;
 	private ServletContext servletContext;
 	private HttpServletRequest request;
-	private HttpServletResponse response;	
+	private HttpServletResponse response;
+	private Dispatcher dispatcher;
 	/**
 	 * 构造方法
 	 * @param request
@@ -32,6 +36,7 @@ public class DispatchHandler {
 	public DispatchHandler(HttpServletRequest request,HttpServletResponse response){
 		this.request=request;
 		this.response=response;
+		dispatcher=new Dispatcher(this.request,this.response);
 	}	
 	/**
 	 * 设置ServletContext
@@ -52,15 +57,11 @@ public class DispatchHandler {
 	 * @throws Exception
 	 */
 	public void handle() throws Exception{		
-		Object controller=null;		
-		Object ret=null;	
-		String s = this.getRequestPath();		
-		
-		controller=this.getRequestController(applicationContext,s);		
-		Dispatcher dispatcher=new Dispatcher(this.request,this.response);
-		
+		Object controller=null;
+		String requestUri = this.getRequestPath();
+		controller=this.getRequestController(applicationContext,requestUri);
 		if(controller==null){			
-			dispatcher.doDispatcher404(s);
+			dispatcher.doDispatcher404(requestUri);
 			return;
 		}				
 		if(controller instanceof AnnotationBean){				
@@ -72,7 +73,7 @@ public class DispatchHandler {
 				String[] beanRequestMethod=annotationBean.getRequestMethod();
 				for(int i=0;i<beanRequestMethod.length;i++){
 					if(requestMethod.equals(beanRequestMethod[i])){
-						ret=this.doHandle(applicationContext,annotationBean);
+						this.doHandle(requestUri,applicationContext,annotationBean);
 						bool=true;
 						break;
 					}else{
@@ -81,80 +82,34 @@ public class DispatchHandler {
 				}				
 			}
 			if(!bool){
-				dispatcher.doDispatcher404(s);
+				dispatcher.doDispatcher404(requestUri);
 				return;
 			}
-		}		
-		if(ret==null){
-			return;
 		}
-		if(ret instanceof ModelAndView){			
-			dispatcher.doDispatch(s,(ModelAndView)ret);
-		}else if(ret instanceof String){
-			dispatcher.doPrintWriter(String.valueOf(ret));
-		}		
 	}
 	/**
-	 * 做处理分发
+	 * 处理请求
 	 * @param applicationContext
 	 * @param annotationBean
 	 * @return
 	 * @throws Exception
 	 */
-	protected Object doHandle(ApplicationContext applicationContext,AnnotationBean annotationBean) throws Exception{
-		Object ret=null;
+	private void doHandle(String requestUri,ApplicationContext applicationContext,AnnotationBean annotationBean) throws Exception{
 		Object obj=null;
+		Object ret=null;
 		String methodName=null;
 		obj=applicationContext.getBean(annotationBean.getName());
-		if(obj==null) return null;
+		if(obj==null) return;
 		methodName=annotationBean.getClassMethod();
 		// 默认调用handleRequest方法
 		if ("".equals(methodName)||methodName==null)
-			methodName = DEFAULT_REQUEST_MAPPING;	
-		ret=this.doInvokeMethod(obj, methodName);
-		return ret;
+			methodName = DEFAULT_REQUEST_MAPPING;
+		Method invokeMethod=obj.getClass().getMethod(methodName);
+		ret=JBOSClassCaller.call(obj,methodName,this.getMethodParameters(invokeMethod));
+		//处理响应
+		dispatcher.doDispatch(requestUri,invokeMethod,ret);
 	}
-	/**
-	 * 做方法调用
-	 * @param obj
-	 * @param methodName
-	 * @return
-	 * @throws Exception
-	 */
-	private Object doInvokeMethod(Object obj,String methodName) throws Exception{
-		Object ret=null;
-		if(obj==null){
-			return null;
-		}
-		Method[] methods=null;
-		Method method=null;	
-		try {
-			methods=obj.getClass().getMethods();
-			if(methods!=null){
-				for(int i=0;i<methods.length;i++){
-					method=methods[i];
-					if(method.getName().equals(methodName)){
-						break;
-					}
-				}
-			}
-			if(method!=null){
-				Object[] args=this.getMehtodParameters(method);
-				ret =method.invoke(obj,args);
-			}else{
-				throw new NoSuchMethodException();
-			}			
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
-			throw e;
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		}		
-		return ret;
-	}
+
 	/**
 	 * 得到方法参数
 	 * @param method
@@ -163,7 +118,7 @@ public class DispatchHandler {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	private Object[] getMehtodParameters(Method method) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
+	private Object[] getMethodParameters(Method method) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
 		Class[] parameterTypes=null;
 		Object[] args=null;
 		Class parameterClass=null;
@@ -217,7 +172,7 @@ public class DispatchHandler {
 	 */
 	protected Object getRequestController(ApplicationContext applicationContext,String s){	
 		Object obj=null;
-		if(s==null) return obj;								
+		if(s==null) return null;
 		obj=applicationContext.getBeanDefinition(s);			
 		if(obj==null){
 			if(s.indexOf(".form")!=-1){		

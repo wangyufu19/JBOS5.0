@@ -124,4 +124,39 @@ public class JBOSClassCaller {
 		}		
 		return result;
 	}
+	/**
+	 * 调用类的方法
+	 * @param obj
+	 * @param method
+	 * @param args
+	 * @return
+	 */
+	public static Object call(Object obj,String method,Object[] args){
+		Object result=null;
+		Class<?>[] parameterTypes=null;
+		if(args==null)
+			return null;
+		parameterTypes=new Class[args.length];
+		for(int i=0;i<parameterTypes.length;i++){
+			parameterTypes[i]=args[i].getClass();
+		}
+		Method methodObj;
+		try {
+			if(obj!=null){
+				methodObj = obj.getClass().getMethod(method, parameterTypes);
+				result=methodObj.invoke(obj,args);
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

@@ -49,9 +49,8 @@ public class YamlConfig {
     /**
      * 加载配置属性
      */
-    public void load(String configLocation){
+    public void load(Resource resource){
         //加载主配置
-        Resource resource=new ClassPathResource(configLocation+".yml");
         properties=this.getConfigProperties(resource);
         String activeProfile="";
         if(this.getValue(Configuration.CTX_PROPERTY_PROFILES_ACTIVE)!=null){

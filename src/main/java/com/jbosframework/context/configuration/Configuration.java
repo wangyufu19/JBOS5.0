@@ -1,7 +1,14 @@
 package com.jbosframework.context.configuration;
 
+import com.jbosframework.core.io.ClassPathResource;
+import com.jbosframework.core.io.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Configuration
@@ -10,7 +17,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Configuration {
     private static Log log= LogFactory.getLog(Configuration.class);
+    private static Map<String, Object> properties= Collections.synchronizedMap(new LinkedHashMap<String,Object>());
     private String configLocation;
+    private String configClassPath;
     private YamlConfig yamlConfig=new YamlConfig();
     private Environment environment=new Environment();
     private boolean enableAspectJAutoProxy=false;
@@ -36,7 +45,13 @@ public class Configuration {
      */
     public void load() {
         yamlConfig.setEnvironment(environment);
-        yamlConfig.load(configLocation);
+        Resource resource=new ClassPathResource(configLocation+".yml");
+        try {
+            configClassPath=resource.getFile().getParentFile().getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        yamlConfig.load(resource);
     }
     /**
      * 设置上下文环境
@@ -102,7 +117,9 @@ public class Configuration {
         value=yamlConfig.getValue(name);
         return value;
     }
-
+    public String getConfigClassPath(){
+        return this.configClassPath;
+    }
     /**
      * 清除属性内存
      */

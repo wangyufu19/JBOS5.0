@@ -1,9 +1,8 @@
 server:
   application: jbos
-  webcontainer:
-    name: tomcat
+  tomcat:
     port: 9080
-    conextPath: jbos
+    contextPath: /jbos
 jbos:
   profiles:
     active: dev

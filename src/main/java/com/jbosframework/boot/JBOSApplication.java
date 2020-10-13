@@ -1,5 +1,8 @@
 package com.jbosframework.boot;
 import java.io.IOException;
+
+import com.jbosframework.boot.web.JBOSWebApplicationContext;
+import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.annotation.EnableAutoConfiguration;
@@ -59,6 +62,9 @@ public class JBOSApplication {
             this.initConfiguration(jbosBootClass,args);
         }
         ctx.registry(jbosBootClass);
+        //初始化和启动Web容器
+        JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
+        jbosWebApplicationContext.onStartup();
         return ctx;
     }
 }
