@@ -24,6 +24,9 @@ public class Dispatcher {
 	public static final String APPLICATION_TEXT_HTML="text/html";
 	public static final String APPLICATION_XML="application/xml";
 	public static final String APPLICATION_JSON="application/json ";
+	public static final String APPLICATION_IMAGE_GIF="image/gif";
+	public static final String APPLICATION_IMAGE_JPEG="image/jpeg";
+	public static final String APPLICATION_IMAGE_PNG="image/png";
 	private HttpServletRequest request;
 	private HttpServletResponse response;	
 	/**
