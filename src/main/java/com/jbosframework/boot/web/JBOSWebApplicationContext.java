@@ -42,23 +42,13 @@ public class JBOSWebApplicationContext {
         tomcat.setPort(port);
         tomcat.setBaseDir(classPath);
         ctx=tomcat.addContext("",classPath);
-        String finalContextPath = contextPath;
-        ctx.addLifecycleListener(new LifecycleListener(){
-            boolean onstartup=false;
-            public void lifecycleEvent(LifecycleEvent event) {
-                if (onstartup==false&&event.getLifecycle().getState() == LifecycleState.STARTING_PREP) {
-                    WebInitializer webInitializer=new JBOSServletInitializer();
-                    ctx.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,applicationContext);
-                    webInitializer.onStartup(ctx.getServletContext());
-                    ctx.addServletMappingDecoded(finalContextPath+"/*", DispatcherServlet.class.getSimpleName());
-                    onstartup=true;
-                    ctx.removeLifecycleListener(this);
-                }
-            }
-        });
-        webServer=new TomcatWebServer(tomcat);
+
         try{
+            webServer=new TomcatWebServer(tomcat);
             logger.info("Tomcat started on port:"+this.port+" with context path '"+contextPath+"'");
+            ctx.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,applicationContext);
+            tomcat.addServlet(ctx,DispatcherServlet.class.getSimpleName(), new DispatcherServlet());
+            ctx.addServletMappingDecoded(contextPath+"/*", DispatcherServlet.class.getSimpleName());
             webServer.start();
         }catch (Exception e) {
             e.printStackTrace();

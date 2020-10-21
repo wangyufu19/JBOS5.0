@@ -67,13 +67,11 @@ public class JBOSApplication {
             this.initConfiguration(jbosBootClass,args);
         }
         ctx.registry(jbosBootClass);
-        etime=System.currentTimeMillis();
-        logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(etime-stime)/1000+" seconds");
         //初始化和启动Web容器
         JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
         jbosWebApplicationContext.onStartup();
-
-
+        etime=System.currentTimeMillis();
+        logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(etime-stime)/1000+" seconds");
         return ctx;
     }
 }
