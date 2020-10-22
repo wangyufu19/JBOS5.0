@@ -9,17 +9,22 @@ public class JBOSClassloader {
 	static Class<?> com$jbosframework$core$JBOSClassloader;/* synthetic field */
 	
 	/**
-	 * 寰楀埌褰撳墠绫诲姞杞藉櫒
+	 * 得到一个类加载器
 	 * @return
 	 */
 	public static ClassLoader getClassLoader(){
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-		if (classloader == null)
-			 classloader = (com$jbosframework$core$JBOSClassloader != null ? com$jbosframework$core$JBOSClassloader : (com$jbosframework$core$JBOSClassloader = class$("com.jbosframework.core.JBOSClassloader"))).getClassLoader();
+		if (classloader == null) {
+			try {
+				classloader = (com$jbosframework$core$JBOSClassloader != null ? com$jbosframework$core$JBOSClassloader : (com$jbosframework$core$JBOSClassloader = class$("com.jbosframework.core.JBOSClassloader"))).getClassLoader();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 		return classloader;
 	}
 	/**
-	 * 鍔犺浇绫�
+	 * 加载类
 	 * @param s
 	 * @return
 	 * @throws ClassNotFoundException
@@ -28,7 +33,7 @@ public class JBOSClassloader {
 		return getClassLoader().loadClass(s);
 	}
 	/**
-	 * 瀹炰緥鍖栫被
+	 * 实例化
 	 * @param s
 	 * @return
 	 * @throws ClassNotFoundException
@@ -46,15 +51,29 @@ public class JBOSClassloader {
 		return obj;
 	}
 	/**
-	 * 娉ㄥ唽绫�
+	 * 查询类
 	 * @param s
 	 * @return
 	 */
-	static Class<?> class$(String s){
+	static Class<?> class$(String s) throws ClassNotFoundException {
 		try {
 			return Class.forName(s);
 		} catch (ClassNotFoundException classnotfoundexception) {			
-			throw new NoClassDefFoundError(classnotfoundexception.getMessage());
+			throw classnotfoundexception;
+		}
+	}
+
+	/**
+	 * classpath下是否存在该类
+	 * @param s
+	 * @return
+	 */
+	static boolean isPresent(String s){
+		try {
+			class$(s);
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
 		}
 	}
 }

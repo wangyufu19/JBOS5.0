@@ -22,7 +22,6 @@ public class TomcatWebServer implements WebServer{
         this.tomcat=tomcat;
     }
     public void start() throws LifecycleException {
-        tomcat.getConnector();
         tomcat.start();
         this.startDaemonAwaitThread();
     }
