@@ -34,9 +34,7 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
     public WebServer getWebServer(){
         Tomcat tomcat=new Tomcat();
         tomcat.setPort(this.getPort());
-        String userDir = System.getProperty("user.dir");
-        String baseDir = userDir + File.separatorChar + "tomcat";
-        tomcat.setBaseDir(baseDir);
+        tomcat.setBaseDir(this.getBaseDir());
         tomcat.getHost().setAutoDeploy(false);
         Context context=tomcat.addContext("",this.getBaseDir());
         context.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,this.getApplicationContext());
