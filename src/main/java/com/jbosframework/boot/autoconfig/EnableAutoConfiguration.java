@@ -1,4 +1,4 @@
-package com.jbosframework.context.annotation;
+package com.jbosframework.boot.autoconfig;
 import java.lang.annotation.*;
 
 /**
