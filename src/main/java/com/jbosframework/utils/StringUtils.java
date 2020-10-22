@@ -1,7 +1,5 @@
 package com.jbosframework.utils;
 
-import com.sun.istack.internal.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -12,11 +10,11 @@ import java.util.StringTokenizer;
  * @version 1.0
  */
 public class StringUtils {
-	public static boolean hasLength(@Nullable CharSequence str) {
+	public static boolean hasLength(CharSequence str) {
 		return str != null && str.length() > 0;
 	}
 
-	public static boolean hasLength(@Nullable String str) {
+	public static boolean hasLength(String str) {
 		return str != null && !str.isEmpty();
 	}
 	/**
@@ -108,7 +106,7 @@ public class StringUtils {
 	public static String[] toStringArray(Collection collection) {
 		return collection == null ? null : (String[])((String[])collection.toArray(new String[collection.size()]));
 	}
-	public static String replace(String inString, String oldPattern, @Nullable String newPattern) {
+	public static String replace(String inString, String oldPattern, String newPattern) {
 		if (hasLength(inString) && hasLength(oldPattern) && newPattern != null) {
 			int index = inString.indexOf(oldPattern);
 			if (index == -1) {

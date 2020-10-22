@@ -34,8 +34,9 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
     public WebServer getWebServer(){
         Tomcat tomcat=new Tomcat();
         tomcat.setPort(this.getPort());
-        File baseDirFile=this.createTempDir("tomcat");
-        tomcat.setBaseDir(baseDirFile.getAbsolutePath());
+        String userDir = System.getProperty("user.dir");
+        String baseDir = userDir + File.separatorChar + "tomcat";
+        tomcat.setBaseDir(baseDir);
         tomcat.getHost().setAutoDeploy(false);
         Context context=tomcat.addContext("",this.getBaseDir());
         context.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,this.getApplicationContext());
@@ -43,17 +44,5 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
         context.addServletMappingDecoded(this.getContextPath()+"/*", DispatcherServlet.class.getSimpleName());
         WebServer webServer=new TomcatWebServer(tomcat);
         return webServer;
-    }
-    private File createTempDir(String prefix) {
-        try{
-            File tmpDir=File.createTempFile(prefix+".","."+this.getPort());
-            tmpDir.delete();
-            tmpDir.mkdirs();
-            tmpDir.deleteOnExit();
-            return tmpDir;
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return null;
     }
 }

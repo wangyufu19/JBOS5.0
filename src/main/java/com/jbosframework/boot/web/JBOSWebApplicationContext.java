@@ -2,14 +2,6 @@ package com.jbosframework.boot.web;
 
 import com.jbosframework.boot.web.servlet.TomcatServletWebServer;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.web.context.ContextLoaderServlet;
-import com.jbosframework.web.servlet.DispatcherServlet;
-import com.jbosframework.web.servlet.WebInitializer;
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleEvent;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.LifecycleState;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /**
