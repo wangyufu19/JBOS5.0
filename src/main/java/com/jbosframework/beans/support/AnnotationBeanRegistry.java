@@ -17,8 +17,15 @@ import java.lang.reflect.Method;
  */
 public class AnnotationBeanRegistry extends BeanRegistry{
     public static final String DEFAULT_REQUEST_MAPPING="handleRequest";
+
     private AnnotationFilter annotationFilter;
 
+    /**
+     * 构造方法
+     */
+    public AnnotationBeanRegistry(){
+
+    }
     /**
      * 构造方法
      * @param ctx
@@ -188,6 +195,41 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             //注入注解Bean
             this.registryBean(methods[i].getClass(),annotationBean);
         }
+    }
+    /**
+     * 设置Scope注解(singleton,prototype)
+     * @param annClass
+     * @param annotationBean
+     */
+    private void setBeanScope(Class<?> annClass,AnnotationBean annotationBean){
+        Scope scope=annClass.getAnnotation(Scope.class);
+        if(scope!=null){
+            annotationBean.setScope(scope.value());
+        }
+    }
+    /**
+     * 注册Bean
+     * @param annotationBean
+     */
+    private void registryBean(Class<?> annClass,AnnotationBean annotationBean){
+        if(!"".equals(StringUtils.replaceNull(annotationBean.getId()))||!"".equals(StringUtils.replaceNull(annotationBean.getName()))){
+            this.setBeanScope(annClass,annotationBean);
+            this.getApplicationContext().putBeanDefinition(annotationBean);
+        }
+    }
+    //注册Bean的接口
+    private void registryBeanInterfaces(Class<?> cls,AnnotationBean annotationBean){
+        Class<?>[] interfaces=cls.getInterfaces();
+        if(interfaces==null){
+            return;
+        }
+        for(Class interfaceCls:interfaces){
+            this.getApplicationContext().putBeanNameOfType(interfaceCls.getName(),annotationBean);
+        }
+    }
+    //注册Bean的接口
+    private void registryBeanInterfaces(String interfaceName,AnnotationBean annotationBean){
+        this.getApplicationContext().putBeanNameOfType(interfaceName,annotationBean);
     }
     /**
      * 注册Bean

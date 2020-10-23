@@ -1,13 +1,10 @@
 package com.jbosframework.boot;
 import java.io.IOException;
-
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.boot.autoconfig.EnableAutoConfiguration;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
-import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.context.annotation.ComponentScan;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,16 +28,20 @@ public class JBOSApplication {
     }
     /**
      * 初始化配置
-     * @param jbosBootApplication
+     * @param args
      */
-    private void initConfiguration(Class<?> jbosBootApplication,String... args){
+    private void initConfiguration(String... args){
+        JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
+        if(jbosBootApplication==null){
+            return;
+        }
         //开启自动配置
-        EnableAutoConfiguration enableAutoConfiguration=jbosBootApplication.getAnnotation(EnableAutoConfiguration.class);
+        EnableAutoConfiguration enableAutoConfiguration=jbosBootApplication.getClass().getAnnotation(EnableAutoConfiguration.class);
         if(enableAutoConfiguration!=null) {
-            ctx.getContextConfiguration().setEnableAutoConfiguration(true);
+
         }
         //开启切面自动代理
-        EnableAspectJAutoProxy enableAspectJAutoProxy=jbosBootApplication.getAnnotation(EnableAspectJAutoProxy.class);
+        EnableAspectJAutoProxy enableAspectJAutoProxy=jbosBootApplication.getClass().getAnnotation(EnableAspectJAutoProxy.class);
         if(enableAspectJAutoProxy!=null){
             ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
         }
@@ -57,15 +58,9 @@ public class JBOSApplication {
         if(jbosBootClass==null){
             return ctx;
         }
-        JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
-        if(jbosBootApplication!=null){
-            this.initConfiguration(JBOSBootApplication.class,args);
-        }else{
-            if(jbosBootClass.getAnnotation(Configuration.class)==null||jbosBootClass.getAnnotation(ComponentScan.class)==null) {
-                return ctx;
-            }
-            this.initConfiguration(jbosBootClass,args);
-        }
+        //初始化环境配置
+        this.initConfiguration(args);
+        //注册和扫描ClassPath下的类
         ctx.registry(jbosBootClass);
         //初始化和启动Web容器
         JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);

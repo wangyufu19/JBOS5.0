@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public interface BeanFactory {
 
+
 	public void destroy();
 	
 	public boolean containsBean(String name);

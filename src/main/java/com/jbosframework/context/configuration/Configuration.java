@@ -23,7 +23,7 @@ public class Configuration {
     private YamlConfig yamlConfig=new YamlConfig();
     private Environment environment=new Environment();
     private boolean enableAspectJAutoProxy=false;
-    private boolean enableAutoConfiguration=false;
+
     public static final String CTX_PROPERTY_PROFILES_ACTIVE="jbos.profiles.active";
 
     /**
@@ -81,22 +81,6 @@ public class Configuration {
      */
     public boolean getEnableAspectJAutoProxy(){
         return this.enableAspectJAutoProxy;
-    }
-
-    /**
-     * 设置启用自动配置
-     * @param enableAutoConfiguration
-     */
-    public void setEnableAutoConfiguration(boolean enableAutoConfiguration){
-        this.enableAutoConfiguration=enableAutoConfiguration;
-    }
-
-    /**
-     * 得到启用自动配置
-     * @return
-     */
-    public boolean getEnableAutoConfiguration(){
-        return this.enableAutoConfiguration;
     }
     /**
      * 注入上下文属性

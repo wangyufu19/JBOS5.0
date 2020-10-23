@@ -1,4 +1,5 @@
 package com.jbosframework.boot.autoconfig;
+import com.jbosframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
@@ -9,6 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Import(AutoConfigurationSelector.class)
 public @interface EnableAutoConfiguration {
-
+    Class<?>[] exclude() default {};
 }
