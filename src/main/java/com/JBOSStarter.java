@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JBOSStarter {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
 //		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);

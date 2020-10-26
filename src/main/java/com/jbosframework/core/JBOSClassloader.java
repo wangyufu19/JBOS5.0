@@ -34,6 +34,23 @@ public class JBOSClassloader {
 	}
 	/**
 	 * 实例化
+	 * @param cls
+	 * @return
+	 * @throws ClassNotFoundException
+	 */
+	public static Object newInstance(Class cls){
+		Object obj=null;
+		try {
+			obj=cls.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	/**
+	 * 实例化
 	 * @param s
 	 * @return
 	 * @throws ClassNotFoundException

@@ -1,11 +1,9 @@
 package com.jbosframework.boot;
-import java.io.IOException;
+
+import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
-import com.jbosframework.boot.autoconfig.EnableAutoConfiguration;
-import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
-import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,37 +29,23 @@ public class JBOSApplication {
      * @param args
      */
     private void initConfiguration(String... args){
-        JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
-        if(jbosBootApplication==null){
-            return;
-        }
-        //开启自动配置
-        EnableAutoConfiguration enableAutoConfiguration=jbosBootApplication.getClass().getAnnotation(EnableAutoConfiguration.class);
-        if(enableAutoConfiguration!=null) {
 
-        }
-        //开启切面自动代理
-        EnableAspectJAutoProxy enableAspectJAutoProxy=jbosBootApplication.getClass().getAnnotation(EnableAspectJAutoProxy.class);
-        if(enableAspectJAutoProxy!=null){
-            ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-        }
     }
     /**
      * 启动应用
      * @param args
      * @return
-     * @throws IOException
      */
-    public ApplicationContext start(String... args) throws IOException {
+    public ApplicationContext start(String... args)  {
         long stime=System.currentTimeMillis();
         long etime=System.currentTimeMillis();
-        if(jbosBootClass==null){
-            return ctx;
-        }
         //初始化环境配置
         this.initConfiguration(args);
-        //注册和扫描ClassPath下的类
+        //注册和扫描启动类所在包和子包下的所有组件类到容器中
         ctx.registry(jbosBootClass);
+        //加载自动配置的组件类到容器中
+        AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
+        autoConfigurationContext.load(jbosBootClass);
         //初始化和启动Web容器
         JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
         jbosWebApplicationContext.onStartup();

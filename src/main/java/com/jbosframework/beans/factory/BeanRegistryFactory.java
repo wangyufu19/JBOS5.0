@@ -9,12 +9,20 @@ import com.jbosframework.beans.support.BeanRegistry;
  * @version 1.0
  */
 public class BeanRegistryFactory {
+    private static  BeanRegistry instance=null;
+
     /**
      * 得到一个BeanRegistry类实例
      * @return
      */
-    private static BeanRegistry getBeanRegistry(){
-        BeanRegistry instance=new AnnotationBeanRegistry();
+    public static BeanRegistry getBeanRegistry(){
+        if(instance==null) {
+            synchronized (BeanRegistry.class) {
+                if (instance == null) {
+                    instance = new AnnotationBeanRegistry();
+                }
+            }
+        }
         return instance;
     }
 }
