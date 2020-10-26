@@ -39,9 +39,9 @@ public class AutoConfigurationContext {
             if(importClasses!=null){
                 for(Class cls:importClasses){
                     Object obj=JBOSClassloader.newInstance(cls);
-                    if(obj instanceof AutoConfigurationSelector){
-                        AutoConfigurationSelector selector=(AutoConfigurationSelector)obj;
-                        selector.registry(this.applicationContext);
+                    if(obj instanceof AutoConfigurationRegister){
+                        AutoConfigurationRegister register=(AutoConfigurationRegister)obj;
+                        register.registry(this.applicationContext);
                     }
                 }
             }

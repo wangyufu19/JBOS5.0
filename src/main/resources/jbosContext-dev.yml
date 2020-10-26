@@ -4,10 +4,11 @@ jbos:
     type: org.apache.tomcat.jdbc.pool.DataSource
     driverClass: com.mysql.cj.jdbc.Driver
     #oracle.jdbc.driver.OracleDriver
-    url: jdbc:mysql://127.0.0.1:3306/jbos?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
-    #jdbc:oracle:thin:@127.0.0.1:1521:orcl
-    username: jbos
-    password: jbos
+    tomcat:
+      url: jdbc:mysql://127.0.0.1:3306/jbos?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
+      #jdbc:oracle:thin:@127.0.0.1:1521:orcl
+      username: jbos
+      password: jbos
 
 
 

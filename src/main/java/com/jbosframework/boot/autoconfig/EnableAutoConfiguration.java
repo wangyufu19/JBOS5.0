@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(AutoConfigurationSelector.class)
+@Import(AutoConfigurationRegister.class)
 public @interface EnableAutoConfiguration {
     Class<?>[] exclude() default {};
 }

@@ -1,12 +1,9 @@
 package com.jbosframework.boot.autoconfig.condition;
-
-import com.jbosframework.context.annotation.Condition;
 import com.jbosframework.context.annotation.Conditional;
-
 import java.lang.annotation.*;
 
 /**
- * ConditionOnClass
+ * ConditionalOnClass
  * @author youfu.wang
  * @version 1.0
  */
@@ -14,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
 @Conditional(OnClassCondition.class)
-public @interface ConditionOnClass {
+public @interface ConditionalOnClass {
     public Class<?>[] value();
 }
