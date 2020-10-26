@@ -5,4 +5,6 @@ package com.jbosframework.boot.autoconfig;
  * @version 1.0
  */
 public class AutoConfigurationFactory {
+
+
 }
