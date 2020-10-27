@@ -32,18 +32,26 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
             if(dataSourceClses!=null){
                 for(Class<?> dataSourceCls:dataSourceClses){
                     if(this.conditionalOnClass(dataSourceCls.getAnnotation(ConditionalOnClass.class))&&this.conditionalOnProperty(dataSourceCls.getAnnotation(ConditionalOnProperty.class))){
-                      this.doCreateDataSource(ctx,dataSourceCls);
+                        //自动配置数据源
+                        this.doCreateDataSource(ctx,dataSourceCls);
                         break;
                     }
                 }
             }
         }
     }
+
+    /**
+     * 自动配置数据源
+     * @param ctx
+     * @param dataSourceCls
+     */
     private void doCreateDataSource(ApplicationContext ctx,Class<?> dataSourceCls){
         ConfigurationProperties configurationPropertiesAnnotation=dataSourceCls.getAnnotation(ConfigurationProperties.class);
         if (configurationPropertiesAnnotation!=null){
             Object properties=ctx.getContextConfiguration().getContextProperty(configurationPropertiesAnnotation.prefix());
-            DataSourceProperties dataSourceProperties=new DataSourceProperties(properties);
+            DataSourceProperties dataSourceProperties=new TomcatDataSourceProperties();
+            dataSourceProperties.load(properties);
         }
     }
 }

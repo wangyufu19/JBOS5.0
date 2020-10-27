@@ -29,10 +29,10 @@ public class AutoConfigurationContext {
             return;
         }
         //开启自动配置
-        EnableAutoConfiguration enableAutoConfiguration=jbosBootApplication.getClass().getAnnotation(EnableAutoConfiguration.class);
+        EnableAutoConfiguration enableAutoConfiguration=JBOSBootApplication.class.getAnnotation(EnableAutoConfiguration.class);
         Class<?>[] importClasses=null;
         if(enableAutoConfiguration!=null) {
-            Import importAnnotation=enableAutoConfiguration.getClass().getAnnotation(Import.class);
+            Import importAnnotation=EnableAutoConfiguration.class.getAnnotation(Import.class);
             if(importAnnotation!=null){
                 importClasses=importAnnotation.value();
             }

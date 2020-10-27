@@ -27,7 +27,7 @@ public abstract class AbstractAutoConfiguration {
         boolean bool=false;
 
 
-        return bool;
+        return true;
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class AbstractAutoConfiguration {
         boolean bool=false;
 
 
-        return bool;
+        return true;
     }
 
 }
