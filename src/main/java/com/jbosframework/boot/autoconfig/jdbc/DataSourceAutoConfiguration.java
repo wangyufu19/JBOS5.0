@@ -77,8 +77,8 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
             obj=JBOSClassCaller.call(dataSourceCls,"getDataSource",parameterValues,parameterTypes);
             if(obj!=null){
                 DataSource dataSource=(DataSource)obj;
-                log.info("******dataSource "+dataSource);
-                ctx.putBean(dataSource.getClass().getName(),dataSource);
+                log.info("Create default DataSource["+dataSource.getClass().getName()+"]");
+                ctx.putBean(DataSource.class.getName(),dataSource);
             }
         }
     }

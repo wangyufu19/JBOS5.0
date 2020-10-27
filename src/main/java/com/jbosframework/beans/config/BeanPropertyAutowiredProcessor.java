@@ -84,12 +84,17 @@ public class BeanPropertyAutowiredProcessor {
                     beanNameClass+=entry.getValue().getName()+",";
                     beanNames.add(entry.getValue());
                 }
-                if(beanNames.size()>1){
-                    BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + field.getType() + "' available:找到多个实现Bean["+beanNameClass+"]");
-                    ex.printStackTrace();
-                    return null;
+                if(beanNames.size()<=0){
+                    fieldValue=this.beanFactoryContext.getBean(field.getType().getName());
+                }else{
+                    if(beanNames.size()>1){
+                        BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + field.getType() + "' available:找到多个实现Bean["+beanNameClass+"]");
+                        ex.printStackTrace();
+                        return null;
+                    }else{
+                        fieldValue=this.beanFactoryContext.getBean(beanNames.get(0).getName());
+                    }
                 }
-                fieldValue=this.beanFactoryContext.getBean(beanNames.get(0).getName());
             }else{
                 fieldValue=this.beanFactoryContext.getBean(field.getType().getName());
             }

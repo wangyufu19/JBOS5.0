@@ -42,10 +42,12 @@ public class JBOSApplication {
         //初始化环境配置
         this.initConfiguration(args);
         //注册和扫描启动类所在包和子包下的所有组件类到容器中
-        //ctx.registry(jbosBootClass);
+        ctx.registry(jbosBootClass);
         //加载自动配置的组件类到容器中
         AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
         autoConfigurationContext.load(jbosBootClass);
+        //刷新容器上下文
+        ctx.refreshContext();
         //初始化和启动Web容器
         JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
         //jbosWebApplicationContext.onStartup();

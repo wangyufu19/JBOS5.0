@@ -1,7 +1,10 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
+import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Map;
 
 /**
  * TomcatDataSourceProperties
@@ -161,7 +164,12 @@ public class TomcatDataSourceProperties extends DataSourceProperties{
      * @param properties
      */
     public void load(Object properties){
-        log.info("******properties: "+properties);
-        
+        if(properties instanceof Map){
+            Map<String,Object> obj=(Map<String,Object>)properties;
+            this.setUrl(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_URL)));
+            this.setUsername(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_USERNAME)));
+            this.setPassword(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_PASSWORD)));
+        }
+
     }
 }

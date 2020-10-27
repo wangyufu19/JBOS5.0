@@ -8,6 +8,9 @@ public abstract class DataSourceProperties {
     public static final String DATASOURCE_TYPE="jbos.datasource.type";
     public static final String DATASOURCE_TYPE_TOMCAT="org.apache.tomcat.jdbc.pool.DataSource";
     public static final String DATASOURCE_DRIVERCLASS="jbos.datasource.driverClass";
+    public static final String DATASOURCE_URL="url";
+    public static final String DATASOURCE_USERNAME="username";
+    public static final String DATASOURCE_PASSWORD="password";
     private String type;
     private String driverClass;
     private String url;

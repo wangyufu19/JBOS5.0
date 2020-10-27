@@ -37,8 +37,6 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 */
 	public void registry(Class<?> cls) {
 		this.beanFactory=new AnnotationBeanFactory(this,cls);
-		this.afterProperties();
-		ApplicationContextFactory.setApplicationContext(this);
 	}
 	/**
 	 * 注册Bean
@@ -46,6 +44,12 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 */
 	public void registry(Class<?>[] clses) {
 		this.beanFactory=new AnnotationBeanFactory(this,clses);
+	}
+
+	/**
+	 * 刷新容器上下文
+	 */
+	public void refreshContext(){
 		this.afterProperties();
 		ApplicationContextFactory.setApplicationContext(this);
 	}

@@ -30,5 +30,8 @@ public interface ApplicationContext extends BeanFactory{
 	 * @return
 	 */
 	public AspectProxyBeanContext getAspectProxyBeanContext();
-
+	/**
+	 * 刷新容器上下文
+	 */
+	public void refreshContext();
 }

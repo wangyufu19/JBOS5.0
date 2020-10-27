@@ -96,18 +96,6 @@ public class BeanFactoryContext extends ContextInitializer{
 		}
 	}
 	/**
-	 * 拼装Bean对象
-	 */
-	private void afterProperties(Object obj,BeanDefinition beanDefinition){
-		if(beanDefinition==null){
-			return;
-		}
-		if(beanDefinition.isSingleton()){
-			propertyAutowiredProcessor.autowire(obj);
-		}
-		putBean(beanDefinition.getName(),obj);
-	}
-	/**
 	 * 销毁Bean对象内存
 	 */
 	public void destroy(){
@@ -171,7 +159,10 @@ public class BeanFactoryContext extends ContextInitializer{
 		}
 		BeanDefinition parentBeanDefinition=beanDefinitions.get(beanDefinition.getParentName());
 		Object parentObj=this.getBean(parentBeanDefinition.getName());
-		this.afterProperties(parentObj,parentBeanDefinition);
+		if(parentBeanDefinition.isSingleton()){
+			propertyAutowiredProcessor.autowire(parentObj);
+		}
+		putBean(parentBeanDefinition.getName(),parentObj);
 		obj=JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
 		return obj;
 	}
@@ -235,6 +226,8 @@ public class BeanFactoryContext extends ContextInitializer{
 			obj = this.getSingletonBean(name);
 		} else if (this.isPrototype(name)) {
 			obj = this.getPrototypeBean(name);
+		}else{
+			obj = this.getSingletonBean(name);
 		}
 		if(obj==null){
 			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + name + "' available");

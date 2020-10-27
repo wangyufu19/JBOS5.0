@@ -20,16 +20,34 @@ public class DataSourceBuilder {
          * @return
          */
         public static org.apache.tomcat.jdbc.pool.DataSource build(DataSourceProperties properties){
-            PoolProperties p = new PoolProperties();
-            p.setUrl(properties.getUrl());
-            p.setDriverClassName(properties.getDriverClass());
-            p.setUsername(properties.getUsername());
-            p.setPassword(properties.getPassword());
-            p.setJdbcInterceptors(
-                    "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
-                            "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
             DataSource datasource = new DataSource();
-            datasource.setPoolProperties(p);
+            if(properties instanceof TomcatDataSourceProperties){
+                TomcatDataSourceProperties tomcatDataSourceProperties=(TomcatDataSourceProperties)properties;
+                PoolProperties p = new PoolProperties();
+                p.setUrl(tomcatDataSourceProperties.getUrl());
+                p.setDriverClassName(tomcatDataSourceProperties.getDriverClass());
+                p.setUsername(tomcatDataSourceProperties.getUsername());
+                p.setPassword(tomcatDataSourceProperties.getPassword());
+                p.setTestWhileIdle(tomcatDataSourceProperties.isTestWhileIdle());
+                p.setTestOnBorrow(tomcatDataSourceProperties.isTestOnBorrow());
+                p.setValidationQuery(tomcatDataSourceProperties.getValidationQuery());
+                p.setTestOnReturn(tomcatDataSourceProperties.isTestOnReturn());
+                p.setValidationInterval(tomcatDataSourceProperties.getValidationInterval());
+                p.setTimeBetweenEvictionRunsMillis(tomcatDataSourceProperties.getTimeBetweenEvictionRunsMillis());
+                p.setMaxActive(tomcatDataSourceProperties.getMaxActive());
+                p.setMinIdle(tomcatDataSourceProperties.getMinIdle());
+                p.setInitialSize(tomcatDataSourceProperties.getInitialSize());
+                p.setMaxWait(tomcatDataSourceProperties.getMaxWait());
+                p.setRemoveAbandonedTimeout(tomcatDataSourceProperties.getRemoveAbandonedTimeout());
+                p.setMinEvictableIdleTimeMillis(tomcatDataSourceProperties.getMinEvictableIdleTimeMillis());
+                p.setLogAbandoned(tomcatDataSourceProperties.isLogAbandoned());
+                p.setRemoveAbandoned(tomcatDataSourceProperties.isRemoveAbandoned());
+                p.setJdbcInterceptors(
+                        "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
+                                "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+
+                datasource.setPoolProperties(p);
+            }
             return datasource;
         }
     }
