@@ -1,8 +1,13 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
 import com.jbosframework.boot.context.ConfigurationProperties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.sql.DataSource;
 
 /**
  * DataSourceConfiguration
@@ -10,7 +15,10 @@ import com.jbosframework.boot.context.ConfigurationProperties;
  * @version 1.0
  */
 public class DataSourceConfiguration {
+    private static final Log log= LogFactory.getLog(DataSourceConfiguration.class);
+
     @ConditionalOnClass(org.apache.tomcat.jdbc.pool.DataSource.class)
+    @ConditionalOnBean(DataSource.class)
     @ConditionalOnProperty(
             name="jbos.datasource.type",
             value = "org.apache.tomcat.jdbc.pool.DataSource"
@@ -23,7 +31,7 @@ public class DataSourceConfiguration {
 
         }
         public org.apache.tomcat.jdbc.pool.DataSource getDataSource(DataSourceProperties properties){
-            return null;
+           return DataSourceBuilder.TomcatDataSourcePool.build(properties);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.jbosframework.core;
 
+import java.lang.reflect.Method;
+
 /**
  * JBOSClassloader
  * @author youfu.wang
@@ -31,6 +33,22 @@ public class JBOSClassloader {
 	 */
 	public static Class<?> loadClass(String s)throws ClassNotFoundException {
 		return getClassLoader().loadClass(s);
+	}
+
+	/**
+	 * 得到类方法
+	 * @param cls
+	 * @param method
+	 * @param parameterTypes
+	 * @return
+	 */
+	public static Method getMethod(Class<?> cls,String method,Class<?>... parameterTypes){
+		try {
+			return cls.getMethod(method,parameterTypes);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	/**
 	 * 实例化

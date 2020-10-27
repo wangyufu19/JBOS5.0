@@ -1,4 +1,5 @@
 package com.jbosframework.boot.autoconfig;
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
 import com.jbosframework.context.ApplicationContext;
@@ -29,7 +30,16 @@ public abstract class AbstractAutoConfiguration {
 
         return true;
     }
+    /**
+     * 捕获注解条件Bean类
+     * @param conditionalOnBean
+     */
+    public boolean conditionalOnBean(ConditionalOnBean conditionalOnBean){
+        boolean bool=false;
 
+
+        return true;
+    }
     /**
      * 捕获注解属性条件类
      * @param conditionalOnProperty

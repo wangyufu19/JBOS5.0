@@ -9,6 +9,20 @@ jbos:
       #jdbc:oracle:thin:@127.0.0.1:1521:orcl
       username: jbos
       password: jbos
+      testWhileIdle: false
+      testOnBorrow: true
+      validationQuery: SELECT 1
+      testOnReturn: false
+      validationInterval: 30000
+      timeBetweenEvictionRunsMillis: 30000
+      maxActive: 100
+      minIdle: 10
+      initialSize: 10
+      maxWait: 30000
+      removeAbandonedTimeout: 60
+      minEvictableIdleTimeMillis: 30000
+      logAbandoned: true
+      removeAbandoned: true
 
 
 
