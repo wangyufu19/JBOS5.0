@@ -2,7 +2,6 @@ package com.jbosframework.boot.autoconfig;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
-import com.jbosframework.boot.autoconfig.jdbc.DataSourceProperties;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.Condition;
 import com.jbosframework.context.annotation.Conditional;
