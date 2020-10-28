@@ -25,10 +25,9 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
     private static final Log log= LogFactory.getLog(DataSourceAutoConfiguration.class);
     /**
      * 注册自动配置组件到容器中
-     * @param ctx
      * @return
      */
-    public void registry(ApplicationContext ctx){
+    public void registry(){
         Configuration configuration=this.getClass().getAnnotation(Configuration.class);
         if (configuration==null){
             return;
@@ -38,10 +37,10 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
             if(dataSourceClses!=null){
                 for(Class<?> dataSourceCls:dataSourceClses){
                     if(this.conditionalOnClass(dataSourceCls.getAnnotation(ConditionalOnClass.class))&&
-                       this.conditionalOnBean(dataSourceCls.getAnnotation(ConditionalOnBean.class))&&
+                       !this.conditionalOnBean(dataSourceCls.getAnnotation(ConditionalOnBean.class))&&
                        this.conditionalOnProperty(dataSourceCls.getAnnotation(ConditionalOnProperty.class))){
                         //自动配置数据源
-                        this.doCreateDataSource(ctx,dataSourceCls);
+                        this.doCreateDataSource(this.getApplicationContext(),dataSourceCls);
                         break;
                     }
                 }
@@ -77,7 +76,7 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
             obj=JBOSClassCaller.call(dataSourceCls,"getDataSource",parameterValues,parameterTypes);
             if(obj!=null){
                 DataSource dataSource=(DataSource)obj;
-                log.info("Create default DataSource["+dataSource.getClass().getName()+"]");
+                //log.info("Create default DataSource["+dataSource.getClass().getName()+"]");
                 ctx.putBean(DataSource.class.getName(),dataSource);
             }
         }

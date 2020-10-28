@@ -15,8 +15,8 @@ public class JBOSStarter {
 	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
-		userMgrController.getUserList();
+//		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
+//		userMgrController.getUserList();
 	}
 
 }

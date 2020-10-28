@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
 public @interface Conditional {
-    public Class<? extends Condition>[] value();
+    public Class<? extends Condition> value();
 }

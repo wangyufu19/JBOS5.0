@@ -32,7 +32,8 @@ public class AutoConfigurationRegister {
             for (String s:autConfigurationBeans){
                 Class<?> autCls= JBOSClassloader.loadClass(s);
                 AbstractAutoConfiguration autoConfiguration=(AbstractAutoConfiguration)JBOSClassloader.loadClass(s).newInstance();
-                autoConfiguration.registry(ctx);
+                autoConfiguration.setApplicationContext(ctx);
+                autoConfiguration.registry();
             }
         }catch (ClassNotFoundException e){
             e.printStackTrace();

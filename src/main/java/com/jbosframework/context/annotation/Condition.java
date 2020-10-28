@@ -1,4 +1,8 @@
 package com.jbosframework.context.annotation;
+
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
+import com.jbosframework.context.ApplicationContext;
+
 /**
  * Condition
  * @author youfu.wang
@@ -6,5 +10,5 @@ package com.jbosframework.context.annotation;
  */
 
 public interface Condition {
-    public boolean matches();
+    public boolean matches(ApplicationContext ctx,Class<?>[] autoConfigurationClasses);
 }

@@ -174,7 +174,9 @@ public class BeanFactoryContext extends ContextInitializer{
 	public boolean containsBean(String name) {
 		if(beanDefinitions.containsKey(name)){
 			return true;
-		}else 
+		}else if(singletonInstances.containsKey(name)){
+			return true;
+		}else
 			return false;
 	}
 	/**

@@ -103,7 +103,7 @@ public class JBOSClassloader {
 	 * @param s
 	 * @return
 	 */
-	static boolean isPresent(String s){
+	public static boolean isPresent(String s){
 		try {
 			class$(s);
 			return true;
