@@ -1,5 +1,6 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
+import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.boot.autoconfig.AbstractAutoConfiguration;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
@@ -77,6 +78,8 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
             if(obj!=null){
                 DataSource dataSource=(DataSource)obj;
                 //log.info("Create default DataSource["+dataSource.getClass().getName()+"]");
+                AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(DataSource.class.getName(),DataSource.class);
+                ctx.putBeanDefinition(annotationBean);
                 ctx.putBean(DataSource.class.getName(),dataSource);
             }
         }

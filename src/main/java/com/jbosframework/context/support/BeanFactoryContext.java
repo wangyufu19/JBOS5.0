@@ -222,8 +222,6 @@ public class BeanFactoryContext extends ContextInitializer{
 			obj = this.getSingletonBean(name);
 		} else if (this.isPrototype(name)) {
 			obj = this.getPrototypeBean(name);
-		}else{
-			obj = this.getSingletonBean(name);
 		}
 		if(obj==null){
 			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + name + "' available");
