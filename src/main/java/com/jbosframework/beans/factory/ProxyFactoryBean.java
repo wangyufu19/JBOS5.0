@@ -1,7 +1,6 @@
 package com.jbosframework.beans.factory;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.AopProxyFactory;
-import com.jbosframework.beans.factory.BeanAopProxyFactory;
 import com.jbosframework.core.JBOSClassloader;
 /**
  * ProxyFactoryBean

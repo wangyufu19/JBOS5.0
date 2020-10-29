@@ -156,8 +156,8 @@ public class BeanFactoryContext extends ContextInitializer{
 		Object parentObj=this.getBean(parentBeanDefinition.getName());
 		if(parentBeanDefinition.isSingleton()){
 			propertyAutowiredProcessor.autowire(parentObj);
+			putBean(parentBeanDefinition.getName(),parentObj);
 		}
-		putBean(parentBeanDefinition.getName(),parentObj);
 		obj=JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
 		return obj;
 	}
@@ -269,7 +269,7 @@ public class BeanFactoryContext extends ContextInitializer{
 		if(requiredType==null){
 			return null;
 		}
-		obj=this.getBean(requiredType.getSimpleName());
+		obj=this.getBean(requiredType.getName());
 		return (T)obj;
 	}
 	public <T> Map<String, T> getBeansOfType(Class<T> requiredType){
