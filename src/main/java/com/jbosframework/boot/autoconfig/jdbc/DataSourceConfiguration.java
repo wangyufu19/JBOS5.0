@@ -30,8 +30,8 @@ public class DataSourceConfiguration {
         public Tomcat(){
 
         }
-        public org.apache.tomcat.jdbc.pool.DataSource getDataSource(DataSourceProperties properties){
-           return DataSourceBuilder.TomcatDataSourcePool.build(properties);
+        public DataSource getDataSource(DataSourceProperties properties){
+           return DataSourceBuilder.create().build(properties);
         }
     }
 }

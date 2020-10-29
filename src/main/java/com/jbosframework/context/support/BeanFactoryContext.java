@@ -8,7 +8,8 @@ import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.core.JBOSClassCaller;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * BeanFactoryContext
@@ -16,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0
  * @date 2016-11-14
  */
-@Slf4j
-public class BeanFactoryContext extends ContextInitializer{
 
+public class BeanFactoryContext extends ContextInitializer{
+	private static final Log log= LogFactory.getLog(BeanFactoryContext.class);
 	//XML and Annotation IoC Bean Singleton Instance
 	protected static Map<String,Object> singletonInstances=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
 	//XML and Annotation IoC Bean 
@@ -60,23 +61,11 @@ public class BeanFactoryContext extends ContextInitializer{
 		if(beanDefinition==null) {
 			return;				
 		}
-		if(beanDefinition.isSingleton()){
-			if(!beanDefinitions.containsKey(beanDefinition.getId())||!beanDefinitions.containsKey(beanDefinition.getName())){	
-				if(!"".equals(beanDefinition.getName())){	
-					beanDefinitions.put(beanDefinition.getName(),beanDefinition);
-					singletonInstances.put(beanDefinition.getName(), BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName()));
-				}else if(!"".equals(beanDefinition.getId())){	
-					beanDefinitions.put(beanDefinition.getId(),beanDefinition);
-					singletonInstances.put(beanDefinition.getId(), BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName()));
-				}				
-			}
-		}else if(beanDefinition.isPrototype()){
-			if(!beanDefinitions.containsKey(beanDefinition.getId())||!beanDefinitions.containsKey(beanDefinition.getName())){
-				if(!"".equals(beanDefinition.getName())){
-					beanDefinitions.put(beanDefinition.getName(),beanDefinition);
-				}else if(!"".equals(beanDefinition.getId())){
-					beanDefinitions.put(beanDefinition.getId(), beanDefinition);
-				}
+		if(!beanDefinitions.containsKey(beanDefinition.getId())||!beanDefinitions.containsKey(beanDefinition.getName())){
+			if(!"".equals(beanDefinition.getName())){
+				beanDefinitions.put(beanDefinition.getName(),beanDefinition);
+			}else if(!"".equals(beanDefinition.getId())){
+				beanDefinitions.put(beanDefinition.getId(), beanDefinition);
 			}
 		}
 	}
@@ -120,10 +109,16 @@ public class BeanFactoryContext extends ContextInitializer{
 	 * @param name
 	 * @return
 	 */
-	public Object getSingletonBean(String name){		
+	private Object getSingletonBean(String name){
 		Object obj=null;
 		if(singletonInstances.containsKey(name)){
 			obj=singletonInstances.get(name);
+		}else{
+			if(beanDefinitions.containsKey(name)){
+				BeanDefinition beanDefinition=beanDefinitions.get(name);
+				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+				singletonInstances.put(beanDefinition.getName(),obj);
+			}
 		}
 		return obj;
 	}
@@ -132,7 +127,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	 * @param name
 	 * @return
 	 */
-	public Object getPrototypeBean(String name){
+	private Object getPrototypeBean(String name){
 		Object obj=null;
 		if(beanDefinitions.containsKey(name)&&this.isPrototype(name)){
 			if(this.isMethodBean(name)){
@@ -174,10 +169,9 @@ public class BeanFactoryContext extends ContextInitializer{
 	public boolean containsBean(String name) {
 		if(beanDefinitions.containsKey(name)){
 			return true;
-		}else if(singletonInstances.containsKey(name)){
-			return true;
-		}else
+		}else {
 			return false;
+		}
 	}
 	/**
 	 * 是否Singleton类型Bean

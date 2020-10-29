@@ -7,7 +7,8 @@ import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.binding.MapperProxyFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -23,8 +24,9 @@ import java.util.Map;
  * @author youfuw.ang
  * @date 2016-12-12
  */
-@Slf4j
+
 public class BeanPropertyAutowiredProcessor {
+    private static final Log log= LogFactory.getLog(BeanPropertyAutowiredProcessor.class);
 
     private BeanFactoryContext beanFactoryContext;
 
@@ -42,6 +44,9 @@ public class BeanPropertyAutowiredProcessor {
      */
     public void autowire(Object obj){
         Class<?> cls=null;
+        if (obj==null){
+            return;
+        }
         cls=obj.getClass();
         Field[] fields=cls.getDeclaredFields();
         if(fields==null) {
