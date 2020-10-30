@@ -76,10 +76,10 @@ public class Configuration {
     }
 
     /**
-     * 得到启用切面
+     * 是否启用切面
      * @return
      */
-    public boolean getEnableAspectJAutoProxy(){
+    public boolean isEnableAspectJAutoProxy(){
         return this.enableAspectJAutoProxy;
     }
     /**

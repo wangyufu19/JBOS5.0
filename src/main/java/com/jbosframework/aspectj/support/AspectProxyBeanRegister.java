@@ -4,7 +4,7 @@ import com.jbosframework.aspectj.annotation.Pointcut;
 import com.jbosframework.aspectj.annotation.Before;
 import com.jbosframework.aspectj.annotation.After;
 import com.jbosframework.utils.StringUtils;
-import com.jbosframework.aspectj.metadata.Metadata;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -33,7 +33,7 @@ public class AspectProxyBeanRegister{
         if(aspect==null){
             return;
         }
-        Metadata metadata=new Metadata();
+        AspectMetadata metadata=new AspectMetadata();
         metadata.setAspectClass(cls);
         this.registerMethodMetadata(cls,metadata);
         if(!"".equals(metadata.getPointcut())){
@@ -41,7 +41,7 @@ public class AspectProxyBeanRegister{
             this.aspectProxyBeanContext.putMetadata(metadata);
         }
     }
-    private void registerMethodMetadata(Class<?> cls,Metadata metadata){
+    private void registerMethodMetadata(Class<?> cls, AspectMetadata metadata){
         if(cls==null){
             return;
         }

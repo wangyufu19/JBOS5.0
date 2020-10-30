@@ -46,10 +46,5 @@ public class AutoConfigurationContext {
                 }
             }
         }
-        //开启切面自动代理
-        EnableAspectJAutoProxy enableAspectJAutoProxy=jbosBootApplication.getClass().getAnnotation(EnableAspectJAutoProxy.class);
-        if(enableAspectJAutoProxy!=null){
-            applicationContext.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-        }
     }
 }

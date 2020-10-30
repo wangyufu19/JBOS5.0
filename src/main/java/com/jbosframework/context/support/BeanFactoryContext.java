@@ -2,7 +2,7 @@ package com.jbosframework.context.support;
 import java.util.*;
 
 import com.jbosframework.aop.AopProxyUtils;
-import com.jbosframework.aspectj.support.AspectProxySupport;
+import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
@@ -26,6 +26,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
+	PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
 	private BeanPropertyAutowiredProcessor propertyAutowiredProcessor=new BeanPropertyAutowiredProcessor(this);
 	/**
 	 * 构造方法
@@ -242,9 +243,9 @@ public class BeanFactoryContext extends ContextInitializer{
 		if(AopProxyUtils.isAopProxyBean(obj)){
 			//判断是否AOP代理Bean
 			obj= AopProxyUtils.getAopProxy(obj);
-		}else if(AspectProxySupport.isAspectPointcut(this.getAspectProxyBeanContext(),obj)){
+		}else if(pointcutMethodMatcher.match(this,obj)){
 			//判断是否切面AOP代理Bean
-			obj=AspectProxySupport.getAspectAopProxy(this.getAspectProxyBeanContext(),obj);
+			obj=pointcutMethodMatcher.getAspectAopProxy(obj);
 		}
 		return obj;
 	}

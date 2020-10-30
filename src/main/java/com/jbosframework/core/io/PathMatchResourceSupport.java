@@ -3,8 +3,6 @@ package com.jbosframework.core.io;
 import com.jbosframework.utils.AntPathMatcher;
 import com.jbosframework.utils.PathMatcher;
 import com.jbosframework.utils.StringUtils;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
  * @author youfu.wang
  * @since 2020.10.10
  */
-@Slf4j
+
 public class PathMatchResourceSupport {
     private PathMatcher pathMatcher=new AntPathMatcher();
 

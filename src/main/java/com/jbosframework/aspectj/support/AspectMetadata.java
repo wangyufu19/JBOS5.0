@@ -1,11 +1,11 @@
-package com.jbosframework.aspectj.metadata;
+package com.jbosframework.aspectj.support;
 
 /**
- * Metadata
+ * AspectMetadata
  * @author youfu.wang
  * @version 1.0
  */
-public class Metadata {
+public class AspectMetadata {
     //切面类
     private Class<?> aspectClass;
     //连接点

@@ -1,6 +1,5 @@
 package com.jbosframework.aspectj.support;
 import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aspectj.metadata.Metadata;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -13,12 +12,12 @@ import com.jbosframework.core.JBOSClassCaller;
  */
 public class AspectCglibProxy implements AopProxy,MethodInterceptor{
     private Class targetClass;
-    private Metadata metadata;
+    private AspectMetadata metadata;
     /**
      * 构造方法
      * @param targetClass
      */
-    public AspectCglibProxy(Metadata metadata,Class targetClass){
+    public AspectCglibProxy(AspectMetadata metadata, Class targetClass){
         this.targetClass=targetClass;
         this.metadata=metadata;
     }

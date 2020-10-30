@@ -1,6 +1,8 @@
 package com.jbosframework.boot;
 
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
+import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
+import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
@@ -29,7 +31,11 @@ public class JBOSApplication {
      * @param args
      */
     private void initConfiguration(String... args){
-
+        //开启切面自动代理
+        EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
+        if(enableAspectJAutoProxy!=null){
+            ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+        }
     }
     /**
      * 启动应用
