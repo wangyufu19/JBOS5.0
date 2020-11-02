@@ -9,6 +9,7 @@ import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.annotation.ConfigurationClassInterceptor;
+import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,7 +29,6 @@ public class BeanFactoryContext extends ContextInitializer{
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
 	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
-	private MethodInterceptor methodInterceptor=new ConfigurationClassInterceptor(this);
 	private BeanPropertyAutowiredProcessor propertyAutowiredProcessor=new BeanPropertyAutowiredProcessor(this);
 	/**
 	 * 构造方法
@@ -141,7 +141,7 @@ public class BeanFactoryContext extends ContextInitializer{
 					propertyAutowiredProcessor.autowire(parentObj);
 					putBean(parentBeanDefinition.getName(),parentObj);
 				}
-				obj=methodInterceptor.intercept(parentObj,beanDefinition.getClassMethod());
+				obj=JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
 			}else{
 				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
 			}
@@ -295,8 +295,5 @@ public class BeanFactoryContext extends ContextInitializer{
 			}
 		}
 		return beansTypesMap;
-	}
-	public MethodInterceptor getMethodInterceptor(){
-		return methodInterceptor;
 	}
 }

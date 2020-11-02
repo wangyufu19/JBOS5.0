@@ -26,6 +26,6 @@ public class ConfigurationClassInterceptor implements MethodInterceptor {
      * @return
      */
     public Object intercept(Object obj, String method) {
-        return JBOSClassCaller.call(obj,method);
+        return null;
     }
 }
