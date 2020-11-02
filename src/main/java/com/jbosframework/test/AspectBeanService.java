@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class AspectBeanService {
-    @Pointcut("com.jbosframework.test.AspectBean.getAspect")
+    @Pointcut("com.jbosframework.test.AspectBeanService.aspect")
     public void aspect(){
         log.info("********aspect");
     }

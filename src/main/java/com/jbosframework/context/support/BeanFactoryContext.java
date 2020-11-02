@@ -2,11 +2,13 @@ package com.jbosframework.context.support;
 import java.util.*;
 
 import com.jbosframework.aop.AopProxyUtils;
+import com.jbosframework.aop.MethodInterceptor;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
+import com.jbosframework.context.annotation.ConfigurationClassInterceptor;
 import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +28,8 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
-	PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
+	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
+	private MethodInterceptor methodInterceptor=new ConfigurationClassInterceptor(this);
 	private BeanPropertyAutowiredProcessor propertyAutowiredProcessor=new BeanPropertyAutowiredProcessor(this);
 	/**
 	 * 构造方法
@@ -131,21 +134,21 @@ public class BeanFactoryContext extends ContextInitializer{
 	private Object getPrototypeBean(String name){
 		Object obj=null;
 		if(beanDefinitions.containsKey(name)&&this.isPrototype(name)){
-			if(this.isMethodBean(name)){
-				obj=this.getMethodBean(name);
+			BeanDefinition beanDefinition=beanDefinitions.get(name);
+			if(beanDefinition.isMethodBean()){
+				BeanDefinition parentBeanDefinition=beanDefinitions.get(beanDefinition.getParentName());
+				Object parentObj=this.getBean(parentBeanDefinition.getName());
+				if(parentBeanDefinition.isSingleton()){
+					propertyAutowiredProcessor.autowire(parentObj);
+					putBean(parentBeanDefinition.getName(),parentObj);
+				}
+				obj=methodInterceptor.intercept(parentObj,beanDefinition.getClassMethod());
+				//obj=this.getMethodBean(name);
 			}else{
-				BeanDefinition beanDefinition=beanDefinitions.get(name);
 				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
 			}
 		}
 		return obj;
-	}
-	private boolean isMethodBean(String name){
-		BeanDefinition beanDefinition=beanDefinitions.get(name);
-		if(beanDefinition!=null){
-			return beanDefinition.isMethodBean();
-		}
-		return false;
 	}
 	public Object getMethodBean(String name){
 		Object obj=null;
