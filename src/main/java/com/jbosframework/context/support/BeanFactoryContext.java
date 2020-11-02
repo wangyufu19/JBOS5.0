@@ -2,13 +2,11 @@ package com.jbosframework.context.support;
 import java.util.*;
 
 import com.jbosframework.aop.AopProxyUtils;
-import com.jbosframework.aop.MethodInterceptor;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
-import com.jbosframework.context.annotation.ConfigurationClassInterceptor;
 import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

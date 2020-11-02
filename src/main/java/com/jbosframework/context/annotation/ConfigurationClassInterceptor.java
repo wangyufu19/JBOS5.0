@@ -1,7 +1,6 @@
 package com.jbosframework.context.annotation;
 import com.jbosframework.aop.MethodInterceptor;
 import com.jbosframework.context.support.BeanFactoryContext;
-import com.jbosframework.core.JBOSClassCaller;
 
 /**
  * ConfigurationClassInterceptor
