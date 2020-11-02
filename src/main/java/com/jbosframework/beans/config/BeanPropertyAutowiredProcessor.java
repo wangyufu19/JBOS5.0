@@ -114,7 +114,7 @@ public class BeanPropertyAutowiredProcessor {
             }
         }else if(annotation instanceof Mapper){
             if(field.getType().isInterface()) {
-                SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactoryContext.getMethodBean("sqlSessionFactoryBean");
+                SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactoryContext.getBean(SqlSessionFactory.class.getName());
                 if(SqlSessionBeanUtils.isMapperBean(sqlSessionFactory,field.getType())){
                     MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(field.getType());
                     fieldValue=mapperProxyFactory.newInstance(sqlSessionFactory.openSession());

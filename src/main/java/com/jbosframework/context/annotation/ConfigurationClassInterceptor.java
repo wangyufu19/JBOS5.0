@@ -1,8 +1,7 @@
 package com.jbosframework.context.annotation;
 import com.jbosframework.aop.MethodInterceptor;
 import com.jbosframework.context.support.BeanFactoryContext;
-
-import java.lang.reflect.Method;
+import com.jbosframework.core.JBOSClassCaller;
 
 /**
  * ConfigurationClassInterceptor
@@ -19,7 +18,14 @@ public class ConfigurationClassInterceptor implements MethodInterceptor {
     public ConfigurationClassInterceptor(BeanFactoryContext context){
         this.context=context;
     }
+
+    /**
+     * 拦截对象的方法
+     * @param obj
+     * @param method
+     * @return
+     */
     public Object intercept(Object obj, String method) {
-        return null;
+        return JBOSClassCaller.call(obj,method);
     }
 }

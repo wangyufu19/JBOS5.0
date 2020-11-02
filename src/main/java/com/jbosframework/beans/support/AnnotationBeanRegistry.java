@@ -7,6 +7,9 @@ import com.jbosframework.utils.StringUtils;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.web.mvc.annotation.Controller;
 import com.jbosframework.web.mvc.annotation.RequestMapping;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -16,6 +19,7 @@ import java.lang.reflect.Method;
  * @version 1.0
  */
 public class AnnotationBeanRegistry extends BeanRegistry{
+    private static final Log log= LogFactory.getLog(AnnotationBeanRegistry.class);
     public static final String DEFAULT_REQUEST_MAPPING="handleRequest";
 
     private AnnotationFilter annotationFilter;
@@ -136,7 +140,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
             for(Annotation annotation:annotations){
                 if(annotation instanceof Bean){
                     //加载Bean注解
-                    AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),cls);
+                    AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),methods[i].getReturnType());
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                     annotationBean.setIsMethodBean(true);

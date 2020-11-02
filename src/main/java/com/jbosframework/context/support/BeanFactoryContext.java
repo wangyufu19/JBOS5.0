@@ -9,7 +9,6 @@ import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
 import com.jbosframework.beans.factory.BeanInstanceUtils;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.annotation.ConfigurationClassInterceptor;
-import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -143,26 +142,10 @@ public class BeanFactoryContext extends ContextInitializer{
 					putBean(parentBeanDefinition.getName(),parentObj);
 				}
 				obj=methodInterceptor.intercept(parentObj,beanDefinition.getClassMethod());
-				//obj=this.getMethodBean(name);
 			}else{
 				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
 			}
 		}
-		return obj;
-	}
-	public Object getMethodBean(String name){
-		Object obj=null;
-		BeanDefinition beanDefinition=beanDefinitions.get(name);
-		if(beanDefinition==null){
-			return null;
-		}
-		BeanDefinition parentBeanDefinition=beanDefinitions.get(beanDefinition.getParentName());
-		Object parentObj=this.getBean(parentBeanDefinition.getName());
-		if(parentBeanDefinition.isSingleton()){
-			propertyAutowiredProcessor.autowire(parentObj);
-			putBean(parentBeanDefinition.getName(),parentObj);
-		}
-		obj=JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
 		return obj;
 	}
 	/**
@@ -312,5 +295,8 @@ public class BeanFactoryContext extends ContextInitializer{
 			}
 		}
 		return beansTypesMap;
+	}
+	public MethodInterceptor getMethodInterceptor(){
+		return methodInterceptor;
 	}
 }

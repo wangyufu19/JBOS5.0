@@ -22,7 +22,7 @@ public class SqlSessionFactoryBeanConfig {
     @Autowired
     private DataSource defaultDataSource;
 
-    @Bean("sqlSessionFactoryBean")
+    @Bean
     public SqlSessionFactory getSqlSessionFactoryBean() throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(defaultDataSource);

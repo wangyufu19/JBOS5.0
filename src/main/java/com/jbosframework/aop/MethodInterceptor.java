@@ -1,7 +1,5 @@
 package com.jbosframework.aop;
 
-import java.lang.reflect.Method;
-
 /**
  * MethodInterceptor
  * @author youfu.wang
