@@ -50,7 +50,6 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 * 刷新容器上下文
 	 */
 	public void refreshContext(){
-		this.afterProperties();
 		ApplicationContextFactory.setApplicationContext(this);
 	}
 }

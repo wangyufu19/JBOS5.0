@@ -4,10 +4,8 @@ import java.util.*;
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.BeanPropertyAutowiredProcessor;
-import com.jbosframework.beans.factory.BeanInstanceUtils;
+import com.jbosframework.beans.factory.AbstractBeanObjectFactory;
 import com.jbosframework.beans.factory.BeanTypeException;
-import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,8 +24,10 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
+	private AbstractBeanObjectFactory beanObjectFactory=new AbstractBeanObjectFactory(this);
+
 	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
-	private BeanPropertyAutowiredProcessor propertyAutowiredProcessor=new BeanPropertyAutowiredProcessor(this);
+
 	/**
 	 * 构造方法
 	 */
@@ -71,21 +71,6 @@ public class BeanFactoryContext extends ContextInitializer{
 		}
 	}
 	/**
-	 * 拼装Bean对象
-	 */
-	public void afterProperties(){
-		for (Map.Entry<String, BeanDefinition> entry : beanDefinitions.entrySet()) {
-			BeanDefinition beanDefinition=entry.getValue();
-			Object obj=null;
-			//注入Bean依赖对象或属性值
-			if(beanDefinition.isSingleton()){
-				obj=this.getSingletonBean(entry.getKey());
-				propertyAutowiredProcessor.autowire(obj);
-			}
-			putBean(entry.getKey(),obj);
-		}
-	}
-	/**
 	 * 销毁Bean对象内存
 	 */
 	public void destroy(){
@@ -105,46 +90,8 @@ public class BeanFactoryContext extends ContextInitializer{
 		}else
 			return null;
 	}
-	/**
-	 * 得到Singleton类型Bean
-	 * @param name
-	 * @return
-	 */
-	private Object getSingletonBean(String name){
-		Object obj=null;
-		if(singletonInstances.containsKey(name)){
-			obj=singletonInstances.get(name);
-		}else{
-			if(beanDefinitions.containsKey(name)){
-				BeanDefinition beanDefinition=beanDefinitions.get(name);
-				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-				singletonInstances.put(beanDefinition.getName(),obj);
-			}
-		}
-		return obj;
-	}
-	/**
-	 * 得到Prototype类型Bean
-	 * @param name
-	 * @return
-	 */
-	private Object getPrototypeBean(String name){
-		Object obj=null;
-		if(beanDefinitions.containsKey(name)&&this.isPrototype(name)){
-			BeanDefinition beanDefinition=beanDefinitions.get(name);
-			if(beanDefinition.isMethodBean()){
-				BeanDefinition parentBeanDefinition=beanDefinitions.get(beanDefinition.getParentName());
-				Object parentObj=this.getBean(parentBeanDefinition.getName());
-				if(parentBeanDefinition.isSingleton()){
-					propertyAutowiredProcessor.autowire(parentObj);
-					putBean(parentBeanDefinition.getName(),parentObj);
-				}
-				obj=JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
-			}else{
-				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-			}
-		}
-		return obj;
+	public Map<String,Object> getSingletonInstances(){
+		return singletonInstances;
 	}
 	/**
 	 * 是否包含该Bean
@@ -195,7 +142,6 @@ public class BeanFactoryContext extends ContextInitializer{
 			singletonInstances.remove(name);
 		this.singletonInstances.put(name,obj);
 	}
-
 	/**
 	 * 根据名称得到Bean对象
 	 * @param name
@@ -203,14 +149,10 @@ public class BeanFactoryContext extends ContextInitializer{
 	 */
 	private Object getBeanObject(String name){
 		Object obj = null;
-		if (this.isSingleton(name)) {
-			obj = this.getSingletonBean(name);
-		} else if (this.isPrototype(name)) {
-			obj = this.getPrototypeBean(name);
-		}
-		if(obj==null){
-			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + name + "' available");
-			ex.printStackTrace();
+		if(singletonInstances.containsKey(name)){
+			obj=singletonInstances.get(name);
+		}else{
+			obj = beanObjectFactory.doCreateBean(this.getBeanDefinition(name));
 		}
 		return obj;
 	}

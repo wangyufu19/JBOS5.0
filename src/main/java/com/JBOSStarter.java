@@ -1,11 +1,13 @@
 package com;
 
+import com.application.examples.controller.UserMgrController;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 
 import com.jbosframework.boot.JBOSApplication;
 import com.jbosframework.test.AspectBeanService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 @JBOSBootApplication
 @Slf4j
@@ -16,8 +18,8 @@ public class JBOSStarter {
 		ApplicationContext ctx=jbosApplication.start(args);
 //		UserMgrController userMgrController=ctx.getBean("/user/getUserList",UserMgrController.class);
 //		userMgrController.getUserList();
-		AspectBeanService aspectBean=ctx.getBean(AspectBeanService.class);
-		aspectBean.aspect();
+//		AspectBeanService aspectBean=ctx.getBean(AspectBeanService.class);
+//		aspectBean.aspect();
 	}
 
 }
