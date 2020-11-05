@@ -1,6 +1,7 @@
 package com;
 
 import com.application.examples.controller.UserMgrController;
+import com.application.examples.service.UserMgrService;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 

@@ -3,8 +3,13 @@ import java.util.*;
 
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
+import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
+import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.AbstractBeanObjectFactory;
+import com.jbosframework.beans.factory.BeanFactory;
+import com.jbosframework.beans.factory.BeanObjectFactory;
 import com.jbosframework.beans.factory.BeanTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
  * @date 2016-11-14
  */
 
-public class BeanFactoryContext extends ContextInitializer{
+public class BeanFactoryContext extends ContextInitializer implements BeanFactory {
 	private static final Log log= LogFactory.getLog(BeanFactoryContext.class);
 	//XML and Annotation IoC Bean Singleton Instance
 	protected static Map<String,Object> singletonInstances=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
@@ -24,7 +29,12 @@ public class BeanFactoryContext extends ContextInitializer{
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
-	private AbstractBeanObjectFactory beanObjectFactory=new AbstractBeanObjectFactory(this);
+
+	private static List<BeanBeforeProcessor> beanBeforeProcessors=Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
+
+	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new ArrayList<BeanPostProcessor>());
+
+	private BeanObjectFactory beanObjectFactory=new AbstractBeanObjectFactory(this);
 
 	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher();
 
@@ -32,7 +42,7 @@ public class BeanFactoryContext extends ContextInitializer{
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
-
+		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 	}
 
 	/**
@@ -77,6 +87,8 @@ public class BeanFactoryContext extends ContextInitializer{
 		singletonInstances.clear();
 		beanDefinitions.clear();
 		beanInterfaces.clear();
+		beanBeforeProcessors.clear();
+		beanPostProcessors.clear();
 		getContextConfiguration().clear();
 	}
 	/**
@@ -235,5 +247,26 @@ public class BeanFactoryContext extends ContextInitializer{
 			}
 		}
 		return beansTypesMap;
+	}
+
+	/**
+	 * 添加BeanBeforeProcessor
+	 * @param beanBeforeProcessor
+	 */
+	public void addBeanBeforeProcessor(BeanBeforeProcessor beanBeforeProcessor){
+		beanBeforeProcessors.add(beanBeforeProcessor);
+	}
+	/**
+	 * 添加BeanPostProcessor
+	 * @param beanPostProcessor
+	 */
+	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
+		beanPostProcessors.add(beanPostProcessor);
+	}
+	public List<BeanBeforeProcessor> getBeanBeforeProcessors(){
+		return beanBeforeProcessors;
+	}
+	public List<BeanPostProcessor> getBeanPostProcessors(){
+		return beanPostProcessors;
 	}
 }

@@ -1,5 +1,7 @@
 package com.jbosframework.beans.factory;
+import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
 
 import java.util.Map;
@@ -79,5 +81,14 @@ public class AnnotationBeanFactory implements BeanFactory{
 	 */
 	public void putBeanNameOfType(String interfaceName,BeanDefinition beanDefinition){
 		this.ctx.putBeanNameOfType(interfaceName,beanDefinition);
+	}
+	public <T> Map<String, BeanDefinition> getBeanNamesOfType(Class<T> requiredType){
+		return this.ctx.getBeanNamesOfType(requiredType);
+	}
+	public void addBeanBeforeProcessor(BeanBeforeProcessor beanBeforeProcessor){
+		this.ctx.addBeanBeforeProcessor(beanBeforeProcessor);
+	}
+	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
+		this.ctx.addBeanPostProcessor(beanPostProcessor);
 	}
 }

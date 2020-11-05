@@ -3,6 +3,7 @@ package com.jbosframework.boot;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
+import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.support.AnnotationApplicationContext;
@@ -30,7 +31,10 @@ public class JBOSApplication {
      * 初始化配置
      * @param args
      */
-    private void initConfiguration(String... args){
+    private void prepareContext(String... args){
+        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
+        configurationPropertiesChecker.setBeanFactory(ctx);
+        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
         //开启切面自动代理
         EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
         if(enableAspectJAutoProxy!=null){
@@ -45,8 +49,8 @@ public class JBOSApplication {
     public ApplicationContext start(String... args)  {
         long stime=System.currentTimeMillis();
         long etime=System.currentTimeMillis();
-        //初始化环境配置
-        this.initConfiguration(args);
+        //初始化容器上下文
+        this.prepareContext(args);
         //注册和扫描启动类所在包和子包下的所有组件类到容器中
         ctx.registry(jbosBootClass);
         //加载自动配置的组件类到容器中

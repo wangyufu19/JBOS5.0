@@ -11,11 +11,7 @@ public class DataSourceBuilder {
     public static DataSourceBuilder create(){
         return new DataSourceBuilder();
     }
-    public DataSource build(DataSourceProperties properties){
-        if(properties instanceof TomcatDataSourceProperties) {
-            return DataSourcePoolBuilder.TomcatDataSourcePool.build(properties);
-        }else {
-            return null;
-        }
+    public DataSource build(){
+        return new DataSourceWrapper();
     }
 }

@@ -3,6 +3,7 @@ package com.jbosframework.beans.annotation;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
+import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.jepl.JEPL;
@@ -31,7 +32,6 @@ public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
     public AnnotationBeanAutowiredProcessor(BeanFactoryContext ctx){
         this.beanFactoryContext=ctx;
     }
-
     public Object process(Object bean,BeanDefinition beanDefinition){
         Object obj=bean;
         Class<?> cls=null;

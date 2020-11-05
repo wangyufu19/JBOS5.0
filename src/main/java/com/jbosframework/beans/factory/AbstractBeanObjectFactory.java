@@ -1,5 +1,5 @@
 package com.jbosframework.beans.factory;
-import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
+import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.support.BeanFactoryContext;
@@ -12,10 +12,9 @@ import org.apache.commons.logging.LogFactory;
  * @author youfu.wang
  * @version 1.0
  */
-public class AbstractBeanObjectFactory implements BeanObject{
+public class AbstractBeanObjectFactory implements BeanObjectFactory {
     private static final Log log= LogFactory.getLog(AbstractBeanObjectFactory.class);
     private BeanFactoryContext ctx;
-    private BeanPostProcessor beanPostProcessor;
     private Object bean;
     /**
      * 构造方法
@@ -23,7 +22,6 @@ public class AbstractBeanObjectFactory implements BeanObject{
      */
     public AbstractBeanObjectFactory(BeanFactoryContext ctx){
         this.ctx=ctx;
-        beanPostProcessor=new AnnotationBeanAutowiredProcessor(ctx);
     }
 
     /**
@@ -52,18 +50,43 @@ public class AbstractBeanObjectFactory implements BeanObject{
             BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
             ex.printStackTrace();
         }
-        this.afterProperties();
-        bean=this.beanPostProcessor.process(bean,beanDefinition);
+        bean=this.doBeanPostProcessor(bean,beanDefinition);
         if(beanDefinition.isSingleton()){
             ctx.putBean(beanDefinition.getName(),bean);
         }
         return bean;
     }
-    /**
-     * 处理Bean对象的依赖属性
-     */
-    public void afterProperties() {
 
+    /**
+     * 处理Bean对象的Processor
+     * @param bean
+     * @param beanDefinition
+     * @return
+     */
+    private Object doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
+        Object obj=bean;
+        Object tmp=null;
+        for(BeanBeforeProcessor beanBeforeProcessor:ctx.getBeanBeforeProcessors()){
+            tmp=beanBeforeProcessor.process(bean);
+            if(tmp!=null){
+                obj=tmp;
+            }
+        }
+        return obj;
+    }
+    /**
+     * 处理Bean对象的Processor
+     */
+    private Object doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
+        Object obj=bean;
+        Object tmp=null;
+        for(BeanPostProcessor beanPostProcessor:ctx.getBeanPostProcessors()){
+            tmp=beanPostProcessor.process(bean,beanDefinition);
+            if(tmp!=null){
+                obj=tmp;
+            }
+        }
+        return obj;
     }
     /**
      * 创建方法Bean对象
@@ -73,11 +96,6 @@ public class AbstractBeanObjectFactory implements BeanObject{
         Object obj;
         BeanDefinition parentBeanDefinition=ctx.getBeanDefinition(beanDefinition.getParentName());
         Object parentObj=ctx.getBean(parentBeanDefinition.getName());
-        this.afterProperties();
-        this.beanPostProcessor.process(parentObj,beanDefinition);
-        if(parentBeanDefinition.isSingleton()){
-            ctx.putBean(parentBeanDefinition.getName(),parentObj);
-        }
         obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
         return obj;
     }

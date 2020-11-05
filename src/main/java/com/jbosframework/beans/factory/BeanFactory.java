@@ -1,5 +1,7 @@
 package com.jbosframework.beans.factory;
+import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.BeanPostProcessor;
 
 import java.util.Map;
 
@@ -34,4 +36,10 @@ public interface BeanFactory {
 	public void putBeanDefinition(BeanDefinition beanDefinition);
 
 	public void putBeanNameOfType(String interfaceName,BeanDefinition beanDefinition);
+
+	public <T> Map<String, BeanDefinition> getBeanNamesOfType(Class<T> requiredType);
+
+	public void addBeanBeforeProcessor(BeanBeforeProcessor beanBeforeProcessor);
+
+	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 }

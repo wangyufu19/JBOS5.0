@@ -31,7 +31,11 @@ public class DataSourceConfiguration {
 
         }
         public DataSource getDataSource(DataSourceProperties properties){
-           return DataSourceBuilder.create().build(properties);
+            if(properties instanceof TomcatDataSourceProperties) {
+                return DataSourcePoolBuilder.TomcatDataSourcePool.build(properties);
+            }else {
+                return null;
+            }
         }
     }
 }

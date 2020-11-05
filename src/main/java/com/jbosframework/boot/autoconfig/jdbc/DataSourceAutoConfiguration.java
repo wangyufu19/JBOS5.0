@@ -9,7 +9,6 @@ import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.core.JBOSClassCaller;
-import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import javax.sql.DataSource;
@@ -56,20 +55,8 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
      */
     private void doCreateDataSource(ApplicationContext ctx,Class<?> dataSourceCls){
         Object obj=null;
-        ConfigurationProperties configurationPropertiesAnnotation=dataSourceCls.getAnnotation(ConfigurationProperties.class);
-        if (configurationPropertiesAnnotation!=null){
-            DataSourceProperties dataSourceProperties=null;
-            String type= StringUtils.replaceNull(ctx.getContextConfiguration().getContextProperty(DataSourceProperties.DATASOURCE_TYPE));
-            String driverClass=StringUtils.replaceNull(ctx.getContextConfiguration().getContextProperty(DataSourceProperties.DATASOURCE_DRIVERCLASS));
-            Object properties=ctx.getContextConfiguration().getContextProperty(configurationPropertiesAnnotation.prefix());
-            if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
-                dataSourceProperties=new TomcatDataSourceProperties();
-            }
-            if(dataSourceProperties!=null){
-                dataSourceProperties.setType(type);
-                dataSourceProperties.setDriverClass(driverClass);
-                dataSourceProperties.load(properties);
-            }
+        DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.create(ctx,dataSourceCls.getAnnotation(ConfigurationProperties.class));
+        if (dataSourceProperties!=null){
             Object[] parameterValues=new Object[1];
             parameterValues[0]=dataSourceProperties;
             Class<?>[] parameterTypes=new Class<?>[1];

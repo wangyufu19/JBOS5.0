@@ -1,5 +1,6 @@
 package com.jbosframework.beans.config;
 
+import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.context.support.BeanFactoryContext;
 
 import java.lang.reflect.Field;
@@ -11,14 +12,14 @@ import java.lang.reflect.Modifier;
  * @date 2016-12-12
  */
 public class InjectionMetadata {
-    private BeanFactoryContext beanFactoryContext;
+    private BeanFactory beanFactory;
     private boolean isField=true;
     /**
      * 构造方法
-     * @param beanFactoryContext
+     * @param beanFactory
      */
-    public InjectionMetadata(BeanFactoryContext beanFactoryContext){
-        this.beanFactoryContext=beanFactoryContext;
+    public InjectionMetadata(BeanFactory beanFactory){
+        this.beanFactory=beanFactory;
     }
 
     /**
