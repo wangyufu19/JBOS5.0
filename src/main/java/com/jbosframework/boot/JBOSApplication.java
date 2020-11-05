@@ -33,7 +33,7 @@ public class JBOSApplication {
      */
     private void prepareContext(String... args){
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
-        configurationPropertiesChecker.setBeanFactory(ctx);
+        configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
         //开启切面自动代理
         EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);

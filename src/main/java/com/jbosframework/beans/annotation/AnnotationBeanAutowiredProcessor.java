@@ -5,7 +5,6 @@ import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanTypeException;
-import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
 import org.apache.commons.logging.Log;
@@ -27,10 +26,14 @@ import java.util.Map;
  */
 public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
     private static final Log log= LogFactory.getLog(AnnotationBeanAutowiredProcessor.class);
-    private BeanFactoryContext beanFactoryContext;
+    private BeanFactory beanFactory;
 
-    public AnnotationBeanAutowiredProcessor(BeanFactoryContext ctx){
-        this.beanFactoryContext=ctx;
+    public AnnotationBeanAutowiredProcessor(BeanFactory beanFactory){
+        this.beanFactory=beanFactory;
+    }
+
+    public Object process(Object bean){
+        return this.process(bean,null);
     }
     public Object process(Object bean,BeanDefinition beanDefinition){
         Object obj=bean;
@@ -43,7 +46,7 @@ public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
         if(fields==null) {
             return obj;
         }
-        InjectionMetadata injectionMetadata=new InjectionMetadata(this.beanFactoryContext);
+        InjectionMetadata injectionMetadata=new InjectionMetadata(this.beanFactory);
         for(int i=0;i<fields.length;i++) {
             Annotation[] annotations = fields[i].getAnnotations();
             if (annotations == null || annotations.length <= 0) {
@@ -73,7 +76,7 @@ public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
         Object fieldValue=null;
         if(annotation instanceof Autowired) {
             if(field.getType().isInterface()){
-                Map<String, BeanDefinition> beansTypesMap=this.beanFactoryContext.getBeanNamesOfType(field.getType());
+                Map<String, BeanDefinition> beansTypesMap=this.beanFactory.getBeanNamesOfType(field.getType());
                 List<BeanDefinition> beanNames=new ArrayList<BeanDefinition>();
                 String beanNameClass="";
                 for(Map.Entry<String,BeanDefinition> entry:beansTypesMap.entrySet()){
@@ -81,18 +84,18 @@ public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
                     beanNames.add(entry.getValue());
                 }
                 if(beanNames.size()<=0){
-                    fieldValue=this.beanFactoryContext.getBean(field.getType().getName());
+                    fieldValue=this.beanFactory.getBean(field.getType().getName());
                 }else{
                     if(beanNames.size()>1){
                         BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + field.getType() + "' available:找到多个实现Bean["+beanNameClass+"]");
                         ex.printStackTrace();
                         return null;
                     }else{
-                        fieldValue=this.beanFactoryContext.getBean(beanNames.get(0).getName());
+                        fieldValue=this.beanFactory.getBean(beanNames.get(0).getName());
                     }
                 }
             }else{
-                fieldValue=this.beanFactoryContext.getBean(field.getType().getName());
+                fieldValue=this.beanFactory.getBean(field.getType().getName());
             }
         }else if(annotation instanceof Value) {
             String s1;
@@ -101,11 +104,11 @@ public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
             //判断值引用JEPL表达式的值
             if(JEPL.matches(s1)){
                 s1=s1.replace(JEPL.JEPL_PATTERN_PREFIX, "").replace(JEPL.JEPL_PATTERN_SUFFIX, "");
-                fieldValue=this.beanFactoryContext.getContextConfiguration().getContextProperty(s1);
+                fieldValue=this.beanFactory.getContextConfiguration().getContextProperty(s1);
             }
         }else if(annotation instanceof Mapper){
             if(field.getType().isInterface()) {
-                SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactoryContext.getBean(SqlSessionFactory.class.getName());
+                SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactory.getBean(SqlSessionFactory.class.getName());
                 if(SqlSessionBeanUtils.isMapperBean(sqlSessionFactory,field.getType())){
                     MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(field.getType());
                     fieldValue=mapperProxyFactory.newInstance(sqlSessionFactory.openSession());

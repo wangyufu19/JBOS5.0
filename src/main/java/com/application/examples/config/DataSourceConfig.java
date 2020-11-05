@@ -1,9 +1,8 @@
 package com.application.examples.config;
 import com.jbosframework.beans.annotation.Bean;
-import com.jbosframework.beans.annotation.Value;
+import com.jbosframework.boot.autoconfig.jdbc.DataSourceBuilder;
+import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.jdbc.datasource.DriverManagerDataSource;
-import com.jbosframework.jdbc.datasource.JndiNamingDataSource;
 import lombok.extern.slf4j.Slf4j;
 import javax.sql.DataSource;
 
@@ -12,8 +11,12 @@ import javax.sql.DataSource;
  * @author youfu.wang
  * @version 1.0
  */
-//@Configuration
+@Configuration
 @Slf4j
 public class DataSourceConfig {
-
+    @Bean
+    @ConfigurationProperties(prefix = "jbos.datasource.tomcat")
+    public DataSource getDataSource(){
+        return DataSourceBuilder.create().build();
+    }
 }

@@ -50,6 +50,7 @@ public class AbstractBeanObjectFactory implements BeanObjectFactory {
             BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
             ex.printStackTrace();
         }
+        bean=this.doBeanBeforeProcessor(bean,beanDefinition);
         bean=this.doBeanPostProcessor(bean,beanDefinition);
         if(beanDefinition.isSingleton()){
             ctx.putBean(beanDefinition.getName(),bean);

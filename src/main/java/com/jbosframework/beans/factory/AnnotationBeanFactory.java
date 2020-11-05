@@ -3,6 +3,7 @@ import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.configuration.Configuration;
 
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public class AnnotationBeanFactory implements BeanFactory{
 		this.ctx=ctx;
 		annotationScanFactory = new AnnotationScanFactory(ctx);
 		annotationScanFactory.scan(clses);
+	}
+	public Configuration getContextConfiguration(){
+		return ctx.getContextConfiguration();
 	}
 	public boolean containsBean(String name) {
 		return ctx.containsBean(name);
