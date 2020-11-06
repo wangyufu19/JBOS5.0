@@ -68,7 +68,7 @@ public class AbstractBeanObjectFactory implements BeanObjectFactory {
         Object obj=bean;
         Object tmp=null;
         for(BeanBeforeProcessor beanBeforeProcessor:ctx.getBeanBeforeProcessors()){
-            tmp=beanBeforeProcessor.process(bean);
+            tmp=beanBeforeProcessor.process(bean,beanDefinition);
             if(tmp!=null){
                 obj=tmp;
             }

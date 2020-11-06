@@ -70,15 +70,15 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 */
 	public void putBeanDefinition(BeanDefinition beanDefinition){
 		if(beanDefinition==null) {
-			return;				
-		}
-		if(!beanDefinitions.containsKey(beanDefinition.getId())||!beanDefinitions.containsKey(beanDefinition.getName())){
-			if(!"".equals(beanDefinition.getName())){
-				beanDefinitions.put(beanDefinition.getName(),beanDefinition);
-			}else if(!"".equals(beanDefinition.getId())){
-				beanDefinitions.put(beanDefinition.getId(), beanDefinition);
-			}
-		}
+            return;
+        }
+        if(!beanDefinitions.containsKey(beanDefinition.getId())||!beanDefinitions.containsKey(beanDefinition.getName())){
+            if(!"".equals(beanDefinition.getName())){
+                beanDefinitions.put(beanDefinition.getName(),beanDefinition);
+            }else if(!"".equals(beanDefinition.getId())){
+                beanDefinitions.put(beanDefinition.getId(), beanDefinition);
+            }
+        }
 	}
 	/**
 	 * 销毁Bean对象内存

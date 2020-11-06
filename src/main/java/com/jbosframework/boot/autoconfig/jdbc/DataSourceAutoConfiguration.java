@@ -55,7 +55,7 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
      */
     private void doCreateDataSource(ApplicationContext ctx,Class<?> dataSourceCls){
         Object obj=null;
-        DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.create(ctx,dataSourceCls.getAnnotation(ConfigurationProperties.class));
+        DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.getInstance().create(ctx,dataSourceCls.getAnnotation(ConfigurationProperties.class));
         if (dataSourceProperties!=null){
             Object[] parameterValues=new Object[1];
             parameterValues[0]=dataSourceProperties;

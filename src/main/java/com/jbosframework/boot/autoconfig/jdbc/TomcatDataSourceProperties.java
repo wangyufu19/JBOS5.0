@@ -165,11 +165,16 @@ public class TomcatDataSourceProperties extends DataSourceProperties{
      */
     public void load(Object properties){
         if(properties instanceof Map){
-            Map<String,Object> obj=(Map<String,Object>)properties;
-            this.setUrl(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_URL)));
-            this.setUsername(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_USERNAME)));
-            this.setPassword(StringUtils.replaceNull(obj.get(DataSourceProperties.DATASOURCE_PASSWORD)));
+            Map<String,Object> pro=(Map<String,Object>)properties;
+            if(pro.containsKey(DataSourceProperties.DATASOURCE_URL)){
+                this.setUrl(StringUtils.replaceNull(pro.get(DataSourceProperties.DATASOURCE_URL)));
+            }
+            if(pro.containsKey(DataSourceProperties.DATASOURCE_USERNAME)){
+                this.setUsername(StringUtils.replaceNull(pro.get(DataSourceProperties.DATASOURCE_USERNAME)));
+            }
+            if(pro.containsKey(DataSourceProperties.DATASOURCE_PASSWORD)){
+                this.setPassword(StringUtils.replaceNull(pro.get(DataSourceProperties.DATASOURCE_PASSWORD)));
+            }
         }
-
     }
 }

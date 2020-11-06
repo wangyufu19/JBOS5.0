@@ -1,5 +1,6 @@
 package com.jbosframework.boot.context;
 import com.jbosframework.beans.config.BeanBeforeProcessor;
+import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.boot.autoconfig.jdbc.DataSourceProperties;
 import com.jbosframework.boot.autoconfig.jdbc.DataSourcePropertiesBuilder;
 import com.jbosframework.context.ApplicationContext;
@@ -19,11 +20,14 @@ public class ConfigurationPropertiesChecker implements BeanBeforeProcessor {
         this.applicationContext=applicationContext;
     }
 
-    public Object process(Object bean){
+    public Object process(Object bean,BeanDefinition beanDefinition){
         Object obj=bean;
-        ConfigurationProperties configurationProperties=bean.getClass().getDeclaredAnnotation(ConfigurationProperties.class);
+        ConfigurationProperties configurationProperties=(ConfigurationProperties)beanDefinition.getAnnotation(ConfigurationProperties.class);
+        if(configurationProperties==null){
+            configurationProperties=bean.getClass().getDeclaredAnnotation(ConfigurationProperties.class);
+        }
         if(configurationProperties!=null){
-            DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.create(applicationContext,configurationProperties);
+            DataSourceProperties dataSourceProperties= DataSourcePropertiesBuilder.getInstance().create(applicationContext,configurationProperties);
             applicationContext.putBean(DataSourceProperties.class.getName(),dataSourceProperties);
         }
         return obj;

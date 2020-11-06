@@ -51,6 +51,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         Configuration configuration=cls.getAnnotation(Configuration.class);
         if(configuration!=null){
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(configuration.value(),cls);
+            annotationBean.setAnnotations(cls.getDeclaredAnnotations());
             //注入注解Bean
             this.registryBean(cls,annotationBean);
             //注入类方法注解
@@ -65,6 +66,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         Bean bean=cls.getAnnotation(Bean.class);
         if(bean!=null){
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(bean.value(),cls);
+            annotationBean.setAnnotations(cls.getDeclaredAnnotations());
             //注入注解Bean
             this.registryBean(cls,annotationBean);
             //注册Bean的接口
@@ -102,6 +104,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         Service service=cls.getAnnotation(Service.class);
         if(service!=null){
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(service.value(),cls);
+            annotationBean.setAnnotations(cls.getDeclaredAnnotations());
             //注入注解Bean
             this.registryBean(cls,annotationBean);
             //注册Bean的接口
@@ -116,6 +119,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
         Repository repository=cls.getAnnotation(Repository.class);
         if(repository!=null){
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(repository.value(),cls);
+            annotationBean.setAnnotations(cls.getDeclaredAnnotations());
             //注入注解Bean
             this.registryBean(cls,annotationBean);
             //注册Bean的接口
@@ -141,6 +145,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
                 if(annotation instanceof Bean){
                     //加载Bean注解
                     AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),methods[i].getReturnType());
+                    annotationBean.setAnnotations(annotations);
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                     annotationBean.setIsMethodBean(true);
@@ -152,6 +157,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
                     this.registryBean(methods[i].getClass(),annotationBean);
                 }else if(annotation instanceof RequestMapping){
                     AnnotationBean annotationBean=new AnnotationBean();
+                    annotationBean.setAnnotations(annotations);
                     annotationBean.setClassName(cls.getName());
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));

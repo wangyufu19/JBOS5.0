@@ -1,7 +1,6 @@
 package com.jbosframework.beans.config;
 import java.lang.annotation.Annotation;
 import com.jbosframework.beans.annotation.Scope;
-import com.jbosframework.beans.config.BeanPropertyAccessor;
 /**
  * BeanDefinition
  * @author youfu.wang
@@ -9,7 +8,6 @@ import com.jbosframework.beans.config.BeanPropertyAccessor;
  */
 public class BeanDefinition extends BeanPropertyAccessor {
 
-	private Annotation annotation;
 	private String id;
 	private String name;
 	private String parentName;
@@ -17,7 +15,7 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	private boolean isMethodBean=false;
 	private String classMethod;
 	private String scope;
-
+	private Annotation[] annotations;
 
 	public BeanDefinition(){	
 		this.className="";
@@ -80,17 +78,30 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	public String getParentName(){
 		return this.parentName;
 	}
-	public Annotation getAnnotation() {
-		return annotation;
-	}
-
-	public void setAnnotation(Annotation annotation) {
-		this.annotation = annotation;
-	}
 	public String getClassMethod() {
 		return classMethod;
 	}
 	public void setClassMethod(String classMethod) {
 		this.classMethod = classMethod;
+	}
+
+	public Annotation[] getAnnotations() {
+		return annotations;
+	}
+
+	public void setAnnotations(Annotation[] annotations) {
+		this.annotations = annotations;
+	}
+	public Annotation getAnnotation(Class<?> cls){
+		Annotation result=null;
+		if(annotations!=null){
+			for(Annotation annotation:annotations){
+				if(annotation.annotationType().getName().equals(cls.getName())){
+					result=annotation;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 }

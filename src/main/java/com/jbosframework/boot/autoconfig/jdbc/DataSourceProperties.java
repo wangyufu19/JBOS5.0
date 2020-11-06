@@ -5,6 +5,7 @@ package com.jbosframework.boot.autoconfig.jdbc;
  * @version 1.0
  */
 public abstract class DataSourceProperties {
+    public static final String DATASOURCE="jbos.datasource";
     public static final String DATASOURCE_TYPE="jbos.datasource.type";
     public static final String DATASOURCE_TYPE_TOMCAT="org.apache.tomcat.jdbc.pool.DataSource";
     public static final String DATASOURCE_DRIVERCLASS="jbos.datasource.driverClass";
