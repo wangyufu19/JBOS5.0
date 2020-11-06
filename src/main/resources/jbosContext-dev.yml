@@ -5,10 +5,11 @@ jbos:
     driverClass: com.mysql.cj.jdbc.Driver
     #oracle.jdbc.driver.OracleDriver
     tomcat:
-      url: jdbc:mysql://127.0.0.1:3306/jbos?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
-      #jdbc:oracle:thin:@127.0.0.1:1521:orcl
-      username: jbos
-      password: jbos
+      default:
+        url: jdbc:mysql://127.0.0.1:3306/jbos?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&nullCatalogMeansCurrent=true
+        #jdbc:oracle:thin:@127.0.0.1:1521:orcl
+        username: jbos
+        password: jbos
       testWhileIdle: false
       testOnBorrow: true
       validationQuery: SELECT 1
