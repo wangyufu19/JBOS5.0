@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 @Configuration
 @Slf4j
 public class DataSourceConfig {
-    @Bean
+    @Bean("default")
     @ConfigurationProperties(prefix = "jbos.datasource.tomcat.default")
     public DataSource getDataSource(){
         return DataSourceBuilder.create().build();

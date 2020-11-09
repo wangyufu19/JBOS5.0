@@ -1,5 +1,6 @@
 package com.jbosframework.beans.config;
 
+import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.utils.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -31,6 +32,10 @@ public class AnnotationBean extends BeanDefinition{
 		annotationBean.setId(id);
 		annotationBean.setName(id);
 		annotationBean.setClassName(cls.getName());
+		Scope scope=cls.getAnnotation(Scope.class);
+		if(scope!=null){
+			annotationBean.setScope(scope.value());
+		}
 		return annotationBean;
 	}
 }
