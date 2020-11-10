@@ -1,7 +1,5 @@
 package com.jbosframework.beans.factory;
-import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.support.BeanFactoryContext;
 import com.jbosframework.core.JBOSClassCaller;
 import org.apache.commons.logging.Log;
@@ -50,45 +48,10 @@ public class AbstractBeanObjectFactory implements BeanObjectFactory {
             BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
             ex.printStackTrace();
         }
-        bean=this.doBeanBeforeProcessor(bean,beanDefinition);
-        bean=this.doBeanPostProcessor(bean,beanDefinition);
-        if(beanDefinition.isSingleton()){
-            ctx.putBean(beanDefinition.getName(),bean);
-        }
         return bean;
     }
 
-    /**
-     * 处理Bean对象的Processor
-     * @param bean
-     * @param beanDefinition
-     * @return
-     */
-    private Object doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
-        Object obj=bean;
-        Object tmp=null;
-        for(BeanBeforeProcessor beanBeforeProcessor:ctx.getBeanBeforeProcessors()){
-            tmp=beanBeforeProcessor.process(bean,beanDefinition);
-            if(tmp!=null){
-                obj=tmp;
-            }
-        }
-        return obj;
-    }
-    /**
-     * 处理Bean对象的Processor
-     */
-    private Object doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
-        Object obj=bean;
-        Object tmp=null;
-        for(BeanPostProcessor beanPostProcessor:ctx.getBeanPostProcessors()){
-            tmp=beanPostProcessor.process(bean,beanDefinition);
-            if(tmp!=null){
-                obj=tmp;
-            }
-        }
-        return obj;
-    }
+
     /**
      * 创建方法Bean对象
      * @param beanDefinition

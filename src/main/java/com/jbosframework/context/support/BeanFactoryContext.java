@@ -1,6 +1,11 @@
 package com.jbosframework.context.support;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import com.jbosframework.aop.AopProxyUtils;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
@@ -14,6 +19,7 @@ import com.jbosframework.beans.factory.BeanTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * BeanFactoryContext
  * @author youfu.wang
@@ -24,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 public class BeanFactoryContext extends ContextInitializer implements BeanFactory {
 	private static final Log log= LogFactory.getLog(BeanFactoryContext.class);
 	//XML and Annotation IoC Bean Singleton Instance
-	protected static Map<String,Object> singletonInstances=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
+	protected static Map<String,Object> singletonInstances= Collections.synchronizedMap(new LinkedHashMap<String,Object>());
 	//XML and Annotation IoC Bean 
 	protected static Map<String,BeanDefinition> beanDefinitions=Collections.synchronizedMap(new LinkedHashMap<String,BeanDefinition>());
 	//Bean Interface Map
@@ -164,7 +170,13 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		if(singletonInstances.containsKey(name)){
 			obj=singletonInstances.get(name);
 		}else{
-			obj = beanObjectFactory.doCreateBean(this.getBeanDefinition(name));
+			BeanDefinition beanDefinition=this.getBeanDefinition(name);
+			obj = beanObjectFactory.doCreateBean(beanDefinition);
+			obj=this.doBeanBeforeProcessor(obj,beanDefinition);
+			obj=this.doBeanPostProcessor(obj,beanDefinition);
+			if(beanDefinition.isSingleton()){
+				this.putBean(beanDefinition.getName(),obj);
+			}
 		}
 		return obj;
 	}
@@ -268,5 +280,37 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	}
 	public List<BeanPostProcessor> getBeanPostProcessors(){
 		return beanPostProcessors;
+	}
+
+	/**
+	 * 处理Bean对象的Processor
+	 * @param bean
+	 * @param beanDefinition
+	 * @return
+	 */
+	private Object doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
+		Object obj=bean;
+		Object tmp=null;
+		for(BeanBeforeProcessor beanBeforeProcessor:this.getBeanBeforeProcessors()){
+			tmp=beanBeforeProcessor.process(bean,beanDefinition);
+			if(tmp!=null){
+				obj=tmp;
+			}
+		}
+		return obj;
+	}
+	/**
+	 * 处理Bean对象的Processor
+	 */
+	private Object doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
+		Object obj=bean;
+		Object tmp=null;
+		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
+			tmp=beanPostProcessor.process(bean,beanDefinition);
+			if(tmp!=null){
+				obj=tmp;
+			}
+		}
+		return obj;
 	}
 }
