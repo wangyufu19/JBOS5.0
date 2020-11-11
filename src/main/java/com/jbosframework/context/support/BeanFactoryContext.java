@@ -85,6 +85,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
                 beanDefinitions.put(beanDefinition.getId(), beanDefinition);
             }
         }
+        beanDefinitions.put(beanDefinition.getClassName(),beanDefinition);
 	}
 	/**
 	 * 销毁Bean对象内存

@@ -146,7 +146,7 @@ public class AnnotationBeanRegistry extends BeanRegistry{
                     annotationBean.setIsMethodBean(true);
                     annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
                     if(methods[i].getReturnType().isInterface()){
-                        this.registryBeanInterfaces(methods[i].getReturnType().getName(),annotationBean);
+                        this.getApplicationContext().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
                     }
                     this.getApplicationContext().putBeanDefinition(annotationBean);
                 }else if(annotation instanceof RequestMapping){
@@ -165,20 +165,6 @@ public class AnnotationBeanRegistry extends BeanRegistry{
                 }
             }
         }
-    }
-    //注册Bean的接口
-    private void registryBeanInterfaces(Class<?> cls,AnnotationBean annotationBean){
-        Class<?>[] interfaces=cls.getInterfaces();
-        if(interfaces==null){
-            return;
-        }
-        for(Class interfaceCls:interfaces){
-            this.getApplicationContext().putBeanNameOfType(interfaceCls.getName(),annotationBean);
-        }
-    }
-    //注册Bean的接口
-    private void registryBeanInterfaces(String interfaceName,AnnotationBean annotationBean){
-        this.getApplicationContext().putBeanNameOfType(interfaceName,annotationBean);
     }
     /**
      * 注册Bean
