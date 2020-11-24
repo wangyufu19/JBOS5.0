@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jbos</artifactId>
+        <groupId>com.jbosframework</groupId>
+        <version>5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jbos-application</artifactId>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.jbosframework.beans</groupId>
+            <artifactId>jbos-beans</artifactId>
+            <version>${jbos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.context</groupId>
+            <artifactId>jbos-context</artifactId>
+            <version>${jbos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.web</groupId>
+            <artifactId>jbos-web</artifactId>
+            <version>${jbos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.boot</groupId>
+            <artifactId>jbos-boot</artifactId>
+            <version>${jbos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.orm</groupId>
+            <artifactId>jbos-orm</artifactId>
+            <version>${jbos.version}</version>
+        </dependency>
+    </dependencies>
+</project>
