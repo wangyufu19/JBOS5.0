@@ -29,7 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jbos.version>5.0</jbos.version>
         <java.version>1.8</java.version>
-        <tomcat.version>8.5.37</tomcat.version>
+        <tomcat.version>9.0.40</tomcat.version>
         <jettyVersion>9.3.9.v20160517</jettyVersion>
         <yaml.version>1.23</yaml.version>
         <mysql.version>8.0.11</mysql.version>
