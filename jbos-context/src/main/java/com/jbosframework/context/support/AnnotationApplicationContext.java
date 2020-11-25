@@ -23,6 +23,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
 		if(this.isEnableAspectJAutoProxy()){
 			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
+			this.addBeanPostProcessor(new AnnotationAspectjProcessor(this));
 		}
 	}
 	/**
@@ -33,6 +34,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
 		if(this.isEnableAspectJAutoProxy()){
 			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
+			this.addBeanPostProcessor(new AnnotationAspectjProcessor(this));
 		}
 	}
 	/**

@@ -9,8 +9,6 @@ import java.util.List;
 
 import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
 import com.jbosframework.beans.factory.*;
-import com.jbosframework.beans.support.AopProxyUtils;
-import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
 import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
@@ -41,13 +39,13 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 
 	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new ArrayList<BeanPostProcessor>());
 
-	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.getAspectProxyBeanContext());
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 		beanPostProcessors.add(new AnnotationMapperProcessor(this));
+		beanPostProcessors.add(new ProxyFactoryBean());
 	}
 	/**
 	 * 构造方法
@@ -56,6 +54,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		super(configuration);
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 		beanPostProcessors.add(new AnnotationMapperProcessor(this));
+		beanPostProcessors.add(new ProxyFactoryBean());
 	}
 
 	/**
@@ -226,18 +225,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * @return
 	 */
 	public Object getBean(String name) {
-		Object obj = getBeanObject(name);
-		if(obj==null){
-			return null;
-		}
-		if(AopProxyUtils.isAopProxyBean(obj)){
-			//判断是否AOP代理Bean
-			obj= AopProxyUtils.getAopProxy(obj);
-		}else if(pointcutMethodMatcher.match(obj)){
-			//判断是否切面AOP代理Bean
-			obj=pointcutMethodMatcher.getAspectAopProxy(obj);
-		}
-		return obj;
+		return getBeanObject(name);
 	}
 	public <T> T getBean(String name,Class<T> requiredType){
 		Object obj=null;
