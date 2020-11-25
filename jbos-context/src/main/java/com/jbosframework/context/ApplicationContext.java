@@ -1,5 +1,4 @@
 package com.jbosframework.context;
-import com.jbosframework.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.configuration.Configuration;
@@ -30,12 +29,11 @@ public interface ApplicationContext extends BeanFactory{
 	 * @return
 	 */
 	public Configuration getContextConfiguration();
-
 	/**
-	 * 得到切面上下文对象实例
-	 * @return
+	 * 设置启用切面
+	 * @param enableAspectJAutoProxy
 	 */
-	public AspectProxyBeanContext getAspectProxyBeanContext();
+	public void setEnableAspectJAutoProxy(boolean enableAspectJAutoProxy);
 	/**
 	 * 刷新容器上下文
 	 */

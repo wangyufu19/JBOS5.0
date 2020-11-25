@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.support.AopProxyUtils;
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
@@ -14,6 +15,7 @@ import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
 import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
+import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,12 +42,20 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new ArrayList<BeanPostProcessor>());
 
 	private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.getAspectProxyBeanContext());
-
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
+		beanPostProcessors.add(new AnnotationMapperProcessor(this));
+	}
+	/**
+	 * 构造方法
+	 */
+	public BeanFactoryContext(Configuration configuration){
+		super(configuration);
+		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
+		beanPostProcessors.add(new AnnotationMapperProcessor(this));
 	}
 
 	/**
@@ -170,8 +180,8 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		}else{
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
 			obj = this.doCreateBean(beanDefinition);
-			obj=this.doBeanBeforeProcessor(obj,beanDefinition);
-            obj=this.doBeanPostProcessor(obj,beanDefinition);
+			this.doBeanBeforeProcessor(obj,beanDefinition);
+            this.doBeanPostProcessor(obj,beanDefinition);
 			if(beanDefinition.isSingleton()){
 				this.putBean(beanDefinition.getName(),obj);
 			}
@@ -318,29 +328,17 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * @param beanDefinition
 	 * @return
 	 */
-	private Object doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
-		Object obj=bean;
-		Object tmp=null;
+	private void doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
 		for(BeanBeforeProcessor beanBeforeProcessor:this.getBeanBeforeProcessors()){
-			tmp=beanBeforeProcessor.process(bean,beanDefinition);
-			if(tmp!=null){
-				obj=tmp;
-			}
+			beanBeforeProcessor.process(bean,beanDefinition);
 		}
-		return obj;
 	}
 	/**
 	 * 处理Bean对象的Processor
 	 */
-	private Object doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
-		Object obj=bean;
-		Object tmp=null;
+	private void doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
 		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
-			tmp=beanPostProcessor.process(bean,beanDefinition);
-			if(tmp!=null){
-				obj=tmp;
-			}
+			beanPostProcessor.process(bean);
 		}
-		return obj;
 	}
 }

@@ -22,7 +22,7 @@ public class Configuration {
     private String configClassPath;
     private YamlConfig yamlConfig=new YamlConfig();
     private Environment environment=new Environment();
-    private boolean enableAspectJAutoProxy=false;
+
 
     public static final String CTX_PROPERTY_PROFILES_ACTIVE="jbos.profiles.active";
 
@@ -31,6 +31,7 @@ public class Configuration {
      */
     public Configuration(){
         configLocation="jbosContext";
+        this.load();
     }
 
     /**
@@ -43,7 +44,7 @@ public class Configuration {
     /**
      * 加载配置属性
      */
-    public void load() {
+    private void load() {
         yamlConfig.setEnvironment(environment);
         Resource resource=new ClassPathResource(configLocation+".yml");
         try {
@@ -67,21 +68,6 @@ public class Configuration {
         return this.environment;
     }
 
-    /**
-     * 设置启用切面
-     * @param enableAspectJAutoProxy
-     */
-    public void setEnableAspectJAutoProxy(boolean enableAspectJAutoProxy){
-        this.enableAspectJAutoProxy=enableAspectJAutoProxy;
-    }
-
-    /**
-     * 是否启用切面
-     * @return
-     */
-    public boolean isEnableAspectJAutoProxy(){
-        return this.enableAspectJAutoProxy;
-    }
     /**
      * 注入上下文属性
      * @param name

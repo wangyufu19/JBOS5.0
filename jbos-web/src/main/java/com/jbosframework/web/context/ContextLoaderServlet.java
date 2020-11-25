@@ -28,11 +28,13 @@ public class ContextLoaderServlet extends HttpServlet{
 		ApplicationContext applicationContext=null;
 		try {
 			if(appConfig==null){		
-				applicationContext=ApplicationContextFactory.getApplicationContext(JBOSClassloader.loadClass(defaultAppConfig));		
+				applicationContext=ApplicationContextFactory.getApplicationContext();
+				applicationContext.registry(JBOSClassloader.loadClass(defaultAppConfig));
 			}else{
 				String[] appConfigs=appConfig.split(" ");
 				if(appConfigs==null){
-					applicationContext=ApplicationContextFactory.getApplicationContext(JBOSClassloader.loadClass(defaultAppConfig));
+					applicationContext=ApplicationContextFactory.getApplicationContext();
+					applicationContext.registry(JBOSClassloader.loadClass(defaultAppConfig));
 				}else{		
 					Class<?>[] appConfigClasses=new Class<?>[appConfigs.length];
 					for(int i=0;i<appConfigs.length;i++) {

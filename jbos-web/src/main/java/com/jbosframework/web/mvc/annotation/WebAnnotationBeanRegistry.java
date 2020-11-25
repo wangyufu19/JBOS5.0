@@ -1,6 +1,7 @@
 package com.jbosframework.web.mvc.annotation;
 import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
@@ -15,6 +16,13 @@ import java.lang.reflect.Method;
 public class WebAnnotationBeanRegistry extends BeanRegistry {
     public static final String DEFAULT_REQUEST_MAPPING="handleRequest";
 
+    /**
+     * 构造方法
+     * @param beanFactory
+     */
+    public WebAnnotationBeanRegistry(BeanFactory beanFactory){
+        super(beanFactory);
+    }
     /**
      * 加载Controller注解
      * @param cls

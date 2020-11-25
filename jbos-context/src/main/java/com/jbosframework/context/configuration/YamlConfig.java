@@ -2,9 +2,7 @@ package com.jbosframework.context.configuration;
 
 import com.jbosframework.core.io.ClassPathResource;
 import com.jbosframework.core.io.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -15,7 +13,7 @@ import java.util.Map;
  * @author youfu.wang
  * @date 2020-10-10
  */
-@Slf4j
+
 public class YamlConfig {
     private String configLocation;
     private static Map<String, Object> properties=Collections.synchronizedMap(new LinkedHashMap<String,Object>());

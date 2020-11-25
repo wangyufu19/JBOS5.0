@@ -24,7 +24,7 @@ public class WebAnnotationApplicationContext {
 	public ApplicationContext initWebApplicationContext(Class<?> cls){
 		ApplicationContext context=null; 
 		context=new AnnotationApplicationContext();
-		context.addBeanRegistry(new WebAnnotationBeanRegistry());
+		context.addBeanRegistry(new WebAnnotationBeanRegistry(context));
 		context.registry(cls);
 		return context;
 	}
@@ -36,7 +36,7 @@ public class WebAnnotationApplicationContext {
 	public ApplicationContext initWebApplicationContext(Class<?>[] clses){
 		ApplicationContext context=null; 
 		context=new AnnotationApplicationContext();
-		context.addBeanRegistry(new WebAnnotationBeanRegistry());
+		context.addBeanRegistry(new WebAnnotationBeanRegistry(context));
 		context.registry(clses);
 		return context;
 	}

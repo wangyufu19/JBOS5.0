@@ -37,41 +37,4 @@ public class ApplicationContextFactory {
 		}
 		return applicationContext;
 	}
-	/**
-	 * 得到ApplicationContext
-	 * @param cls
-	 * @return
-	 */
-	public static ApplicationContext getApplicationContext(Class<?> cls){
-		if(cls==null){
-			return applicationContext;
-		}
-		if(applicationContext==null){
-			synchronized(ApplicationContext.class){
-				if(applicationContext==null){
-					applicationContext=new AnnotationApplicationContext(cls);
-				}
-			}
-		}
-		return applicationContext;
-	}
-	/**
-	 * 得到ApplicationContext
-	 * @param clses
-	 * @return
-	 */
-	public static ApplicationContext getApplicationContext(Class<?>[] clses){
-		if(clses==null){
-			return applicationContext;
-		}
-		if(applicationContext==null){
-			synchronized(ApplicationContext.class){
-				if(applicationContext==null){
-					applicationContext=new AnnotationApplicationContext(clses);
-				}
-			}
-		}
-		return applicationContext;
-	}
-	
 }

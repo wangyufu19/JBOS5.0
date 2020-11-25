@@ -6,18 +6,20 @@ import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
+import com.jbosframework.web.mvc.annotation.WebAnnotationBeanRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * com.jbosframework.boot.JBOSApplication
+ * JBOSApplication
  * @author youfu.wang
  * @version 1.0
  */
 public class JBOSApplication {
     public static final Log logger= LogFactory.getLog(JBOSApplication.class);
-    private ApplicationContext ctx=new AnnotationApplicationContext();
+    private ApplicationContext ctx;
     public Class<?> jbosBootClass;
 
     /**
@@ -32,14 +34,22 @@ public class JBOSApplication {
      * @param args
      */
     private void prepareContext(String... args){
-        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
-        configurationPropertiesChecker.setApplicationContext(ctx);
-        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+        //初始化上下文配置
+        Configuration configuration=new Configuration();
+        ctx=new AnnotationApplicationContext(configuration);
         //开启切面自动代理
         EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
         if(enableAspectJAutoProxy!=null){
-            ctx.getContextConfiguration().setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+            ctx.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
         }
+
+        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
+        configurationPropertiesChecker.setApplicationContext(ctx);
+        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+
+        //注册和扫描启动类所在包和子包下的所有组件类到容器中
+        ctx.addBeanRegistry(new WebAnnotationBeanRegistry(ctx));
+        ctx.registry(jbosBootClass);
     }
     /**
      * 启动应用
@@ -51,8 +61,6 @@ public class JBOSApplication {
         long etime=System.currentTimeMillis();
         //初始化容器上下文
         this.prepareContext(args);
-        //注册和扫描启动类所在包和子包下的所有组件类到容器中
-        ctx.registry(jbosBootClass);
         //加载自动配置的组件类到容器中
         AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
         autoConfigurationContext.load(jbosBootClass);

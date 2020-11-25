@@ -1,4 +1,4 @@
-package com.jbosframework.test;
+package com.application;
 
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;

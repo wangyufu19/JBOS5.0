@@ -6,6 +6,7 @@ import com.jbosframework.context.AnnotationBeanRegistry;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextFactory;
 import com.jbosframework.context.AspectProxyBeanRegister;
+import com.jbosframework.context.configuration.Configuration;
 
 /**
  * AnnotationApplicationContext
@@ -20,33 +21,19 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 */
 	public AnnotationApplicationContext() {
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
-		if(this.getContextConfiguration().isEnableAspectJAutoProxy()){
+		if(this.isEnableAspectJAutoProxy()){
 			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
 		}
 	}
 	/**
 	 * 构造方法
-	 * @param cls
 	 */
-	public AnnotationApplicationContext(Class<?> cls) {
+	public AnnotationApplicationContext(Configuration configuration) {
+		super(configuration);
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
-		if(this.getContextConfiguration().isEnableAspectJAutoProxy()){
+		if(this.isEnableAspectJAutoProxy()){
 			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
 		}
-		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
-		annotationScanFactory.scan(cls);
-	}
-	/**
-	 * 构造方法
-	 * @param clses
-	 */
-	public AnnotationApplicationContext(Class<?>[] clses) {
-		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
-		if(this.getContextConfiguration().isEnableAspectJAutoProxy()){
-			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
-		}
-		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
-		annotationScanFactory.scan(clses);
 	}
 	/**
 	 * 添加BeanRegistry
