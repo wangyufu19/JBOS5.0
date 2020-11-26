@@ -1,4 +1,4 @@
-package com.jbosframework.web.mvc.data;
+package com.jbosframework.web.context;
 /**
  * Charset
  * @author youfu.wang

@@ -2,6 +2,8 @@ package com.jbosframework.web.mvc.data;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import javax.servlet.http.HttpServletRequest;
+
+import com.jbosframework.web.context.Charset;
 import com.jbosframework.web.utils.CoderUtils;
 
 /**

@@ -56,7 +56,7 @@ public class DispatchHandler {
 	 * 处理分发
 	 * @throws Exception
 	 */
-	public void handle() throws Exception{		
+	public void handle() throws Exception{
 		Object controller=null;
 		String requestUri = this.getRequestPath();
 		controller=this.getRequestController(applicationContext,requestUri);

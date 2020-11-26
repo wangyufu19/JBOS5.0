@@ -3,6 +3,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.web.context.Charset;
 import com.jbosframework.web.utils.CoderUtils;
 import com.jbosframework.web.mvc.dispatcher.Dispatcher;
 /**

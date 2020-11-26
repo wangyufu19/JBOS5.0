@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.jbosframework.utils.JsonUtils;
 import com.jbosframework.web.mvc.ModelAndView;
 import com.jbosframework.web.mvc.annotation.ResponseBody;
-import com.jbosframework.web.mvc.data.Charset;
+
 /**
  * Dispatcher
  * @author youfu.wang
@@ -100,7 +100,7 @@ public class Dispatcher {
     }
 	private void doPrintWriter(String contentType,String s){
 		try {
-			response.setContentType(contentType+";charset=\""+Charset.UTF8+"\"");
+//			response.setContentType(contentType+";charset=\""+Charset.UTF8+"\"");
 			PrintWriter out = response.getWriter();
 			out.write(s);
 	        out.flush();
