@@ -38,5 +38,11 @@
             <artifactId>jbos-orm</artifactId>
             <version>${jbos.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.jbosframework.test</groupId>
+            <artifactId>jbos-test</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

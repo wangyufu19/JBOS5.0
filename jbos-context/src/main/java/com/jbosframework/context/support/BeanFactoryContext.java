@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
@@ -38,7 +39,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	private static List<BeanBeforeProcessor> beanBeforeProcessors=Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
 
 	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new ArrayList<BeanPostProcessor>());
-
+    private PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.getAspectProxyBeanContext());
 	/**
 	 * 构造方法
 	 */
@@ -179,12 +180,18 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		}else{
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
 			obj = this.doCreateBean(beanDefinition);
-			this.doBeanBeforeProcessor(obj,beanDefinition);
-            this.doBeanPostProcessor(obj,beanDefinition);
-			if(beanDefinition.isSingleton()){
-				this.putBean(beanDefinition.getName(),obj);
+			if(obj!=null){
+				this.doBeanBeforeProcessor(obj,beanDefinition);
+				this.doBeanPostProcessor(obj,beanDefinition);
+				if(beanDefinition.isSingleton()){
+					this.putBean(beanDefinition.getName(),obj);
+				}
 			}
 		}
+        if(this.isEnableAspectJAutoProxy()&&pointcutMethodMatcher.match(obj)){
+            //判断是否切面AOP代理Bean
+            obj=pointcutMethodMatcher.getAspectAopProxy(obj);
+        }
 		return obj;
 	}
 	/**

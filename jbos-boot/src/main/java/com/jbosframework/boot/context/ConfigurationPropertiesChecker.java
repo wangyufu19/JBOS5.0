@@ -59,16 +59,15 @@ public class ConfigurationPropertiesChecker implements BeanInitialize,BeanBefore
             }
         }
     }
-    public Object process(Object bean,BeanDefinition beanDefinition){
-        this.afterProperties(bean);
+    public void process(Object obj,BeanDefinition beanDefinition){
+        this.afterProperties(obj);
         ConfigurationProperties configurationProperties=(ConfigurationProperties)beanDefinition.getAnnotation(ConfigurationProperties.class);
         if(configurationProperties==null){
-            configurationProperties=bean.getClass().getDeclaredAnnotation(ConfigurationProperties.class);
+            configurationProperties=obj.getClass().getDeclaredAnnotation(ConfigurationProperties.class);
         }
         if(configurationProperties!=null){
             DataSourceProperties dataSourceProperties= DataSourcePropertiesBuilder.getInstance().create(applicationContext,configurationProperties);
             applicationContext.putBean(DataSourceProperties.class.getName(),dataSourceProperties);
         }
-        return bean;
     }
 }
