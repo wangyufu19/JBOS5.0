@@ -33,6 +33,10 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
         tomcat.getHost().setAutoDeploy(false);
         Context context=tomcat.addContext("",this.getBaseDir());
         context.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,this.getApplicationContext());
+
+        WebFilterRegistryBean webFilterRegistryBean=new WebFilterRegistryBean(context.getServletContext());
+        this.getApplicationContext().addBeanPostProcessor(webFilterRegistryBean);
+
         tomcat.addServlet(context, DispatcherServlet.class.getSimpleName(), new DispatcherServlet());
         context.addServletMappingDecoded(this.getContextPath()+"/*", DispatcherServlet.class.getSimpleName());
         WebServer webServer=new TomcatWebServer(tomcat);

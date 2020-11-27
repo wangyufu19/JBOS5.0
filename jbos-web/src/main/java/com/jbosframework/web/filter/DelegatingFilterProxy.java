@@ -12,8 +12,11 @@ import java.io.IOException;
  * @version 5.0
  * @date 2020-11-26
  */
-public class DelegatingFilerProxy extends AbstractFilterBean{
+public class DelegatingFilterProxy extends AbstractFilterBean{
 
+    public DelegatingFilterProxy(String beanName){
+        super(beanName);
+    }
     public void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
     }

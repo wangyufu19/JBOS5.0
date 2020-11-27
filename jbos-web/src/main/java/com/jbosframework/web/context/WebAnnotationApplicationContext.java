@@ -1,6 +1,5 @@
 package com.jbosframework.web.context;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBeanRegistry;
 
 /**
@@ -9,36 +8,29 @@ import com.jbosframework.web.mvc.annotation.WebAnnotationBeanRegistry;
  * @version 1.0
  */
 public class WebAnnotationApplicationContext {
-	
+	private ApplicationContext applicationContext=null;
 	/**
 	 * 构造方法
 	 */
-	public WebAnnotationApplicationContext(){
-		
+	public WebAnnotationApplicationContext(ApplicationContext applicationContext){
+		this.applicationContext=applicationContext;
+		applicationContext.addBeanRegistry(new WebAnnotationBeanRegistry(applicationContext));
 	}
 	/**
 	 * 初始化上下文
 	 * @param cls
 	 * @return
 	 */
-	public ApplicationContext initWebApplicationContext(Class<?> cls){
-		ApplicationContext context=null; 
-		context=new AnnotationApplicationContext();
-		context.addBeanRegistry(new WebAnnotationBeanRegistry(context));
-		context.registry(cls);
-		return context;
+	public void initWebApplicationContext(Class<?> cls){
+		applicationContext.registry(cls);
 	}
 	/**
 	 * 初始化上下文
 	 * @param clses
 	 * @return
 	 */
-	public ApplicationContext initWebApplicationContext(Class<?>[] clses){
-		ApplicationContext context=null; 
-		context=new AnnotationApplicationContext();
-		context.addBeanRegistry(new WebAnnotationBeanRegistry(context));
-		context.registry(clses);
-		return context;
+	public void initWebApplicationContext(Class<?>[] clses){
+		applicationContext.registry(clses);
 	}
 
 }

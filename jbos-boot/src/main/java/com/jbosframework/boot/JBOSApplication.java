@@ -8,7 +8,6 @@ import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
-import com.jbosframework.web.mvc.annotation.WebAnnotationBeanRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,7 +29,7 @@ public class JBOSApplication {
         this.jbosBootClass=jbosBootClass;
     }
     /**
-     * 初始化配置
+     * 初始化上下文
      * @param args
      */
     private void prepareContext(String... args){
@@ -46,10 +45,20 @@ public class JBOSApplication {
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+    }
 
-        //注册和扫描启动类所在包和子包下的所有组件类到容器中
-        ctx.addBeanRegistry(new WebAnnotationBeanRegistry(ctx));
-        ctx.registry(jbosBootClass);
+    /**
+     * 完成上下文
+     */
+    public void finishContext(){
+        //初始化和启动Web容器
+        JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx,jbosBootClass);
+        jbosWebApplicationContext.onStartup();
+        //加载自动配置的组件类到容器中
+        AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
+        autoConfigurationContext.load(jbosBootClass);
+        //刷新容器上下文
+        ctx.refreshContext();
     }
     /**
      * 启动应用
@@ -61,14 +70,8 @@ public class JBOSApplication {
         long etime=System.currentTimeMillis();
         //初始化容器上下文
         this.prepareContext(args);
-        //加载自动配置的组件类到容器中
-        AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
-        autoConfigurationContext.load(jbosBootClass);
-        //刷新容器上下文
-        ctx.refreshContext();
-        //初始化和启动Web容器
-        JBOSWebApplicationContext jbosWebApplicationContext=new JBOSWebApplicationContext(ctx);
-        jbosWebApplicationContext.onStartup();
+        //完成容器上下文
+        this.finishContext();
         etime=System.currentTimeMillis();
         logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(etime-stime)/1000+" seconds");
         return ctx;

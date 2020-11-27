@@ -2,6 +2,7 @@ package com.jbosframework.boot.web;
 
 import com.jbosframework.boot.web.servlet.TomcatServletWebServer;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.web.context.WebAnnotationApplicationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /**
@@ -15,11 +16,13 @@ public class JBOSWebApplicationContext {
     public static final String CTX_PROPERTY_SERVER_TOMCAT_PORT="server.tomcat.port";
     public static final String CTX_PROPERTY_SERVER_TOMCAT_CONTEXTPATH="server.tomcat.contextPath";
     private ApplicationContext applicationContext;
+    public Class<?> jbosBootClass;
     private WebServer webServer;
     private int port=8080;
 
-    public JBOSWebApplicationContext(ApplicationContext applicationContext){
+    public JBOSWebApplicationContext(ApplicationContext applicationContext,Class<?> jbosBootClass){
         this.applicationContext=applicationContext;
+        this.jbosBootClass=jbosBootClass;
     }
     public void onStartup(){
         String contextPath="";
@@ -34,8 +37,10 @@ public class JBOSWebApplicationContext {
             TomcatServletWebServer tomcatServletWebServer=new TomcatServletWebServer(port,classPath,contextPath);
             tomcatServletWebServer.setApplicationContext(applicationContext);
             webServer=tomcatServletWebServer.getWebServer();
-            logger.info("Tomcat started on port:"+this.port+" with com.jbosframework.boot.context path '"+contextPath+"'");
+            WebAnnotationApplicationContext webAnnotationApplicationContext=new WebAnnotationApplicationContext(applicationContext);
+            webAnnotationApplicationContext.initWebApplicationContext(jbosBootClass);
             webServer.start();
+            logger.info("Tomcat started on port:"+this.port+" with com.jbosframework.boot.context path '"+contextPath+"'");
         }catch (Exception e) {
             e.printStackTrace();
         }

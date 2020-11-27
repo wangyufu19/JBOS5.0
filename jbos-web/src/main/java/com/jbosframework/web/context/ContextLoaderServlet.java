@@ -24,23 +24,22 @@ public class ContextLoaderServlet extends HttpServlet{
 	}
 	public void init(){
 		ServletContext servletContext=super.getServletConfig().getServletContext();
-		String appConfig=servletContext.getInitParameter("appConfig");	
-		ApplicationContext applicationContext=null;
+		String appConfig=servletContext.getInitParameter("appConfig");
+		ApplicationContext applicationContext=ApplicationContextFactory.getApplicationContext();
+		WebAnnotationApplicationContext webAnnotationApplicationContext=new WebAnnotationApplicationContext(applicationContext);
 		try {
-			if(appConfig==null){		
-				applicationContext=ApplicationContextFactory.getApplicationContext();
-				applicationContext.registry(JBOSClassloader.loadClass(defaultAppConfig));
+			if(appConfig==null){
+				webAnnotationApplicationContext.initWebApplicationContext(JBOSClassloader.loadClass(defaultAppConfig));
 			}else{
 				String[] appConfigs=appConfig.split(" ");
 				if(appConfigs==null){
-					applicationContext=ApplicationContextFactory.getApplicationContext();
-					applicationContext.registry(JBOSClassloader.loadClass(defaultAppConfig));
+					webAnnotationApplicationContext.initWebApplicationContext(JBOSClassloader.loadClass(defaultAppConfig));
 				}else{		
 					Class<?>[] appConfigClasses=new Class<?>[appConfigs.length];
 					for(int i=0;i<appConfigs.length;i++) {
 						appConfigClasses[i]=JBOSClassloader.loadClass(appConfigs[i]);
 					}
-					applicationContext=new WebAnnotationApplicationContext().initWebApplicationContext(appConfigClasses);
+					webAnnotationApplicationContext.initWebApplicationContext(appConfigClasses);
 					ApplicationContextFactory.setApplicationContext(applicationContext);
 				}			
 			}
