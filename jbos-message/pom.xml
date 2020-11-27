@@ -11,5 +11,17 @@
 
     <artifactId>jbos-message</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3</version>
+        </dependency>
+    </dependencies>
 
 </project>

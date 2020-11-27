@@ -3,7 +3,6 @@ import javax.sql.DataSource;
 
 import com.jbosframework.core.io.PathMatchResourceSupport;
 import com.jbosframework.core.io.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -20,7 +19,7 @@ import java.io.IOException;
  * @version 1.0
  * @date 2019-01-07
  */
-@Slf4j
+
 public class SqlSessionFactoryBean {
 	//development和work
 	private String id="work";
