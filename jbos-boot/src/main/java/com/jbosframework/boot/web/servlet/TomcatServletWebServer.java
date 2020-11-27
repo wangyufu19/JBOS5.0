@@ -3,12 +3,8 @@ package com.jbosframework.boot.web.servlet;
 import com.jbosframework.boot.web.TomcatWebServer;
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.web.context.ContextLoaderServlet;
-import com.jbosframework.web.filter.CharacterEncodingFilter;
-import com.jbosframework.web.servlet.DispatcherServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.tomcat.util.descriptor.web.FilterDef;
-import org.apache.tomcat.util.descriptor.web.FilterMap;
 
 /**
  * TomcatServletWebServer
@@ -37,11 +33,9 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
         Context context=tomcat.addContext("",this.getBaseDir());
         context.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,this.getApplicationContext());
 
-        WebFilterRegistryBean webFilterRegistryBean=new WebFilterRegistryBean(context);
-        this.getApplicationContext().addBeanPostProcessor(webFilterRegistryBean);
-
-        tomcat.addServlet(context, DispatcherServlet.class.getSimpleName(), new DispatcherServlet());
-        context.addServletMappingDecoded(this.getContextPath()+"/*", DispatcherServlet.class.getSimpleName());
+        WebContextRegistryBean webContextRegistryBean=new WebContextRegistryBean(context);
+        webContextRegistryBean.initDispatcherServlet(this.getContextPath());
+        this.getApplicationContext().addBeanPostProcessor(webContextRegistryBean);
 
         WebServer webServer=new TomcatWebServer(tomcat);
         return webServer;
