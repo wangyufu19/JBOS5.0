@@ -180,13 +180,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		}else{
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
 			obj = this.doCreateBean(beanDefinition);
-			if(obj!=null){
-				this.doBeanBeforeProcessor(obj,beanDefinition);
-				this.doBeanPostProcessor(obj,beanDefinition);
-				if(beanDefinition.isSingleton()){
-					this.putBean(beanDefinition.getName(),obj);
-				}
-			}
 		}
         if(this.isEnableAspectJAutoProxy()&&pointcutMethodMatcher.match(obj)){
             //判断是否切面AOP代理Bean
@@ -194,36 +187,51 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
         }
 		return obj;
 	}
+
+	/**
+	 * 自动装配Bean对象
+	 */
+	public void autowired(){
+		for(Map.Entry<String,BeanDefinition> entry:beanDefinitions.entrySet()){
+			this.doCreateBean(entry.getValue());
+		}
+	}
 	/**
 	 * 创建Bean对象
 	 * @param beanDefinition
 	 * @return
 	 */
-	public Object doCreateBean(BeanDefinition beanDefinition){
-		Object bean=null;
+	private Object doCreateBean(BeanDefinition beanDefinition){
+		Object obj=null;
 		if(beanDefinition==null){
 			return null;
 		}
 		if(beanDefinition.isSingleton()){
 			if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
-				bean=this.getSingletonInstances().get(beanDefinition.getName());
+				obj=this.getSingletonInstances().get(beanDefinition.getName());
 			}else{
-				bean= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+				obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
 			}
 		}else if(beanDefinition.isPrototype()){
 			if (beanDefinition.isMethodBean()){
 				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
 				Object parentObj=this.getBean(parentBeanDefinition.getName());
-				bean= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
+				obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
 			}else{
-				bean=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
 			}
 		}
-		if(bean==null){
+		if(obj==null){
 			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
 			ex.printStackTrace();
+		}else{
+			this.doBeanBeforeProcessor(obj,beanDefinition);
+			this.doBeanPostProcessor(obj,beanDefinition);
+			if(beanDefinition.isSingleton()){
+				this.putBean(beanDefinition.getName(),obj);
+			}
 		}
-		return bean;
+		return obj;
 	}
 
 	/**

@@ -46,6 +46,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 		}
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(cls);
+		this.autowired();
 	}
 	/**
 	 * 注册Bean
@@ -57,6 +58,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 		}
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(clses);
+		this.autowired();
 	}
 	/**
 	 * 刷新容器上下文
