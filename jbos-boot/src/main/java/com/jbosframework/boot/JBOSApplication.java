@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * JBOSApplication
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class JBOSApplication {
     public static final Log logger= LogFactory.getLog(JBOSApplication.class);
