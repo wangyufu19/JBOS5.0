@@ -18,9 +18,6 @@ public class ConfigurationPropertiesChecker extends InitializeBean implements Be
     public void process(Object obj,BeanDefinition beanDefinition){
         this.afterProperties(obj);
         ConfigurationProperties configurationProperties=(ConfigurationProperties)beanDefinition.getAnnotation(ConfigurationProperties.class);
-        if(configurationProperties==null){
-            configurationProperties=obj.getClass().getDeclaredAnnotation(ConfigurationProperties.class);
-        }
         if(configurationProperties!=null){
             DataSourceProperties dataSourceProperties= DataSourcePropertiesBuilder.getInstance().create(this.getApplicationContext(),configurationProperties);
             this.getApplicationContext().putBean(DataSourceProperties.class.getName(),dataSourceProperties);

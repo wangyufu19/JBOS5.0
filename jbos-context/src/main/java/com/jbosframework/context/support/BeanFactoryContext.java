@@ -226,7 +226,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			ex.printStackTrace();
 		}else{
 			this.doBeanBeforeProcessor(obj,beanDefinition);
-			this.doBeanPostProcessor(obj,beanDefinition);
+			this.doBeanPostProcessor(obj);
 			if(beanDefinition.isSingleton()){
 				this.putBean(beanDefinition.getName(),obj);
 			}
@@ -339,7 +339,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	/**
 	 * 处理Bean对象的Processor
 	 */
-	private void doBeanPostProcessor(Object bean,BeanDefinition beanDefinition){
+	private void doBeanPostProcessor(Object bean){
 		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
 			beanPostProcessor.process(bean);
 		}

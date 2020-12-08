@@ -30,6 +30,9 @@ public class PointcutMethodMatcher {
      */
     public boolean match(Object obj){
         boolean bool=false;
+        if(obj==null){
+            return bool;
+        }
         Method[] methods=obj.getClass().getMethods();
         if(methods!=null){
             for(Method method:methods){
