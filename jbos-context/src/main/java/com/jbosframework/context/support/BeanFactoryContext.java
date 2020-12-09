@@ -206,31 +206,31 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		if(beanDefinition==null){
 			return null;
 		}
-		if(beanDefinition.isSingleton()){
-			if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
-				obj=this.getSingletonInstances().get(beanDefinition.getName());
-			}else{
-				obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-			}
-		}else if(beanDefinition.isPrototype()){
-			if (beanDefinition.isMethodBean()){
-				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
-				Object parentObj=this.getBean(parentBeanDefinition.getName());
-				obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
-			}else{
-				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-			}
-		}
-		if(obj==null){
-			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
-			ex.printStackTrace();
-		}else{
-			this.doBeanBeforeProcessor(obj,beanDefinition);
-			this.doBeanPostProcessor(obj);
-			if(beanDefinition.isSingleton()){
-				this.putBean(beanDefinition.getName(),obj);
-			}
-		}
+        if (beanDefinition.isMethodBean()){
+            BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
+            Object parentObj=this.doCreateBean(parentBeanDefinition);
+            obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
+        }else {
+            if(beanDefinition.isSingleton()){
+                if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
+                    obj=this.getSingletonInstances().get(beanDefinition.getName());
+                }else{
+                    obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+                }
+            }else if(beanDefinition.isPrototype()){
+                obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+            }
+        }
+        if(obj==null){
+            BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
+            ex.printStackTrace();
+        }else{
+            this.doBeanBeforeProcessor(obj,beanDefinition);
+            this.doBeanPostProcessor(obj);
+            if(beanDefinition.isSingleton()){
+                this.putBean(beanDefinition.getName(),obj);
+            }
+        }
 		return obj;
 	}
 
