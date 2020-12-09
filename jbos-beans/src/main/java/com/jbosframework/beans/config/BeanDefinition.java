@@ -14,6 +14,7 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	private String className;
 	private boolean isMethodBean=false;
 	private String classMethod;
+	private Class<?>[] methodParameters;
 	private String scope;
 	private Annotation[] annotations;
 
@@ -84,7 +85,12 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	public void setClassMethod(String classMethod) {
 		this.classMethod = classMethod;
 	}
-
+	public void setMethodParameters(Class<?>[] methodParameters){
+		this.methodParameters=methodParameters;
+	}
+	public Class<?>[] getMethodParameters(){
+		return methodParameters;
+	}
 	public Annotation[] getAnnotations() {
 		return annotations;
 	}

@@ -207,9 +207,21 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			return null;
 		}
         if (beanDefinition.isMethodBean()){
-            BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
-            Object parentObj=this.doCreateBean(parentBeanDefinition);
-            obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
+			if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
+				obj=this.getSingletonInstances().get(beanDefinition.getName());
+			}else{
+				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
+				Object parentObj=this.doCreateBean(parentBeanDefinition);
+				if(beanDefinition.getMethodParameters().length>0){
+					Object[] parameterValues=new Object[beanDefinition.getMethodParameters().length];
+					for(int i=0;i<beanDefinition.getMethodParameters().length;i++){
+						parameterValues[i]=this.getBean(beanDefinition.getMethodParameters()[i].getName());
+					}
+					obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod(),parameterValues,beanDefinition.getMethodParameters());
+				}else{
+					obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
+				}
+			}
         }else {
             if(beanDefinition.isSingleton()){
                 if(this.getSingletonInstances().containsKey(beanDefinition.getName())){

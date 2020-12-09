@@ -42,8 +42,40 @@ public class AnnotationBeanRegistry extends BeanRegistry {
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(configuration.value(),cls);
             annotationBean.setAnnotations(cls.getDeclaredAnnotations());
             this.getBeanFactory().putBeanDefinition(annotationBean);
-            //注入类方法注解
-            this.loadClassMethodAnnotation(cls,annotationBean);
+            //加载配置注解方法Bean
+            this.loadConfigurationMethodBean(cls,annotationBean);
+        }
+    }
+    /**
+     * 加载配置注解方法Bean
+     * @param cls
+     * @param parent
+     */
+    private void loadConfigurationMethodBean(Class<?> cls,AnnotationBean parent){
+        Method[] methods=cls.getMethods();
+        if(methods==null) {
+            return;
+        }
+        for(int i=0;i<methods.length;i++) {
+            Annotation[] annotations = methods[i].getDeclaredAnnotations();
+            if (annotations == null||annotations.length<=0) {
+                continue;
+            }
+            for(Annotation annotation:annotations){
+                if(annotation instanceof Bean){
+                    //加载Bean注解
+                    AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),methods[i].getReturnType());
+                    annotationBean.setAnnotations(annotations);
+                    annotationBean.setParentName(parent.getName());
+                    annotationBean.setIsMethodBean(true);
+                    annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
+                    annotationBean.setMethodParameters(methods[i].getParameterTypes());
+                    if(methods[i].getReturnType().isInterface()){
+                        this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
+                    }
+                    this.getBeanFactory().putBeanDefinition(annotationBean);
+                }
+            }
         }
     }
     /**
@@ -87,38 +119,6 @@ public class AnnotationBeanRegistry extends BeanRegistry {
             this.getBeanFactory().putBeanDefinition(annotationBean);
             //注册Bean的接口
             this.registryBeanInterfaces(cls,annotationBean);
-        }
-    }
-    /**
-     * 加载类方法注解
-     * @param cls
-     * @param parent
-     */
-    private void loadClassMethodAnnotation(Class<?> cls,AnnotationBean parent){
-        Method[] methods=cls.getMethods();
-        if(methods==null) {
-            return;
-        }
-        for(int i=0;i<methods.length;i++) {
-            Annotation[] annotations = methods[i].getDeclaredAnnotations();
-            if (annotations == null||annotations.length<=0) {
-                continue;
-            }
-            for(Annotation annotation:annotations){
-                if(annotation instanceof Bean){
-                    //加载Bean注解
-                    AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),methods[i].getReturnType());
-                    annotationBean.setAnnotations(annotations);
-                    annotationBean.setParentName(parent.getName());
-                    annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
-                    annotationBean.setIsMethodBean(true);
-                    annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
-                    if(methods[i].getReturnType().isInterface()){
-                        this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
-                    }
-                    this.getBeanFactory().putBeanDefinition(annotationBean);
-                }
-            }
         }
     }
     /**
