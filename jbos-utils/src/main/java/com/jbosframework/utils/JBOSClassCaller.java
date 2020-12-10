@@ -223,7 +223,22 @@ public class JBOSClassCaller {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			try{
+				for(int i=0;i<parameterTypes.length;i++){
+					Class<?>[] clsInterfaces=args[i].getClass().getInterfaces();
+					if(clsInterfaces!=null&&clsInterfaces.length>0){
+						parameterTypes[i]=clsInterfaces[0];
+					}
+				}
+				methodObj = obj.getClass().getMethod(method, parameterTypes);
+				result=methodObj.invoke(obj,args);
+			}catch (NoSuchMethodException ex) {
+				ex.printStackTrace();
+			}catch (InvocationTargetException ex) {
+				ex.printStackTrace();
+			} catch (IllegalAccessException ex) {
+				ex.printStackTrace();
+			}
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
