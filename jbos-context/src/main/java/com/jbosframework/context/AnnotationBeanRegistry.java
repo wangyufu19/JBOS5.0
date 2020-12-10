@@ -64,7 +64,18 @@ public class AnnotationBeanRegistry extends BeanRegistry {
             for(Annotation annotation:annotations){
                 if(annotation instanceof Bean){
                     //加载Bean注解
-                    AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(((Bean)annotation).value(),methods[i].getReturnType());
+                    AnnotationBean annotationBean=new AnnotationBean();
+                    String id=((Bean)annotation).value();
+                    if(StringUtils.isNUll(id)) {
+                        id=methods[i].getName();
+                    }
+                    annotationBean.setId(id);
+                    annotationBean.setName(id);
+                    annotationBean.setClassName(methods[i].getReturnType().getName());
+                    Scope scope=cls.getAnnotation(Scope.class);
+                    if(scope!=null){
+                        annotationBean.setScope(scope.value());
+                    }
                     annotationBean.setAnnotations(annotations);
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setIsMethodBean(true);

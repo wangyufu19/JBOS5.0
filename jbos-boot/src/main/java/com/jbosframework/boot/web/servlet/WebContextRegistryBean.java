@@ -1,6 +1,8 @@
 package com.jbosframework.boot.web.servlet;
 
 import com.jbosframework.beans.config.BeanPostProcessor;
+import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.web.filter.DelegatingFilterProxy;
 import com.jbosframework.web.servlet.DispatcherServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
@@ -8,6 +10,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
+
+import javax.servlet.Filter;
 import java.util.Map;
 
 /**
@@ -19,9 +23,11 @@ import java.util.Map;
 public class WebContextRegistryBean implements BeanPostProcessor {
     public static final Log logger= LogFactory.getLog(WebContextRegistryBean.class);
     private Context context;
+    private ApplicationContext applicationContext;
 
-    public WebContextRegistryBean(Context context){
+    public WebContextRegistryBean(Context context,ApplicationContext applicationContext){
         this.context=context;
+        this.applicationContext=applicationContext;
     }
 
     public void initDispatcherServlet(String contextPath){
@@ -35,8 +41,14 @@ public class WebContextRegistryBean implements BeanPostProcessor {
         if(obj instanceof FilterRegistryBean){
             FilterRegistryBean filterRegistryBean=(FilterRegistryBean)obj;
             FilterDef filterDef = new FilterDef();
-            filterDef.setFilterName(filterRegistryBean.getName());
-            filterDef.setFilter(filterRegistryBean.getFilter());
+            String filterName=filterRegistryBean.getName();
+            Filter filter=filterRegistryBean.getFilter();
+            if(filter instanceof DelegatingFilterProxy){
+                ((DelegatingFilterProxy)filter).setApplicationContext(applicationContext);
+                filterName=((DelegatingFilterProxy)filter).getBeanName();
+            }
+            filterDef.setFilterName(filterName);
+            filterDef.setFilter(filter);
             Map<String,String> initParameters = filterRegistryBean.getInitParameters();
             for(Map.Entry<String,String> entry:initParameters.entrySet()){
                 filterDef.addInitParameter(entry.getKey(),entry.getValue());
@@ -44,11 +56,11 @@ public class WebContextRegistryBean implements BeanPostProcessor {
             context.addFilterDef(filterDef);
 
             FilterMap mapping = new FilterMap();
-            mapping.setFilterName(filterRegistryBean.getName());
+            mapping.setFilterName(filterName);
             mapping.addURLPattern(filterRegistryBean.getUrlPattern());
             context.addFilterMap(mapping);
 
-            logger.debug("******Registry filter "+filterRegistryBean.getFilter().getClass().getName());
+            logger.info("******Registry filter "+filterRegistryBean.getFilter().getClass().getName());
         }else if(obj instanceof ServletRegistryBean){
             ServletRegistryBean servletRegistryBean=(ServletRegistryBean)obj;
             Wrapper wrapper = context.createWrapper();

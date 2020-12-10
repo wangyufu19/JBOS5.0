@@ -17,15 +17,12 @@ public abstract class AbstractFilterBean implements Filter {
     protected boolean ignore = false;
     private FilterConfig filterConfig;
     private ApplicationContext applicationContext;
-    private String beanName;
+
 
     public AbstractFilterBean(){
 
     }
-    public AbstractFilterBean(String beanName){
-        this.beanName=beanName;
-    }
-    private void setApplicationContext(ApplicationContext applicationContext){
+    public void setApplicationContext(ApplicationContext applicationContext){
         this.applicationContext=applicationContext;
     }
     public ApplicationContext getApplicationContext(){
@@ -45,7 +42,7 @@ public abstract class AbstractFilterBean implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         this.doFilterInternal(servletRequest,servletResponse,filterChain);
     }
-    public abstract void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException;
+    public abstract void doFilterInternal(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,ServletException;
 
     public void destroy() {
         filterConfig=null;

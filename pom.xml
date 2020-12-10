@@ -31,8 +31,8 @@
         <java.version>1.8</java.version>
         <tomcat.version>8.5.37</tomcat.version>
         <jettyVersion>9.3.9.v20160517</jettyVersion>
-        <yaml.version>1.23</yaml.version>
         <shiro.version>1.4.0</shiro.version>
+        <yaml.version>1.23</yaml.version>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.fileupload.version>1.3.1</commons.fileupload.version>
         <commons.io.version>2.5</commons.io.version>
@@ -74,8 +74,21 @@
             <artifactId>tomcat-jdbc</artifactId>
             <version>${tomcat.version}</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jettyVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -110,13 +123,6 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.2.0</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jettyVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
