@@ -1,6 +1,5 @@
 package com.jbosframework.web.mvc.annotation;
 import com.jbosframework.beans.annotation.Scope;
-import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.beans.support.BeanRegistry;
@@ -28,29 +27,25 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
      * @param cls
      */
     private void loadControllerAnnotation(Class<?> cls){
-        Controller controller=cls.getAnnotation(Controller.class);
-        if(controller==null){
-            return;
-        }
-        AnnotationBean annotationBean=new AnnotationBean();
-        annotationBean.setClassName(cls.getName());
+        WebAnnotationBean webAnnotationBean=new WebAnnotationBean();
+        webAnnotationBean.setClassName(cls.getName());
         RequestMapping requestMapping=cls.getAnnotation(RequestMapping.class);
         if(requestMapping!=null){
-            annotationBean.setId(StringUtils.replaceNull(requestMapping.value()));
-            annotationBean.setName(StringUtils.replaceNull(requestMapping.value()));
-            annotationBean.setRequestMethod(StringUtils.replaceNull(requestMapping.method()));
-            annotationBean.setClassMethod(DEFAULT_REQUEST_MAPPING);
-            this.getBeanFactory().putBeanDefinition(annotationBean);
+            webAnnotationBean.setId(StringUtils.replaceNull(requestMapping.value()));
+            webAnnotationBean.setName(StringUtils.replaceNull(requestMapping.value()));
+            webAnnotationBean.setRequestMethod(requestMapping.method());
+            webAnnotationBean.setClassMethod(DEFAULT_REQUEST_MAPPING);
+            this.getBeanFactory().putBeanDefinition(webAnnotationBean);
         }
         //注入类方法注解
-        this.loadClassMethodAnnotation(cls,annotationBean);
+        this.loadClassMethodAnnotation(cls,webAnnotationBean);
     }
     /**
      * 加载类方法注解
      * @param cls
      * @param parent
      */
-    private void loadClassMethodAnnotation(Class<?> cls,AnnotationBean parent){
+    private void loadClassMethodAnnotation(Class<?> cls,WebAnnotationBean parent){
         Method[] methods=cls.getMethods();
         if(methods==null) {
             return;
@@ -63,14 +58,14 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
             for(Annotation annotation:annotations){
                 if(annotation instanceof RequestMapping){
                     //加载RequestMapping注解
-                    AnnotationBean annotationBean=new AnnotationBean();
+                    WebAnnotationBean annotationBean=new WebAnnotationBean();
                     annotationBean.setAnnotations(annotations);
                     annotationBean.setClassName(cls.getName());
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
                     annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
                     annotationBean.setName(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
-                    annotationBean.setRequestMethod(StringUtils.replaceNull(((RequestMapping)annotation).method()));
+                    annotationBean.setRequestMethod(((RequestMapping)annotation).method());
                     annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
                     annotationBean.setParentName(parent.getName());
                     this.getBeanFactory().putBeanDefinition(annotationBean);
@@ -80,6 +75,14 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
     }
     public void registerBean(Class<?> cls) {
         //加载Controller注解
-        this.loadControllerAnnotation(cls);
+        Controller controller=cls.getAnnotation(Controller.class);
+        if(controller!=null){
+            this.loadControllerAnnotation(cls);
+        }
+        //加载RestController注解
+        RestController restController=cls.getAnnotation(RestController.class);
+        if(restController!=null){
+            this.loadControllerAnnotation(cls);
+        }
     }
 }

@@ -10,16 +10,6 @@ import com.jbosframework.utils.StringUtils;
  */
 public class AnnotationBean extends BeanDefinition{
 
-	private String[] requestMethod;
-
-	public String[] getRequestMethod() {
-		return requestMethod;
-	}
-	public void setRequestMethod(String[] requestMethod) {
-		this.requestMethod = requestMethod;
-	}
-
-
 	public static AnnotationBean createAnnotationBean(String id,Class<?> cls){
 		AnnotationBean annotationBean=new AnnotationBean();
 		if(StringUtils.isNUll(id)) {

@@ -32,7 +32,7 @@ public class ShiroFilterFactoryBean extends AbstractShiroFilter {
     public void setFilterChainMap(Map<String, String> filterChainMap){
         this.filterChainMap=filterChainMap;
     }
-    private FilterChainManager createFilterChainManager(){
+    private FilterChainManager createFilterChainManager(ServletRequest servletRequest){
         DefaultFilterChainManager manager=new DefaultFilterChainManager();
         if(this.filters!=null){
             for(Map.Entry<String,Filter> entry:this.filters.entrySet()){
@@ -50,7 +50,7 @@ public class ShiroFilterFactoryBean extends AbstractShiroFilter {
         if(securityManager==null){
             throw new ServletException("The security manager does not implements the WebSecurityManager interface");
         }else{
-            FilterChainManager manager=this.createFilterChainManager();
+            FilterChainManager manager=this.createFilterChainManager(servletRequest);
             PathMatchingFilterChainResolver chainResolver=new PathMatchingFilterChainResolver();
             chainResolver.setFilterChainManager(manager);
             this.setSecurityManager((WebSecurityManager)securityManager);

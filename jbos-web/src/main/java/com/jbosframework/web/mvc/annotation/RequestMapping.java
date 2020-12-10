@@ -13,8 +13,6 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface RequestMapping {
-	public static final String REQUEST_GET="get";
-	public static final String REQUEST_POST="post";
 	public String value() default "";
-	public String[] method() default {REQUEST_GET,REQUEST_POST};
+	public RequestMethod[] method() default {RequestMethod.GET,RequestMethod.POST};
 }

@@ -9,6 +9,8 @@ import com.jbosframework.beans.access.BeanFactory;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassCaller;
+import com.jbosframework.web.mvc.annotation.RequestMethod;
+import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
 import com.jbosframework.web.mvc.data.Represention;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.web.utils.TypeConverter;
@@ -66,14 +68,14 @@ public class DispatchHandler {
 		}				
 		if(controller instanceof AnnotationBean){				
 			//使用注解加载配置的IoC对象	
-			AnnotationBean annotationBean=(AnnotationBean)controller;		
+			WebAnnotationBean webAnnotationBean=(WebAnnotationBean)controller;
 			String requestMethod=request.getMethod().toLowerCase();
 			boolean bool=false;
-			if(annotationBean.getRequestMethod()!=null){
-				String[] beanRequestMethod=annotationBean.getRequestMethod();
+			if(webAnnotationBean.getRequestMethod()!=null){
+				RequestMethod[] beanRequestMethod=webAnnotationBean.getRequestMethod();
 				for(int i=0;i<beanRequestMethod.length;i++){
 					if(requestMethod.equals(beanRequestMethod[i])){
-						this.doHandle(requestUri,applicationContext,annotationBean);
+						this.doHandle(requestUri,applicationContext,webAnnotationBean);
 						bool=true;
 						break;
 					}else{

@@ -1,0 +1,35 @@
+package com.application.sys.mapper;
+
+import com.application.sys.pojo.UserToken;
+import java.util.Map;
+
+/**
+ * UserTokenMapper
+ * @author youfu.wang
+ */
+public interface UserTokenMapper {
+    /**
+     * 根据ID查询用户Token
+     * @param parameterObject
+     * @return
+     */
+    public UserToken getUserTokenByUserId(Map<String, Object> parameterObject);
+    /**
+     * 根据accessToken查询用户Token
+     * @param parameterObject
+     * @return
+     */
+    public UserToken getUserTokenByAccessToken(Map<String, Object> parameterObject);
+    /**
+     * 添加用户Token
+     * @param userToken
+     * @return
+     */
+    public void addUserToken(UserToken userToken);
+    /**
+     * 更新用户Token
+     * @param userToken
+     * @return
+     */
+    public void updateUserToken(UserToken userToken);
+}
