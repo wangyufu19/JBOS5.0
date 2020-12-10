@@ -4,23 +4,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.web.context.Charset;
-import com.jbosframework.web.utils.CoderUtils;
+import com.jbosframework.web.utils.WebUtils;
 import com.jbosframework.web.mvc.dispatcher.Dispatcher;
+import org.apache.commons.io.IOUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Represention
  * @author youfu.wang
  * @version 1.0
  */
-public class Represention {
+public class Representation {
 	private ServletContext servletContext;
 	private ApplicationContext applicationContext;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private Charset charset;
-	public static final String exec_success="成功";
-	public static final String exec_failure="操作失败";
+	public static final String exec_success="success";
+	public static final String exec_failure="failure";
 	
-	public Represention(HttpServletRequest request,HttpServletResponse response){
+	public Representation(HttpServletRequest request, HttpServletResponse response){
 		this.request=request;
 		this.response=response;		
 		this.charset=new Charset();
@@ -50,7 +57,7 @@ public class Represention {
 		if(value==null||"".equals(value)||"null".equals(value))
 			return "";	
 		if(decode)
-			value=CoderUtils.decode(value,charset.getCharset());
+			value= WebUtils.decode(value,charset.getCharset());
 		return value;
 	}
 	public String[] getParameterValues(String name,boolean decode){
@@ -59,12 +66,44 @@ public class Represention {
 		if(arrs==null) return null;
 		for(int i=0;i<arrs.length;i++){		
 			if(decode)
-				arrs[i]=CoderUtils.decode(arrs[i],charset.getCharset());		
+				arrs[i]= WebUtils.decode(arrs[i],charset.getCharset());
 		}
 		return arrs;
 	}	
 	public Dispatcher getDispatcher(){		
 		Dispatcher dispatcher=new Dispatcher(this.request,this.response);
 		return dispatcher;
+	}
+
+	public String getRequestBody() {
+		StringBuilder buf=new StringBuilder();
+		InputStream inputStream=null;
+		BufferedReader reader=null;
+		String line="";
+		try{
+			inputStream=this.getRequest().getInputStream();
+			reader=new BufferedReader(new InputStreamReader(inputStream));
+			while((line=reader.readLine())!=null){
+				buf.append(line);
+			}
+		}catch (IOException ex) {
+			ex.printStackTrace();
+		}finally {
+			if(inputStream!=null){
+				try {
+					inputStream.close();
+				}catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+			if(reader!=null){
+				try {
+					reader.close();
+				}catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return buf.toString();
 	}
 }

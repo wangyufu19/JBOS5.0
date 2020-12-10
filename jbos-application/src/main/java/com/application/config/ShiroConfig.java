@@ -3,11 +3,11 @@ package com.application.config;
 import com.application.common.shiro.AuthRealm;
 import com.application.common.shiro.AuthTokenFilter;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.web.filter.ShiroFilterFactoryBean;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,6 +20,8 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
+    @Value("${server.tomcat.contextPath}")
+    private String contextPath;
 
     @Bean
     public SecurityManager securityManager(AuthRealm authRealm) {
@@ -35,7 +37,7 @@ public class ShiroConfig {
         filters.put("authToken", new AuthTokenFilter());
         shiroFilterFactoryBean.setFilters(filters);
         Map<String, String> filterChainMap=new LinkedHashMap<String, String>();
-        filterChainMap.put("/user/getUserList","anon");
+        filterChainMap.put(contextPath+"/sys/auth/login","anon");
         filterChainMap.put("/**","authToken");
         shiroFilterFactoryBean.setFilterChainMap(filterChainMap);
         return shiroFilterFactoryBean;

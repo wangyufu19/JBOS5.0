@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import com.jbosframework.web.context.Charset;
-import com.jbosframework.web.utils.CoderUtils;
+import com.jbosframework.web.utils.WebUtils;
 
 /**
  * MultipartForm
@@ -17,7 +17,7 @@ public class MultipartForm {
 	private Map<String,String> parameterValues=new LinkedHashMap<String,String>();
 	private Charset charset;
 	
-	public MultipartForm(Represention represention){
+	public MultipartForm(Representation represention){
 		this.request=represention.getRequest();	
 		this.charset=new Charset();
 	}
@@ -25,7 +25,7 @@ public class MultipartForm {
 		this.request=request;	
 		this.charset=new Charset();
 	}
-	public void handleMulitpartForm(MultipartFormResolver multipartFormResolver){				
+	public void handleMultipartForm(MultipartFormResolver multipartFormResolver){
 		parameterValues=multipartFormResolver.handleMulitpartForm(request);
 	}
 	public String get(String name){
@@ -33,6 +33,6 @@ public class MultipartForm {
 		value=parameterValues.get(name);
 		if(value==null||"".equals(value)||"null".equals(value))
 			return "";			
-		return CoderUtils.decode(value,charset.getCharset());
+		return WebUtils.decode(value,charset.getCharset());
 	}
 }

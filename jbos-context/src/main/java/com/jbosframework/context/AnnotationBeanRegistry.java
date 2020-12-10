@@ -1,6 +1,7 @@
 package com.jbosframework.context;
 import com.jbosframework.beans.annotation.*;
 import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
@@ -79,8 +80,7 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     annotationBean.setAnnotations(annotations);
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setIsMethodBean(true);
-                    annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
-                    annotationBean.setMethodParameters(methods[i].getParameterTypes());
+                    annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
                     if(methods[i].getReturnType().isInterface()){
                         this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
                     }

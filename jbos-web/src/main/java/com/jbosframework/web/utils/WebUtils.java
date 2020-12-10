@@ -6,17 +6,52 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.jbosframework.web.servlet.JBOSServlet;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * CoderUtils
  * @author youfu.wang
  * @version 1.0
  */
-public class CoderUtils {
+public class WebUtils {
 	private static final String PARAMETER_SEPARATOR = "&";
 	private static final String NAME_VALUE_SEPARATOR = "=";
 
 	private static final String ISO_ENCODING="iso-8859-1";
 	private static final String SERVER_TOMCAT="Tomcat";
+	/**
+	 * 得到请求路径
+	 * @return
+	 */
+	public static String getRequestPath(HttpServletRequest request) {
+		String s = null;
+		s = (String) request
+				.getAttribute("javax.servlet.include.path_info");
+		if (s == null)
+			s = request.getPathInfo();
+		if (s != null && s.length() >= 0) {
+			return s;
+		}
+		s = (String)request.getAttribute("javax.servlet.include.servlet_path");
+		if (s == null)
+			s = request.getServletPath();
+		return s;
+	}
+	/**
+	 * 是否Multipart
+	 * @param request
+	 * @return
+	 */
+	public static boolean isMultipartRequest(HttpServletRequest request){
+		String contentType = request.getContentType();
+		if (contentType != null) {
+			if (contentType.indexOf("multipart/form-data") != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static String encode(String s) {
 		return encode(s,"UTF-8");

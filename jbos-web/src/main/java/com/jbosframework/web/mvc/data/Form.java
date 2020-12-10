@@ -1,5 +1,5 @@
 package com.jbosframework.web.mvc.data;
-import com.jbosframework.web.mvc.data.Represention;
+
 /**
  * Form
  * @author youfu.wang
@@ -7,24 +7,24 @@ import com.jbosframework.web.mvc.data.Represention;
  */
 public class Form {
 
-	private Represention represention;
+	private Representation representation;
 	
-	public Form(Represention represention){
-		this.represention=represention;	
+	public Form(Representation representation){
+		this.representation=representation;
 	}
-	public Represention getRepresention(){
-		return this.represention;
+	public Representation getRepresentation(){
+		return this.representation;
 	}
 	public String get(String name){
-		return represention.getParameter(name,false);
+		return representation.getParameter(name,false);
 	}
 	public String get(String name,boolean decode){
-		return represention.getParameter(name,decode);
+		return representation.getParameter(name,decode);
 	}
 	public String[] getArray(String name){
-		return represention.getParameterValues(name,false);
+		return representation.getParameterValues(name,false);
 	}
 	public String[] getArray(String name,boolean decode){
-		return represention.getParameterValues(name,decode);
+		return representation.getParameterValues(name,decode);
 	}	
 }

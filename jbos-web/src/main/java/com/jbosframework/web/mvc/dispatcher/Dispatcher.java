@@ -43,22 +43,16 @@ public class Dispatcher {
 	/**
 	 * 处理响应
 	 * @param requestUri
-	 * @param invokeMethod
 	 * @param ret
 	 */
-	public void doDispatch(String requestUri, Method invokeMethod, Object ret) throws IOException, ServletException {
+	public void doDispatch(String requestUri,String contentType, Object ret) throws IOException, ServletException {
 		if(ret instanceof ModelAndView){
 			doDispatch(requestUri,(ModelAndView)ret);
 		}else{
 			if(ret instanceof ModelAndView){
 				doDispatch(requestUri,(ModelAndView)ret);
 			}else{
-				String contentType=APPLICATION_TEXT_HTML;
 				String resContent="";
-				ResponseBody responseBody=invokeMethod.getAnnotation(ResponseBody.class);
-				if(responseBody!=null){
-					contentType=APPLICATION_JSON;
-				}
 				if(ret instanceof String){
 					resContent=String.valueOf(ret);
 				}else{

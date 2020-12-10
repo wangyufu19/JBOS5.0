@@ -13,8 +13,7 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	private String parentName;
 	private String className;
 	private boolean isMethodBean=false;
-	private String classMethod;
-	private Class<?>[] methodParameters;
+	private MethodMetadata methodMetadata;
 	private String scope;
 	private Annotation[] annotations;
 
@@ -53,6 +52,14 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	public boolean isMethodBean(){
 		return this.isMethodBean;
 	}
+
+	public MethodMetadata getMethodMetadata() {
+		return methodMetadata;
+	}
+
+	public void setMethodMetadata(MethodMetadata methodMetadata) {
+		this.methodMetadata = methodMetadata;
+	}
 	public void setScope(String scope) {
 		this.scope=scope;
 	}
@@ -79,18 +86,7 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	public String getParentName(){
 		return this.parentName;
 	}
-	public String getClassMethod() {
-		return classMethod;
-	}
-	public void setClassMethod(String classMethod) {
-		this.classMethod = classMethod;
-	}
-	public void setMethodParameters(Class<?>[] methodParameters){
-		this.methodParameters=methodParameters;
-	}
-	public Class<?>[] getMethodParameters(){
-		return methodParameters;
-	}
+
 	public Annotation[] getAnnotations() {
 		return annotations;
 	}

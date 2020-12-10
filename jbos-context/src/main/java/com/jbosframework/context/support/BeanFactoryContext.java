@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.jbosframework.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
 import com.jbosframework.beans.config.BeanBeforeProcessor;
@@ -212,14 +213,15 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			}else{
 				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
 				Object parentObj=this.doCreateBean(parentBeanDefinition);
-				if(beanDefinition.getMethodParameters().length>0){
-					Object[] parameterValues=new Object[beanDefinition.getMethodParameters().length];
-					for(int i=0;i<beanDefinition.getMethodParameters().length;i++){
-						parameterValues[i]=this.getBean(beanDefinition.getMethodParameters()[i].getName());
+				MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
+				if(methodMetadata.getMethodParameters().length>0){
+					Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
+					for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
+						parameterValues[i]=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
 					}
-					obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod(),parameterValues,beanDefinition.getMethodParameters());
+					obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
 				}else{
-					obj= JBOSClassCaller.call(parentObj,beanDefinition.getClassMethod());
+					obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
 				}
 			}
         }else {

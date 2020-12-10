@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import com.jbosframework.web.utils.CoderUtils;
+import com.jbosframework.web.utils.WebUtils;
 import com.jbosframework.utils.DateUtils;
 /**
  * JMail消息类
@@ -50,7 +50,7 @@ public class MailMessage {
 	    String formAddr="";
 		try {
 			formAddr=((InternetAddress) message.getFrom()[0]).toString();
-			formAddr= CoderUtils.decode(formAddr, charset);
+			formAddr= WebUtils.decode(formAddr, charset);
 		} catch (MessagingException e) {			
 			e.printStackTrace();
 		}
@@ -65,7 +65,7 @@ public class MailMessage {
     	String toAddr="";
     	try {
 			toAddr=((InternetAddress) message.getAllRecipients()[0]).toString();
-			toAddr=CoderUtils.decode(toAddr, charset);
+			toAddr= WebUtils.decode(toAddr, charset);
 		} catch (MessagingException e) {		
 			e.printStackTrace();
 		}

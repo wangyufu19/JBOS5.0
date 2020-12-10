@@ -1,19 +1,20 @@
 package com.jbosframework.web.mvc.dispatcher;
-import java.lang.reflect.Field;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
-import com.jbosframework.beans.access.Setter;
-import com.jbosframework.beans.access.BeanFactory;
 import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassCaller;
+import com.jbosframework.utils.JsonUtils;
+import com.jbosframework.web.mvc.annotation.ResponseBody;
+import com.jbosframework.web.utils.WebUtils;
 import com.jbosframework.web.mvc.annotation.RequestMethod;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
-import com.jbosframework.web.mvc.data.Represention;
-import com.jbosframework.utils.JBOSClassloader;
-import com.jbosframework.web.utils.TypeConverter;
+import com.jbosframework.web.mvc.data.Representation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,7 +61,7 @@ public class DispatchHandler {
 	 */
 	public void handle() throws Exception{
 		Object controller=null;
-		String requestUri = this.getRequestPath();
+		String requestUri = WebUtils.getRequestPath(request);
 		controller=this.getRequestController(applicationContext,requestUri);
 		if(controller==null){			
 			dispatcher.doDispatcher404(requestUri);
@@ -69,12 +70,12 @@ public class DispatchHandler {
 		if(controller instanceof AnnotationBean){				
 			//使用注解加载配置的IoC对象	
 			WebAnnotationBean webAnnotationBean=(WebAnnotationBean)controller;
-			String requestMethod=request.getMethod().toLowerCase();
+			String requestMethod=request.getMethod().toUpperCase();
 			boolean bool=false;
 			if(webAnnotationBean.getRequestMethod()!=null){
 				RequestMethod[] beanRequestMethod=webAnnotationBean.getRequestMethod();
 				for(int i=0;i<beanRequestMethod.length;i++){
-					if(requestMethod.equals(beanRequestMethod[i])){
+					if(requestMethod.equals(beanRequestMethod[i].name())){
 						this.doHandle(requestUri,applicationContext,webAnnotationBean);
 						bool=true;
 						break;
@@ -92,80 +93,49 @@ public class DispatchHandler {
 	/**
 	 * 处理请求
 	 * @param applicationContext
-	 * @param annotationBean
+	 * @param webAnnotationBean
 	 * @return
 	 * @throws Exception
 	 */
-	private void doHandle(String requestUri,ApplicationContext applicationContext,AnnotationBean annotationBean) throws Exception{
+	private void doHandle(String requestUri,ApplicationContext applicationContext,WebAnnotationBean webAnnotationBean) throws Exception{
 		Object obj=null;
 		Object ret=null;
 		String methodName=null;
-		obj=applicationContext.getBean(annotationBean.getName());
+		obj=applicationContext.getBean(webAnnotationBean.getName());
 		if(obj==null) return;
-		methodName=annotationBean.getClassMethod();
+		MethodMetadata methodMetadata=webAnnotationBean.getMethodMetadata();
+		methodName=methodMetadata.getMethodName();
 		// 默认调用handleRequest方法
 		if ("".equals(methodName)||methodName==null)
 			methodName = DEFAULT_REQUEST_MAPPING;
-		Method invokeMethod=obj.getClass().getMethod(methodName);
-		ret=JBOSClassCaller.call(obj,methodName,this.getMethodParameters(invokeMethod));
+		Representation representation=new Representation(request,response);
+		representation.setServletContext(servletContext);
+		representation.setApplicationContext(applicationContext);
+		RequestParameter requestParameter=new RequestParameter(representation);
+		Object[] parameterValues=requestParameter.getParameterValues(webAnnotationBean);
+		if(parameterValues!=null&&parameterValues.length>0){
+			ret=JBOSClassCaller.call(obj,methodName,parameterValues);
+		}else{
+			ret=JBOSClassCaller.call(obj,methodName);
+		}
 		//处理响应
-		dispatcher.doDispatch(requestUri,invokeMethod,ret);
-	}
-
-	/**
-	 * 得到方法参数
-	 * @param method
-	 * @return
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 */
-	private Object[] getMethodParameters(Method method) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
-		Class[] parameterTypes=null;
-		Object[] args=null;
-		Class parameterClass=null;
-		Object parameterObject=null;
-		Field[] parameterClassFields=null;
-		if(method!=null){
-			parameterTypes=method.getParameterTypes();
-			if(parameterTypes!=null){
-				args=new Object[parameterTypes.length];
-				for(int i=0;i<parameterTypes.length;i++){
-					Represention represention=new Represention(request,response);			
-					represention.setServletContext(servletContext);
-					represention.setApplicationContext(applicationContext);
-					//判断是否接口或基本数据类型
-					if(parameterTypes[i].isInterface()||TypeConverter.isPrimitiveType(parameterTypes[i])){
-						continue;
-					}else if(parameterTypes[i].getName().equals(Represention.class.getName())){		
-						args[i]=represention;
-					}else{
-						//设置POJO对象字段值
-						try {
-							parameterClass=JBOSClassloader.loadClass(parameterTypes[i].getName());
-						} catch (ClassNotFoundException e) {
-							throw e;
-						}
-						if(parameterClass!=null){
-							parameterObject=parameterClass.newInstance();
-							parameterClassFields=parameterClass.getDeclaredFields();
-							for(Field field:parameterClassFields){
-								if(field.getType().isInterface()){
-									continue;
-								}
-								Setter setter=BeanFactory.getSetter(parameterTypes[i], field.getName());
-								if(TypeConverter.isPrimitiveType(field.getType())){										
-									setter.set(parameterObject,represention.getParameter(field.getName(), false));
-								}							
-							}
-						}	
-						args[i]=parameterObject;
-					}
+		Annotation[] methodAnnotations=methodMetadata.getMethodAnnotations();
+		if(methodAnnotations!=null&&methodAnnotations.length>0){
+			ResponseBody responseBody=null;
+			for(Annotation annotation:methodAnnotations){
+				if(annotation instanceof ResponseBody){
+					responseBody=(ResponseBody)annotation;
+					break;
 				}
 			}
+			if(responseBody!=null){
+				dispatcher.doDispatch(requestUri,Dispatcher.APPLICATION_JSON,ret);
+			}else{
+				dispatcher.doDispatch(requestUri,Dispatcher.APPLICATION_TEXT_HTML,ret);
+			}
 		}
-		return args;
 	}
+
 	/**
 	 * 得到请求控制器对象
 	 * @param applicationContext
@@ -189,56 +159,4 @@ public class DispatchHandler {
 		}				
 		return obj;
 	}
-	/**
-	 * 得到请求控制器器方法
-	 * @param s
-	 * @return
-	 */
-	protected String getRequestControllerMethod(String s){	
-		String methodName="";
-		if(s==null||"".equals(s)){
-			//调用默认handleRequest方法
-			methodName = DEFAULT_REQUEST_MAPPING;		
-		}		
-		if(s.indexOf(".form")!=-1){			
-			if(s.lastIndexOf("/")!=-1){
-				methodName=s.substring(s.lastIndexOf("/")+1, s.indexOf(".form"));
-			}else{
-				methodName=s.substring(0, s.indexOf(".form"));
-			}
-		}		
-		return methodName;
-	}
-	/**
-	 * 是否Multipart
-	 * @param request
-	 * @return
-	 */
-	protected boolean isMultipartRequest(HttpServletRequest request){
-		String contentType = request.getContentType();
-		if (contentType != null) {
-			if (contentType.indexOf("multipart/form-data") != -1) {
-				return true;
-			}
-		}	
-		return false;
-	}
-	/**
-	 * 得到请求路径
-	 * @return
-	 */
-	protected String getRequestPath() {
-		String s = null;
-		s = (String) request
-				.getAttribute("javax.servlet.include.path_info");
-		if (s == null)
-			s = request.getPathInfo();
-		if (s != null && s.length() >= 0) {
-			return s;
-		}
-		s = (String)request.getAttribute("javax.servlet.include.servlet_path");
-		if (s == null)
-			s = request.getServletPath();	
-		return s;
-	}	
 }

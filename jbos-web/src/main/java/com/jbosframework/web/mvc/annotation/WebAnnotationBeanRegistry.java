@@ -1,5 +1,6 @@
 package com.jbosframework.web.mvc.annotation;
 import com.jbosframework.beans.annotation.Scope;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.beans.support.BeanRegistry;
@@ -34,7 +35,6 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
             webAnnotationBean.setId(StringUtils.replaceNull(requestMapping.value()));
             webAnnotationBean.setName(StringUtils.replaceNull(requestMapping.value()));
             webAnnotationBean.setRequestMethod(requestMapping.method());
-            webAnnotationBean.setClassMethod(DEFAULT_REQUEST_MAPPING);
             this.getBeanFactory().putBeanDefinition(webAnnotationBean);
         }
         //注入类方法注解
@@ -66,7 +66,7 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
                     annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
                     annotationBean.setName(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
                     annotationBean.setRequestMethod(((RequestMapping)annotation).method());
-                    annotationBean.setClassMethod(StringUtils.replaceNull(methods[i].getName()));
+                    annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
                     annotationBean.setParentName(parent.getName());
                     this.getBeanFactory().putBeanDefinition(annotationBean);
                 }
