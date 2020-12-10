@@ -41,6 +41,9 @@
         <mybatis.version>3.2.8</mybatis.version>
         <ojdbc.version>12.1.0.2.0</ojdbc.version>
         <fastjson.version>1.2.45</fastjson.version>
+        <cglib.version>3.2.0</cglib.version>
+        <log4j.version>1.2.17</log4j.version>
+        <jdom.version>1.0</jdom.version>
     </properties>
     <dependencies>
         <dependency>
@@ -118,17 +121,17 @@
         <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
-            <version>1.0</version>
+            <version>${jdom.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>3.2.0</version>
+            <version>${cglib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
