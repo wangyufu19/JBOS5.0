@@ -1,7 +1,6 @@
 package com.jbosframework.web.mvc.dispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.jbosframework.utils.JsonUtils;
 import com.jbosframework.web.context.Charset;
 import com.jbosframework.web.mvc.ModelAndView;
-import com.jbosframework.web.mvc.annotation.ResponseBody;
-
 /**
  * Dispatcher
  * @author youfu.wang
