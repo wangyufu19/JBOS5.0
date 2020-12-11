@@ -77,35 +77,14 @@ public class Representation {
 
 	public String getRequestBody(String charset) {
 	    String body="";
-		StringBuilder buf=new StringBuilder();
 		InputStream inputStream=null;
-		BufferedReader reader=null;
-        String line="";
 		try{
 			inputStream=this.getRequest().getInputStream();
             body=IOUtils.toString(inputStream,charset);
-
-//			reader=new BufferedReader(new InputStreamReader(inputStream));
-//			while((line=reader.readLine())!=null){
-//				buf.append(line);
-//			}
 		}catch (IOException ex) {
 			ex.printStackTrace();
 		}finally {
-			if(inputStream!=null){
-				try {
-					inputStream.close();
-				}catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
-			if(reader!=null){
-				try {
-					reader.close();
-				}catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
+            IOUtils.closeQuietly(inputStream);
 		}
 		return body;
 	}
