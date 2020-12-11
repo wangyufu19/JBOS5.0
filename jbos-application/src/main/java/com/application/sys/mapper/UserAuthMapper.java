@@ -1,5 +1,7 @@
 package com.application.sys.mapper;
 
+import com.jbosframework.beans.annotation.Mapper;
+
 import java.util.Map;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Map;
  * @author youfu.wang
  * @date 2019-01-31
  */
+
 public interface UserAuthMapper {
 	/**
      * 用户认证

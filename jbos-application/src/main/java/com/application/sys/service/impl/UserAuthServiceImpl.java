@@ -2,6 +2,7 @@ package com.application.sys.service.impl;
 import com.application.sys.mapper.UserAuthMapper;
 import com.application.sys.service.UserAuthService;
 import com.jbosframework.beans.annotation.Autowired;
+import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
  */
 @Service
 public class UserAuthServiceImpl implements UserAuthService {
-    @Autowired
+    @Mapper
     private UserAuthMapper userAuthMapper;
     /**
      * 用户认证
