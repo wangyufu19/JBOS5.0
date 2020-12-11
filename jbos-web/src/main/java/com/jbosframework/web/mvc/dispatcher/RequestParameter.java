@@ -44,7 +44,7 @@ public class RequestParameter {
                 }else if(type.getName().equals(Map.class.getName())){
                     RequestBody requestBody=parameter.getAnnotation(RequestBody.class);
                     if(requestBody!=null){
-                        parameterValues[i]=JsonUtils.fromJson(representation.getRequestBody(),Map.class);
+                        parameterValues[i]=JsonUtils.fromJson(representation.getRequestBody(representation.getRequest().getCharacterEncoding()),Map.class);
                     }
                 }else if(TypeConverter.isPrimitiveType(type.getName())){
                     parameterValues[i]=representation.getParameter(parameter.getName(),true);

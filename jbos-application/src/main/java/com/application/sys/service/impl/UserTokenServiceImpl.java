@@ -6,6 +6,7 @@ import com.application.sys.pojo.UserToken;
 import com.application.sys.service.UserMgrService;
 import com.application.sys.service.UserTokenService;
 import com.jbosframework.beans.annotation.Autowired;
+import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
 
 import java.util.Date;
@@ -22,7 +23,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
     private final static int EXPIRE = 3600 * 12;
     @Autowired
     private UserMgrService userMgrService;
-    @Autowired
+    @Mapper
     private UserTokenMapper userTokenMapper;
     /**
      * 创建用户Token

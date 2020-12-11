@@ -75,17 +75,20 @@ public class Representation {
 		return dispatcher;
 	}
 
-	public String getRequestBody() {
+	public String getRequestBody(String charset) {
+	    String body="";
 		StringBuilder buf=new StringBuilder();
 		InputStream inputStream=null;
 		BufferedReader reader=null;
-		String line="";
+        String line="";
 		try{
 			inputStream=this.getRequest().getInputStream();
-			reader=new BufferedReader(new InputStreamReader(inputStream));
-			while((line=reader.readLine())!=null){
-				buf.append(line);
-			}
+            body=IOUtils.toString(inputStream,charset);
+
+//			reader=new BufferedReader(new InputStreamReader(inputStream));
+//			while((line=reader.readLine())!=null){
+//				buf.append(line);
+//			}
 		}catch (IOException ex) {
 			ex.printStackTrace();
 		}finally {
@@ -104,6 +107,6 @@ public class Representation {
 				}
 			}
 		}
-		return buf.toString();
+		return body;
 	}
 }

@@ -15,7 +15,7 @@ public class MethodMetadata {
     private String methodName;
     private Parameter[] methodParameters;
     private Annotation[] methodAnnotations;
-    private Class<?>[] ParameterTypes;
+    private Class<?>[] parameterTypes;
 
     public String getMethodName() {
         return methodName;
@@ -40,11 +40,11 @@ public class MethodMetadata {
 
 
     public Class<?>[] getParameterTypes() {
-        return ParameterTypes;
+        return parameterTypes;
     }
 
     public void setParameterTypes(Class<?>[] parameterTypes) {
-        ParameterTypes = parameterTypes;
+        this.parameterTypes = parameterTypes;
     }
     public static MethodMetadata createMethodMetadata(Method method){
         MethodMetadata methodMetadata=new MethodMetadata();
