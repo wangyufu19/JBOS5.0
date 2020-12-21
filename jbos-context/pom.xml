@@ -28,6 +28,12 @@
             <artifactId>jbos-aspectj</artifactId>
             <version>${jbos.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.jbosframework.aop</groupId>
+            <artifactId>jbos-aop</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

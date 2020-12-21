@@ -14,12 +14,6 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.jbosframework.aspectj</groupId>
-            <artifactId>jbos-aspectj</artifactId>
-            <version>${jbos.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.jbosframework.orm</groupId>
             <artifactId>jbos-orm</artifactId>

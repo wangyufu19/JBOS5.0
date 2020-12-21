@@ -1,14 +1,13 @@
-package com.jbosframework.beans.factory;
+package com.jbosframework.aop.support;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.AopProxyFactory;
-import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.utils.JBOSClassloader;
 /**
  * ProxyFactoryBean
  * @author youfu.wang
  * @version 1.0
  */
-public class ProxyFactoryBean implements BeanPostProcessor {
+public class ProxyFactoryBean {
     /**
      * 代理实现类
      */
@@ -94,11 +93,5 @@ public class ProxyFactoryBean implements BeanPostProcessor {
     public Object getProxyBean(){
         AopProxy aopProxy=getAopProxy(this.getTarget());
         return aopProxy.createProxy();
-    }
-
-    public void process(Object obj){
-        if(obj instanceof ProxyFactoryBean){
-            obj=this.getProxyBean();
-        }
     }
 }

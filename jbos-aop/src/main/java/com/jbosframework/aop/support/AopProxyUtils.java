@@ -1,7 +1,6 @@
-package com.jbosframework.beans.support;
-import com.jbosframework.beans.factory.ProxyFactoryBean;
+package com.jbosframework.aop.support;
 /**
- * 
+ * AopProxyUtils
  * @author youfu.wang
  * @version 1.0
  * @date 2016-11-11

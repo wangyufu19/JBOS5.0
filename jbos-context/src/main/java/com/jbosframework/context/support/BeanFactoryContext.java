@@ -47,7 +47,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	public BeanFactoryContext(){
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 		beanPostProcessors.add(new AnnotationMapperProcessor(this));
-		beanPostProcessors.add(new ProxyFactoryBean());
 	}
 	/**
 	 * 构造方法
@@ -56,7 +55,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		super(configuration);
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 		beanPostProcessors.add(new AnnotationMapperProcessor(this));
-		beanPostProcessors.add(new ProxyFactoryBean());
 	}
 
 	/**

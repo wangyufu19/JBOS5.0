@@ -1,4 +1,4 @@
-package com.jbosframework.beans.factory;
+package com.jbosframework.aop.support;
 import com.jbosframework.aop.AopProxyFactory;
 import com.jbosframework.aop.CglibAopProxyFactory;
 import com.jbosframework.aop.JdkAopProxyFactory;
