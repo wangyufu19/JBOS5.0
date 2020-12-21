@@ -1,15 +1,15 @@
-package com.jbosframework.aspectj.annotation;
+package com.jbosframework.aop.aspectj;
 
 import java.lang.annotation.*;
 
 /**
- * Aspect
+ * Before
  * @author youfu.wang
  * @date 2019-03-01
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Aspect {
+@Target({ElementType.METHOD})
+public @interface Before {
     public String value() default "";
 }

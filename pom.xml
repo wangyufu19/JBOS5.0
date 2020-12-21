@@ -7,7 +7,6 @@
     <version>5.0</version>
     <modules>
         <module>jbos-aop</module>
-        <module>jbos-aspectj</module>
         <module>jbos-beans</module>
         <module>jbos-boot</module>
         <module>jbos-context</module>

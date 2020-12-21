@@ -1,6 +1,6 @@
 package com.jbosframework.context.support;
 
-import com.jbosframework.aspectj.support.PointcutMethodMatcher;
+import com.jbosframework.aop.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
 

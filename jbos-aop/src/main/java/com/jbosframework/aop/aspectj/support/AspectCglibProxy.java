@@ -1,4 +1,4 @@
-package com.jbosframework.aspectj.support;
+package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;

@@ -1,4 +1,4 @@
-package com.jbosframework.aspectj.support;
+package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.utils.AntPathMatcher;
 import com.jbosframework.utils.PathMatcher;

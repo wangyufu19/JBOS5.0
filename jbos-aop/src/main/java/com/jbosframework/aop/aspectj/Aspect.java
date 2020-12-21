@@ -1,15 +1,15 @@
-package com.jbosframework.aspectj.annotation;
+package com.jbosframework.aop.aspectj;
 
 import java.lang.annotation.*;
 
 /**
- * Pointcut
+ * Aspect
  * @author youfu.wang
  * @date 2019-03-01
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface Pointcut {
+@Target({ElementType.TYPE})
+public @interface Aspect {
     public String value() default "";
 }

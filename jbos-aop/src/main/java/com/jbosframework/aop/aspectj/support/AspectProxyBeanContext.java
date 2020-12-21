@@ -1,4 +1,4 @@
-package com.jbosframework.aspectj.support;
+package com.jbosframework.aop.aspectj.support;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

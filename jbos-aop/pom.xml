@@ -13,7 +13,9 @@
     <artifactId>jbos-aop</artifactId>
     <properties>
         <aopalliance.version>1.0</aopalliance.version>
+        <aspectj.version>1.8.13</aspectj.version>
         <cglib.version>3.2.0</cglib.version>
+
     </properties>
     <dependencies>
         <dependency>
@@ -21,6 +23,13 @@
             <artifactId>aopalliance</artifactId>
             <version>${aopalliance.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>

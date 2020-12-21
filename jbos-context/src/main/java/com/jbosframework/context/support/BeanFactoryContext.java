@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jbosframework.aspectj.support.PointcutMethodMatcher;
+import com.jbosframework.aop.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;

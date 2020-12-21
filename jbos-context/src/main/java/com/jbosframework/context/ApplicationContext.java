@@ -1,5 +1,5 @@
 package com.jbosframework.context;
-import com.jbosframework.aspectj.support.AspectProxyBeanContext;
+import com.jbosframework.aop.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.configuration.Configuration;

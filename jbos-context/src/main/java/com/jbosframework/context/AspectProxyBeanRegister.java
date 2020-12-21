@@ -1,10 +1,10 @@
 package com.jbosframework.context;
-import com.jbosframework.aspectj.annotation.Aspect;
-import com.jbosframework.aspectj.annotation.Pointcut;
-import com.jbosframework.aspectj.annotation.Before;
-import com.jbosframework.aspectj.annotation.After;
-import com.jbosframework.aspectj.support.AspectMetadata;
-import com.jbosframework.aspectj.support.AspectProxyBeanContext;
+import com.jbosframework.aop.aspectj.Aspect;
+import com.jbosframework.aop.aspectj.Pointcut;
+import com.jbosframework.aop.aspectj.Before;
+import com.jbosframework.aop.aspectj.After;
+import com.jbosframework.aop.aspectj.support.AspectMetadata;
+import com.jbosframework.aop.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
