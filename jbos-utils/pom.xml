@@ -13,7 +13,7 @@
     <artifactId>jbos-utils</artifactId>
 
     <properties>
-        <ant.version>1.8.1</ant.version>
+        <ant.version>1.9.15</ant.version>
     </properties>
 
     <dependencies>
