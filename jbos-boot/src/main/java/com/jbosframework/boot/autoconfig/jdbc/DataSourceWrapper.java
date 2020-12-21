@@ -27,10 +27,11 @@ public class DataSourceWrapper implements DataSource{
 
     @Override
     public Connection getConnection() throws SQLException {
+        Connection connection=null;
         if(dataSourceProperties instanceof TomcatDataSourceProperties) {
-            return DataSourcePoolBuilder.TomcatDataSourcePool.build(dataSourceProperties).getConnection();
+            connection=DataSourcePoolBuilder.TomcatDataSourcePool.build(dataSourceProperties).getConnection();
         }
-        return null;
+        return connection;
     }
 
     @Override

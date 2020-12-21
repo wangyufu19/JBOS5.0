@@ -21,6 +21,7 @@
         <module>jbos-cache</module>
         <module>jbos-test</module>
         <module>jbos-application</module>
+        <module>jbos-tx</module>
     </modules>
     <name>jbos Maven Webapp</name>
     <url>http://maven.apache.org</url>
@@ -41,7 +42,6 @@
         <mybatis.version>3.2.8</mybatis.version>
         <ojdbc.version>12.1.0.2.0</ojdbc.version>
         <fastjson.version>1.2.45</fastjson.version>
-        <cglib.version>3.2.0</cglib.version>
         <log4j.version>1.2.17</log4j.version>
         <jdom.version>1.0</jdom.version>
     </properties>
@@ -127,11 +127,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>${cglib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>

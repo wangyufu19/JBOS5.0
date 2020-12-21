@@ -7,6 +7,7 @@ import com.jbosframework.orm.mybatis.SqlSessionBeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.binding.MapperProxyFactory;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -51,7 +52,8 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
                 SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactory.getBean(SqlSessionFactory.class.getName());
                 if(SqlSessionBeanUtils.isMapperBean(sqlSessionFactory,fields[i].getType())){
                     MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(fields[i].getType());
-                    fieldValue=mapperProxyFactory.newInstance(sqlSessionFactory.openSession());
+                    SqlSession sqlSession=sqlSessionFactory.openSession(true);
+                    fieldValue=mapperProxyFactory.newInstance(sqlSession);
                     injectionMetadata.inject(obj,fields[i],fieldValue);
                 }
             }

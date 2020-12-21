@@ -104,7 +104,11 @@ public class DispatchHandler {
 		obj=applicationContext.getBean(webAnnotationBean.getName());
 		if(obj==null) return;
 		MethodMetadata methodMetadata=webAnnotationBean.getMethodMetadata();
-		methodName=methodMetadata.getMethodName();
+		Annotation[] methodAnnotations=null;
+		if(methodMetadata!=null){
+			methodAnnotations=methodMetadata.getMethodAnnotations();
+			methodName=methodMetadata.getMethodName();
+		}
 		// 默认调用handleRequest方法
 		if ("".equals(methodName)||methodName==null)
 			methodName = DEFAULT_REQUEST_MAPPING;
@@ -119,7 +123,6 @@ public class DispatchHandler {
 			ret=JBOSClassCaller.call(obj,methodName);
 		}
 		//处理响应
-		Annotation[] methodAnnotations=methodMetadata.getMethodAnnotations();
 		if(methodAnnotations!=null&&methodAnnotations.length>0){
 			ResponseBody responseBody=null;
 			for(Annotation annotation:methodAnnotations){

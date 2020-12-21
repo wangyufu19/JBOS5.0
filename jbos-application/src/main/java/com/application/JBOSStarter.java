@@ -1,6 +1,7 @@
 package com.application;
 
 
+import com.application.sys.service.UserAuthService;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
@@ -12,6 +13,8 @@ public class JBOSStarter {
 	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
+		Object obj=ctx.getBean(UserAuthService.class);
+		System.out.println(obj);
 	}
 
 }

@@ -2,17 +2,13 @@ package com.jbosframework.web.mvc.dispatcher;
 
 import com.jbosframework.beans.access.BeanFactory;
 import com.jbosframework.beans.access.Setter;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.JsonUtils;
 import com.jbosframework.web.mvc.annotation.RequestBody;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
 import com.jbosframework.web.mvc.data.Representation;
 import com.jbosframework.web.utils.TypeConverter;
-import org.apache.commons.io.IOUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.util.Map;
@@ -33,7 +29,11 @@ public class RequestParameter {
         Class parameterClass=null;
         Object parameterObject=null;
         Field[] parameterClassFields=null;
-        Parameter[] parameters=webAnnotationBean.getMethodMetadata().getMethodParameters();
+        Parameter[] parameters=null;
+        MethodMetadata methodMetadata=webAnnotationBean.getMethodMetadata();
+        if(methodMetadata!=null){
+            parameters=methodMetadata.getMethodParameters();
+        }
         if(parameters!=null&&parameters.length>0){
             parameterValues=new Object[parameters.length];
             for(int i=0;i<parameters.length;i++){
