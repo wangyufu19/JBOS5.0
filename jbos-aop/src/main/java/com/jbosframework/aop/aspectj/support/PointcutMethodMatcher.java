@@ -54,7 +54,7 @@ public class PointcutMethodMatcher {
      */
     public Object getAspectAopProxy(Object obj){
         AopProxy aopProxy=new AspectCglibProxy(aspectMetadata,obj.getClass());
-        return aopProxy.createProxy();
+        return aopProxy.getProxy();
     }
 
 }

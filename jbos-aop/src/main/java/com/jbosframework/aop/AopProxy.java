@@ -10,8 +10,8 @@ import com.jbosframework.aop.support.ProxyConfig;
  */
 public interface AopProxy {
 	/**
-	 * 创建代理类对象
+	 * 得到代理类对象
 	 * @return
 	 */
-	public <T> T createProxy();
+	public <T> T getProxy();
 }

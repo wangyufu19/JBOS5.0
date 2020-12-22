@@ -14,12 +14,6 @@ public class DefaultAopProxyFactory implements AopProxyFactory {
      * @return
      */
     public AopProxy createAopProxy(ProxyConfig proxyConfig){
-        AopProxyFactory aopProxyFactory=null;
-        if("true".equals(proxyConfig.getAutoProxy())){
-            aopProxyFactory=new CglibAopProxyFactory();
-        }else{
-            aopProxyFactory=new JdkAopProxyFactory();
-        }
         return "true".equals(proxyConfig.getAutoProxy())?new CglibProxy(proxyConfig):new JdkDynamicProxy(proxyConfig);
     }
 }

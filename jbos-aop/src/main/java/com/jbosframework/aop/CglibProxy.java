@@ -22,10 +22,10 @@ public class CglibProxy implements AopProxy,MethodInterceptor{
 		this.proxyConfig=proxyConfig;
 	}
 	/**
-	 * 创建代理类
+	 * 得到代理类对象
 	 * @return
 	 */
-	public Object createProxy(){
+	public Object getProxy(){
 		Object obj=null;
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(proxyConfig.getTarget().getClass());

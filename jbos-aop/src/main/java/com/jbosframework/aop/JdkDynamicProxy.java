@@ -21,10 +21,10 @@ public class JdkDynamicProxy implements AopProxy,InvocationHandler{
 		this.proxyConfig=proxyConfig;
 	}
 	/**
-	 * 创建代理类
+	 * 得到代理类对象
 	 * @return
 	 */
-	public Object createProxy(){
+	public Object getProxy(){
 		Object obj=null;
 		obj=Proxy.newProxyInstance(JBOSClassloader.getClassLoader(), proxyConfig.getProxyInterfaces(), this);
 		return obj;

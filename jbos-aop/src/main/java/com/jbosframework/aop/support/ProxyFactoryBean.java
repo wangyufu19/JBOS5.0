@@ -16,7 +16,7 @@ public class ProxyFactoryBean extends AopProxySupport implements FactoryBean {
         this.isSingleton=isSingleton;
     }
 
-    public Object getObject() throws Exception {
+    public Object getObject(){
         if(this.isSingleton){
             return this.getSingletonInstance();
         }else{
@@ -25,7 +25,7 @@ public class ProxyFactoryBean extends AopProxySupport implements FactoryBean {
     }
     public synchronized Object getSingletonInstance(){
         if (this.singletonInstance==null){
-            this.singletonInstance=this.createAopProxy();
+            this.singletonInstance=this.createAopProxy().getProxy();
         }
         return this.singletonInstance;
     }
@@ -34,7 +34,7 @@ public class ProxyFactoryBean extends AopProxySupport implements FactoryBean {
         aopProxySupport.setTarget(this.getTarget());
         aopProxySupport.setProxyInterfaces(this.getProxyInterfaces());
         aopProxySupport.setAutoProxy(this.getAutoProxy());
-        return aopProxySupport.createAopProxy();
+        return aopProxySupport.createAopProxy().getProxy();
     }
     public Class<?> getObjectType() {
         synchronized (this){

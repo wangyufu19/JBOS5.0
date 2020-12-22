@@ -1,7 +1,4 @@
 package com.jbosframework.aop.support;
-
-import com.jbosframework.aop.AopProxyFactory;
-
 /**
  * ProxyConfig
  * @author youfu.wang
