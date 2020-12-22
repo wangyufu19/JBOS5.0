@@ -24,8 +24,8 @@ public class AopProxyUtils {
 	 * @param obj
 	 * @return
 	 */
-	public static Object getAopProxy(Object obj){	
+	public static Object getAopProxy(Object obj) throws Exception {
 		ProxyFactoryBean proxyFactoryBean=(ProxyFactoryBean)obj;
-		return proxyFactoryBean.getProxyBean();	
+		return proxyFactoryBean.getObject();
 	}
 }

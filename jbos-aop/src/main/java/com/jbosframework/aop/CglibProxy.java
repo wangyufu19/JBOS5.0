@@ -1,6 +1,8 @@
 package com.jbosframework.aop;
-import java.lang.reflect.Method;  
-import net.sf.cglib.proxy.Enhancer;  
+import java.lang.reflect.Method;
+
+import com.jbosframework.aop.support.ProxyConfig;
+import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;  
 import net.sf.cglib.proxy.MethodProxy;
 /**
@@ -10,13 +12,14 @@ import net.sf.cglib.proxy.MethodProxy;
  * @date 2016-11-10
  */
 public class CglibProxy implements AopProxy,MethodInterceptor{
-	private Class targetClass;
+	private ProxyConfig proxyConfig;
+
 	/**
 	 * 构造方法
-	 * @param targetClass
+	 * @param proxyConfig
 	 */
-	public CglibProxy(Class targetClass){
-		this.targetClass=targetClass;
+	public CglibProxy(ProxyConfig proxyConfig){
+		this.proxyConfig=proxyConfig;
 	}
 	/**
 	 * 创建代理类
@@ -25,7 +28,7 @@ public class CglibProxy implements AopProxy,MethodInterceptor{
 	public Object createProxy(){
 		Object obj=null;
 		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(targetClass);
+		enhancer.setSuperclass(proxyConfig.getTarget().getClass());
 		enhancer.setCallback(this);
 		obj=enhancer.create();
 		return obj;
