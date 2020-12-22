@@ -14,10 +14,6 @@ public class ProxyConfig {
      */
     private Class<?>[] proxyInterfaces;
     /**
-     * 自动代理(true:Cglib库代理;false:JDK动态代理)
-     */
-    private String autoProxy="false";
-    /**
      * 得到代理实现类
      * @return
      */
@@ -44,19 +40,5 @@ public class ProxyConfig {
      */
     public void setProxyInterfaces(Class<?>[] proxyInterfaces) {
         this.proxyInterfaces = proxyInterfaces;
-    }
-    /**
-     * 得到自动代理值
-     * @return
-     */
-    public String getAutoProxy() {
-        return autoProxy;
-    }
-    /**
-     * 设置自动代理值
-     * @param autoProxy
-     */
-    public void setAutoProxy(String autoProxy) {
-        this.autoProxy = autoProxy;
     }
 }

@@ -1,6 +1,5 @@
 package com.application;
 
-
 import com.application.sys.service.UserAuthService;
 import com.application.sys.service.impl.UserAuthServiceImpl;
 import com.jbosframework.aop.support.ProxyFactoryBean;
@@ -8,6 +7,8 @@ import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
 import lombok.extern.slf4j.Slf4j;
+
+
 @JBOSBootApplication
 @Slf4j
 public class JBOSStarter {
@@ -16,9 +17,8 @@ public class JBOSStarter {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
 		ProxyFactoryBean proxyFactoryBean=new ProxyFactoryBean();
-		proxyFactoryBean.setTarget(UserAuthServiceImpl.class);
+		proxyFactoryBean.setTarget(new UserAuthServiceImpl());
 		proxyFactoryBean.setProxyInterfaces(new Class[]{UserAuthService.class});
-		proxyFactoryBean.setAutoProxy("true");
 		UserAuthService obj=(UserAuthService)proxyFactoryBean.getObject();
 		System.out.println(obj.toString());
 	}

@@ -33,7 +33,6 @@ public class ProxyFactoryBean extends AopProxySupport implements FactoryBean {
         AopProxySupport aopProxySupport=new AopProxySupport();
         aopProxySupport.setTarget(this.getTarget());
         aopProxySupport.setProxyInterfaces(this.getProxyInterfaces());
-        aopProxySupport.setAutoProxy(this.getAutoProxy());
         return aopProxySupport.createAopProxy().getProxy();
     }
     public Class<?> getObjectType() {

@@ -31,7 +31,7 @@ public class PointcutMethodMatcher {
     public boolean match(Object obj){
         boolean bool=false;
         if(obj==null){
-            return bool;
+            return false;
         }
         Method[] methods=obj.getClass().getMethods();
         if(methods!=null){
