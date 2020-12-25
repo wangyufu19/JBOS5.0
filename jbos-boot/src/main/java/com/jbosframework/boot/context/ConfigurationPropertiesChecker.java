@@ -65,8 +65,7 @@ public class ConfigurationPropertiesChecker  implements InitializingBean,BeanBef
         this.afterPropertiesSet();
         ConfigurationProperties configurationProperties=(ConfigurationProperties)beanDefinition.getAnnotation(ConfigurationProperties.class);
         if(configurationProperties!=null){
-            DataSourceProperties dataSourceProperties= DataSourcePropertiesBuilder.getInstance().create(this.applicationContext,configurationProperties);
-            this.applicationContext.putBean(DataSourceProperties.class.getName(),dataSourceProperties);
+           DataSourcePropertiesBuilder.getInstance().create(this.applicationContext,configurationProperties);
         }
     }
 }

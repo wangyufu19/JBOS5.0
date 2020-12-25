@@ -40,6 +40,7 @@ public class DataSourcePropertiesBuilder {
             dataSourceProperties.setDriverClass(driverClass);
             loadProperties(ctx,dataSourceProperties,prefix);
         }
+        ctx.putBean(DataSourceProperties.class.getName(),dataSourceProperties);
         return dataSourceProperties;
     }
 
