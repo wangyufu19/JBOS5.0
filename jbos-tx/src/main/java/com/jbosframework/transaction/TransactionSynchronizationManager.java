@@ -1,7 +1,6 @@
 package com.jbosframework.transaction;
 
 import com.jbosframework.jdbc.datasource.ConnectionHolder;
-import com.jbosframework.jdbc.datasource.DataSourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,7 +14,7 @@ import java.util.Map;
  * @version 5.0
  */
 public class TransactionSynchronizationManager {
-    private static final Log log= LogFactory.getLog(DataSourceUtils.class);
+    private static final Log log= LogFactory.getLog(TransactionSynchronizationManager.class);
     /**
      * 数据源本地线程副本变量
      */
