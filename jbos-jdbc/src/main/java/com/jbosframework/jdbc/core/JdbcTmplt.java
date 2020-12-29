@@ -1,10 +1,10 @@
 package com.jbosframework.jdbc.core;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import com.jbosframework.jdbc.core.RowMapper;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
+
 /**
  * JDBC模板接口
  * 
@@ -15,12 +15,12 @@ public interface JdbcTmplt {
 	/**
 	 * 设置数据源对象
 	 */
-	public void setDataSource(JDBCDataSource dataSource);
+	public void setDataSource(DataSource dataSource);
 	/**
 	 * 得到数据源对象
 	 * @return
 	 */
-	public JDBCDataSource getDataSource();
+	public DataSource getDataSource();
 	/**
 	 * 设置数据源连接
 	 * @param Connection

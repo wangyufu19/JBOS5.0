@@ -5,7 +5,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
+
 /**
  * Jndi数据源实现类
  * @author youfu.wang

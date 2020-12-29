@@ -4,7 +4,6 @@ import java.util.List;
 import com.jbosframework.jdbc.core.JdbcSessionFactory;
 import com.jbosframework.jdbc.core.JdbcTmplt;
 import com.jbosframework.jdbc.core.PageParam;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
 
 /**
  * JDBC DAO支撑类

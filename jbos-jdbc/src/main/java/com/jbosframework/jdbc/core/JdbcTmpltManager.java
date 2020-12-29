@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
 import com.jbosframework.jdbc.datasource.DataSourceUtils;
 import com.jbosframework.jdbc.support.JdbcUtils;
 import com.jbosframework.jdbc.support.SqlAutowireFactory;
@@ -27,6 +26,9 @@ import com.jbosframework.jdbc.support.type.TypeConverter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.sql.DataSource;
+
 /**
  * JDBC模板管理类
  * 
@@ -34,13 +36,27 @@ import org.apache.commons.logging.LogFactory;
  * @version 1.0
  */
 public class JdbcTmpltManager implements JdbcTmplt {
-	private JDBCDataSource dataSource;
+	/**
+	 * ORACLE数据库
+	 */
+	public final static String DB_ORALCE="oracle";
+	/**
+	 * MYSQL数据库
+	 */
+	public final static String DB_MYSQL="mysql";
+	/**
+	 * MYSQL数据库
+	 */
+	public final static String DB_MSSQL="mssql";
+	private DataSource dataSource;
 	private Connection connection=null;
 	private PreparedStatement pstmt=null;
 	private CallableStatement cstmt=null;
 	private String useCache="false";
 	private CacheProvider cacheProvider;
 	private Log log=LogFactory.getLog(JdbcTmpltManager.class);
+	private boolean showSql=true;
+	private String dialect=JdbcTmpltManager.DB_MYSQL;
 	/**
 	 * 构造方法
 	 */
@@ -51,7 +67,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * 构造方法
 	 * @param dataSource
 	 */
-	public JdbcTmpltManager(JDBCDataSource dataSource) {
+	public JdbcTmpltManager(DataSource dataSource) {
 		this.dataSource = dataSource;
 		try {
 			this.connection=DataSourceUtils.getConnection(dataSource);
@@ -63,13 +79,13 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * 得到数据源对象
 	 * @return
 	 */
-	public JDBCDataSource getDataSource(){
+	public DataSource getDataSource(){
 		return this.dataSource;
 	}
 	/**
 	 * 设置数据源对象
 	 */
-	public void setDataSource(JDBCDataSource dataSource) {
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 		try {
 			this.connection=DataSourceUtils.getConnection(dataSource);
@@ -107,7 +123,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	}
 	/**
 	 * 设置数据源连接
-	 * @param Connection
+	 * @param connection
 	 */
 	public void setConnection(Connection connection){
 		this.connection=connection;
@@ -128,6 +144,12 @@ public class JdbcTmpltManager implements JdbcTmplt {
 		pstmt=null;
 		cstmt=null;
 	}
+	private boolean getShowSql(){
+		return this.showSql;
+	}
+	public String getDialect(){
+		return this.dialect;
+	}
 	/**
 	 * 执行给定的SQL语句,该语句可能为 INSERT、UPDATE 或 DELETE 语句
 	 * 
@@ -135,7 +157,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException 
 	 */
 	public void execute(String sql) throws SQLException{			
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}		
 		pstmt = connection.prepareStatement(sql);
@@ -151,7 +173,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException 
 	 */
 	public void execute(String sql, Object[] args) throws SQLException {
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		this.execute(sql);
 	}
 
@@ -163,7 +185,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException 
 	 */
 	public void execute(String sql, Map args) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		this.execute(sql);
 	}
 	/**
@@ -173,7 +195,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public void executeProcedure(String sql) throws SQLException{
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}		
 		cstmt=connection.prepareCall(sql);
@@ -188,7 +210,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public void executeProcedure(String sql,Map<String,Object> args) throws SQLException{	
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}		
 		cstmt=connection.prepareCall(sql);
@@ -212,7 +234,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 */
 	public Map<String,Object> executeProcedure(String sql,Map<String,Object> arg1,Map<String,String> arg2) throws SQLException{
 		Map<String,Object> out=new HashMap<String,Object>();
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}		
 		cstmt=connection.prepareCall(sql);
@@ -268,7 +290,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 		int rownum = 0;		
 		ResultSet rst=null;
 		sql = "select count(1) from (" + sql + ") t1";
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}
 		pstmt = connection.prepareStatement(sql);
@@ -289,7 +311,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 */
 	public ResultSet queryForResultSet(String sql) throws SQLException{
 		ResultSet rst=null;
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("******SQL: "+sql);
 		}		
 		pstmt = connection.prepareStatement(sql);
@@ -398,7 +420,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException 
 	 */
 	public Object[] queryForArray(String sql, Object[] args) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql);
 	}
 	/**
@@ -411,7 +433,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> T queryForArray(String sql, Object[] args,RowMapper<T> rowMapper) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql, rowMapper);
 	}
 	/**
@@ -424,7 +446,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> T queryForArray(String sql,Object[] args,Class<T> requiredType) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql, requiredType);
 	}
 	/**
@@ -436,7 +458,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException 
 	 */
 	public Object[] queryForArray(String sql, Map args) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql);
 	}
 	/**
@@ -449,7 +471,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> T queryForArray(String sql, Map args,RowMapper<T> rowMapper) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql, rowMapper);
 	}
 	/**
@@ -462,7 +484,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> T queryForArray(String sql,Map args,Class<T> requiredType) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForArray(sql, requiredType);
 	}
 	/**
@@ -531,7 +553,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public List queryForList(String sql, Object[] args) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql);
 	}
 	/**
@@ -544,7 +566,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> List<T> queryForList(String sql, Object[] args,RowMapper<T> rowMapper) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql, rowMapper);
 	}
 	/**
@@ -557,7 +579,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> List<T> queryForList(String sql,Object[] args,Class<T> requiredType) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql, requiredType);
 	}
 	
@@ -570,7 +592,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public List queryForList(String sql, Map args) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql);
 	}
 	/**
@@ -583,7 +605,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> List<T> queryForList(String sql, Map args,RowMapper<T> rowMapper) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql, rowMapper);
 	}
 	/**
@@ -596,7 +618,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public <T> List<T> queryForList(String sql,Map args,Class<T> requiredType) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		return this.queryForList(sql, requiredType);
 	}
 	/**
@@ -622,22 +644,22 @@ public class JdbcTmpltManager implements JdbcTmplt {
 				pageParam.setMaxPage(1);
 			
 			// 分别组装oracle,mssql,mysql数据库方言的分页查询语句
-			if ("oracle".equals(dataSource.getDialect())) {
+			if ("oracle".equals(this.getDialect())) {
 				sql = "select * from (select rownum r,t1.* from (" + sql
 						+ ") t1 where rownum<=" + pageParam.getMaxResult()
 						+ ") t2 where r>=" + pageParam.getFirstResult();
-			} else if ("mssql".equals(dataSource.getDialect())) {
+			} else if ("mssql".equals(this.getDialect())) {
 				sql = "select * from (select row_number() over(order by "
 						+ pageParam.getPrimary() + ") r,t1.* from (" + sql
 						+ ") t1 ) t2 where r between "
 						+ pageParam.getFirstResult() + " and "
 						+ pageParam.getMaxResult();
 
-			} else if ("mysql".equals(dataSource.getDialect())) {
+			} else if ("mysql".equals(this.getDialect())) {
 				sql = "select * from (select t1.* from (" + sql
 				+ ") t1) t2 limit " + (pageParam.getFirstResult()-1) + ","
 				+ pageParam.getMaxResult();
-			} else if ("db2".equals(dataSource.getDialect())) {
+			} else if ("db2".equals(this.getDialect())) {
 
 			}
 		}
@@ -672,7 +694,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public List queryForPage(String sql, Object[] args, PageParam pageParam) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		// 是否采用分页查询数据
 		if (pageParam.getMaxResult() > 0) {
 			int rownum = this.getROWNUM(sql);
@@ -687,22 +709,22 @@ public class JdbcTmpltManager implements JdbcTmplt {
 				pageParam.setMaxPage(1);
 			
 			// 分别组装oracle,mssql,mysql数据库方言的分页查询语句
-			if ("oracle".equals(dataSource.getDialect())) {
+			if ("oracle".equals(this.getDialect())) {
 				sql = "select * from (select rownum r,t1.* from (" + sql
 						+ ") t1 where rownum<=" + pageParam.getMaxResult()
 						+ ") t2 where r>=" + pageParam.getFirstResult();
-			} else if ("mssql".equals(dataSource.getDialect())) {
+			} else if ("mssql".equals(this.getDialect())) {
 				sql = "select * from (select row_number() over(order by "
 						+ pageParam.getPrimary() + ") r,t1.* from (" + sql
 						+ ") t1 ) t2 where r between "
 						+ pageParam.getFirstResult() + " and "
 						+ pageParam.getMaxResult();
 
-			} else if ("mysql".equals(dataSource.getDialect())) {
+			} else if ("mysql".equals(this.getDialect())) {
 				sql = "select * from (select t1.* from (" + sql
 				+ ") t1) t2 limit " + (pageParam.getFirstResult()-1) + ","
 				+ pageParam.getMaxResult();
-			} else if ("db2".equals(dataSource.getDialect())) {
+			} else if ("db2".equals(this.getDialect())) {
 
 			}		
 		}
@@ -738,7 +760,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	 * @throws SQLException
 	 */
 	public List queryForPage(String sql, Map args, PageParam pageParam) throws SQLException{
-		sql = SqlAutowireFactory.makeUp(sql, args, dataSource.getDialect());
+		sql = SqlAutowireFactory.makeUp(sql, args, this.getDialect());
 		// 是否采用分页查询数据
 		if (pageParam.getMaxResult() > 0) {
 			int rownum = this.getROWNUM(sql);
@@ -753,27 +775,26 @@ public class JdbcTmpltManager implements JdbcTmplt {
 				pageParam.setMaxPage(1);
 			
 			// 分别组装oracle,mssql,mysql数据库方言的分页查询语句
-			if ("oracle".equals(dataSource.getDialect())) {
+			if ("oracle".equals(this.getDialect())) {
 				sql = "select * from (select rownum r,t1.* from (" + sql
 						+ ") t1 where rownum<=" + pageParam.getMaxResult()
 						+ ") t2 where r>=" + pageParam.getFirstResult();
-			} else if ("mssql".equals(dataSource.getDialect())) {
+			} else if ("mssql".equals(this.getDialect())) {
 				sql = "select * from (select row_number() over(order by "
 						+ pageParam.getPrimary() + ") r,t1.* from (" + sql
 						+ ") t1 ) t2 where r between "
 						+ pageParam.getFirstResult() + " and "
 						+ pageParam.getMaxResult();
 
-			} else if ("mysql".equals(dataSource.getDialect())) {
+			} else if ("mysql".equals(this.getDialect())) {
 				sql = "select * from (select t1.* from (" + sql
 				+ ") t1) t2 limit " + (pageParam.getFirstResult()-1) + ","
 				+ pageParam.getMaxResult();
-			} else if ("db2".equals(dataSource.getDialect())) {
+			} else if ("db2".equals(this.getDialect())) {
 
 			}
 		}
-		List list=null;
-		list=this.queryForList(sql);
+		List list=this.queryForList(sql);;
 		if(list==null){
 			pageParam.setFirstResult(0);
 			pageParam.setMaxResult(0);
@@ -835,7 +856,7 @@ public class JdbcTmpltManager implements JdbcTmplt {
 	public synchronized void executeClob(String sql,String col,String data) throws SQLException{
 	
 		ResultSet rst=null;
-		if("true".equals(dataSource.getShowSql())){
+		if("true".equals(this.getShowSql())){
 			log.info("SQL: "+sql);
 		}
 		connection.setAutoCommit(false);

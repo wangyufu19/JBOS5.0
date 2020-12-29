@@ -1,7 +1,5 @@
 package com.jbosframework.jdbc.core;
-import com.jbosframework.jdbc.core.JdbcSession;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
-import com.jbosframework.jdbc.core.JdbcSessionImpl;
+
 /**
  * JDBC会话工厂类
  * @author youfu.wang

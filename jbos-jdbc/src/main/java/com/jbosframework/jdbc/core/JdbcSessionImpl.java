@@ -1,7 +1,6 @@
 package com.jbosframework.jdbc.core;
 import java.sql.SQLException;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
 import com.jbosframework.transaction.TransactionManager;
 
 /**

@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.jbosframework.jdbc.datasource.JDBCDataSource;
+
 /**
  * 日期类型对象
  * @author youfu.wang
