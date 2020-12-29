@@ -1,7 +1,8 @@
 package com.jbosframework.jdbc.core;
 import java.sql.SQLException;
-import com.jbosframework.jdbc.core.JdbcTmplt;
 import com.jbosframework.jdbc.datasource.JDBCDataSource;
+import com.jbosframework.transaction.TransactionManager;
+
 /**
  * JDBC会话接口类
  * @author youfu.wang
@@ -21,7 +22,7 @@ public interface JdbcSession {
 	/**
 	 * 开始一个事务
 	 */
-	public Transaction beginTransaction() throws SQLException;
+	public TransactionManager beginTransaction() throws SQLException;
 	/**
 	 * 得到JdbcTmplt
 	 * @return

@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * AopProxyBeanRegister
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class AspectProxyBeanRegister extends BeanRegistry {
     private static Log log=LogFactory.getLog(AspectProxyBeanRegister.class);

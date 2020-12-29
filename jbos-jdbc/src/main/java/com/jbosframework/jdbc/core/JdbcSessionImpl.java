@@ -1,10 +1,9 @@
 package com.jbosframework.jdbc.core;
 import java.sql.SQLException;
-import com.jbosframework.jdbc.core.JdbcSession;
-import com.jbosframework.jdbc.core.JdbcTmpltManager;
-import com.jbosframework.jdbc.core.Transaction;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
 import com.jbosframework.jdbc.datasource.JDBCDataSource;
+import com.jbosframework.transaction.TransactionManager;
+
 /**
  * JDBC会话实现类
  * @author youfu.wang
@@ -42,9 +41,8 @@ public class JdbcSessionImpl implements JdbcSession{
 	 * 开始一个事务
 	 * @throws SQLException 
 	 */
-	public Transaction beginTransaction() throws SQLException{
-		Transaction tx=new DataSourceTransactionManager(this.dataSource);
-		tx.begin();
+	public TransactionManager beginTransaction() throws SQLException{
+		TransactionManager tx=new DataSourceTransactionManager(this.dataSource);
 		return tx;
 	}
 	/**

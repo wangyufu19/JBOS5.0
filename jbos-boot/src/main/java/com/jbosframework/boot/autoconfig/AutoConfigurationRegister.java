@@ -1,5 +1,5 @@
 package com.jbosframework.boot.autoconfig;
-import com.jbosframework.beans.support.BeanRegistry;
+
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassloader;
 

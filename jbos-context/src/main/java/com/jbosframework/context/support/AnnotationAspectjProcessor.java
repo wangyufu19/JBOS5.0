@@ -7,7 +7,7 @@ import com.jbosframework.context.ApplicationContext;
 /**
  * AnnotationAspectjProcessor
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class AnnotationAspectjProcessor implements BeanPostProcessor {
     private ApplicationContext applicationContext;

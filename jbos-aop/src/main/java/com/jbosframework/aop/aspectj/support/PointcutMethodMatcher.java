@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * PointcutMethodMatcher
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class PointcutMethodMatcher {
     private static Log log= LogFactory.getLog(PointcutMethodMatcher.class);

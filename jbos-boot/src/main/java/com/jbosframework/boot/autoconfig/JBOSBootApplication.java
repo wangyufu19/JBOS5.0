@@ -11,7 +11,6 @@ import java.lang.annotation.*;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-@EnableAspectJAutoProxy
 public @interface JBOSBootApplication {
 
 }

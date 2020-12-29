@@ -1,19 +1,19 @@
 package com.jbosframework.jdbc.datasource;
+import com.jbosframework.transaction.DefaultTransactionStatus;
+import com.jbosframework.transaction.TransactionDefinition;
+import com.jbosframework.transaction.TransactionManager;
+import com.jbosframework.transaction.TransactionStatus;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import com.jbosframework.jdbc.core.Transaction;
-import com.jbosframework.jdbc.datasource.DataSourceUtils;
 /**
  * 事务管理
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
-public class DataSourceTransactionManager implements Transaction{
-	private Connection connection=null;
-	private DataSource dataSource=null;
-	private boolean committed = false;
-	private boolean rolledBack = false;
+public class DataSourceTransactionManager implements TransactionManager {
+	private DataSource dataSource;
+
 	/**
 	 * 构造方法
 	 * @param dataSource
@@ -22,63 +22,83 @@ public class DataSourceTransactionManager implements Transaction{
 		this.dataSource=dataSource;		
 	}
 	/**
-	 * 设置数据源连接
+	 * 设置数据源
 	 * @param dataSource
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource=dataSource;				
 	}
 	/**
-	 * 得到数据源连接
+	 * 得到数据源
 	 * @return
 	 */
 	public DataSource getDataSource(){
 		return this.dataSource;
 	}
 	/**
-	 * 开始事务
-	 * @throws SQLException 
+	 * 得到一个事务
+	 * @param transactionDefinition
+	 * @return
+	 * @throws SQLException
 	 */
-	public void begin() throws SQLException{
-		connection=DataSourceUtils.getConnection(dataSource);
+	public TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws SQLException {
+		DefaultTransactionStatus transactionStatus=new DefaultTransactionStatus();
+		this.begin(transactionStatus,transactionDefinition);
+		return transactionStatus;
+	}
+
+	/**
+	 * 开始事务
+	 * @param transactionDefinition
+	 * @throws SQLException
+	 */
+	private void begin(DefaultTransactionStatus transactionStatus,TransactionDefinition transactionDefinition) throws SQLException{
+		DataSourceTransactionManager.DataSourceTransactionObject txObject=new DataSourceTransactionManager.DataSourceTransactionObject();
+		ConnectionHolder connectionHolder=txObject.getConnectionHolder(this.dataSource,true);
+		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
+			connection.setTransactionIsolation(transactionDefinition.getIsolationLevel());
 			connection.setAutoCommit(false);
 		}
+		transactionStatus.setConnectionHolder(connectionHolder);
 	}
 	/**
 	 * 提交事务
-	 * @throws SQLException
+	 * @param transactionStatus
 	 */
-	public void commit() throws SQLException {		
+	public void commit(TransactionStatus transactionStatus) throws SQLException {
+		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
+		ConnectionHolder connectionHolder=defaultTransactionStatus.getConnectionHolder();
+		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
-			connection.commit();		
-			connection.setAutoCommit(true);	
-			this.committed = connection.getAutoCommit();	
+			connection.commit();
+			connection.setAutoCommit(true);
 		}
 	}
 	/**
 	 * 回滚事务
-	 * @throws SQLException
+	 * @param transactionStatus
 	 */
-	public void rollback() throws SQLException {
+	public void rollback(TransactionStatus transactionStatus) throws SQLException {
+		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
+		ConnectionHolder connectionHolder=defaultTransactionStatus.getConnectionHolder();
+		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
 			connection.rollback();
-			connection.setAutoCommit(true);	
-			this.rolledBack = true;
+			connection.setAutoCommit(true);
 		}
 	}
-	/**
-	 * 事务是否已经提交
-	 * @return
-	 */
-	public boolean wasCommitted() {
-		return this.committed;
-	}
-	/**
-	 * 事务是否已经回滚
-	 * @return
-	 */
-	public boolean wasRolledBack() {
-		return this.rolledBack;
+	public class DataSourceTransactionObject{
+		private ConnectionHolder connectionHolder=new ConnectionHolder();
+
+		public DataSourceTransactionObject(){
+
+		}
+
+		public ConnectionHolder getConnectionHolder(DataSource dataSource,boolean transactionActive) throws SQLException {
+			connectionHolder.setConnection(DataSourceUtils.getConnection(dataSource));
+			connectionHolder.setTransactionActive(transactionActive);
+			return connectionHolder;
+		}
 	}
 }

@@ -1,4 +1,7 @@
 package com.jbosframework.jdbc.datasource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.lang.ThreadLocal;
@@ -9,10 +12,11 @@ import javax.sql.DataSource;
  * @version 1.0
  */
 public class DataSourceUtils {
+	private static final Log log= LogFactory.getLog(DataSourceUtils.class);
 	/**
 	 * 数据源本地线程副本变量
 	 */
-	private static ThreadLocal<Connection> dataSources=new ThreadLocal<Connection>();
+	private static ThreadLocal<DataSource> dataSources=new ThreadLocal<DataSource>();
 	/**
 	 * 得到数据源连接
 	 * @param dataSource
@@ -20,11 +24,11 @@ public class DataSourceUtils {
 	 * @throws SQLException 
 	 */
 	public static Connection getConnection(DataSource dataSource) throws SQLException{
-		Connection connection=null;		
-		connection=dataSources.get();
-		if(connection==null){
+		Connection connection=null;
+		DataSource currentDataSource=dataSources.get();
+		if(currentDataSource==null){
 			connection=doConnection(dataSource);
-			dataSources.set(connection);
+			dataSources.set(dataSource);
 		}
 		return connection;
 	}
@@ -45,13 +49,14 @@ public class DataSourceUtils {
 	/**
 	 * 释放数据源连接
 	 */
-	public static void releaseConnection(){
-		Connection connection=null;
-		connection=dataSources.get();	
-		if (connection != null) {		
+	public static void releaseConnection(Connection connection,DataSource dataSource){
+		DataSource currentDataSource=dataSources.get();
+		if (connection != null&&currentDataSource!=null) {
 			try {				
 				if (!connection.isClosed()&&connection.getAutoCommit()){
-//					System.out.println("******connection closed");
+					if(log.isDebugEnabled()){
+						log.debug("******connection closed");
+					}
 					connection.close();
 					dataSources.remove();
 				}
