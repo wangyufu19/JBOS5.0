@@ -5,10 +5,15 @@ package com.jbosframework.transaction;
  * @version 5.0
  */
 public class DefaultTransactionDefinition implements TransactionDefinition{
-    private int propagationBehavior=TransactionDefinition.PROPAGATION_REQUIRED;
-    private int isolationLevel=TransactionDefinition.ISOLATION_READ_COMMITTED;
+    private int propagationBehavior;
+    private int isolationLevel;
     private int timeout=60;//单位:秒
     private boolean readOnly=false;
+
+    public DefaultTransactionDefinition(){
+        this.propagationBehavior=TransactionDefinition.PROPAGATION_REQUIRED;
+        this.isolationLevel=TransactionDefinition.ISOLATION_READ_COMMITTED;
+    }
     /**
      * 返回事务的传播行为
      * @return
