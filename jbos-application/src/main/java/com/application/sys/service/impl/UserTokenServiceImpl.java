@@ -8,7 +8,13 @@ import com.application.sys.service.UserTokenService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
+import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
+import com.jbosframework.transaction.DefaultTransactionDefinition;
+import com.jbosframework.transaction.TransactionDefinition;
+import com.jbosframework.transaction.TransactionManager;
+import com.jbosframework.transaction.TransactionStatus;
 
+import javax.sql.DataSource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +31,8 @@ public class UserTokenServiceImpl  implements UserTokenService {
     private UserMgrService userMgrService;
     @Mapper
     private UserTokenMapper userTokenMapper;
+    @Autowired
+    private DataSource dataSource;
     /**
      * 创建用户Token
      * @param userid
@@ -39,6 +47,9 @@ public class UserTokenServiceImpl  implements UserTokenService {
         UserToken userToken=getUserTokenByUserId(userid);
         //生成一个Token
         String token = TokenGenerator.generateValue();
+        TransactionManager tx=new DataSourceTransactionManager(dataSource);
+        TransactionDefinition transactionDefinition=new DefaultTransactionDefinition();
+        TransactionStatus transactionStatus=tx.getTransaction(transactionDefinition);
         if(null==userToken){
             userToken=new UserToken();
             userToken.setUserId(userid);
@@ -46,7 +57,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
             userTokenMapper.addUserToken(userToken);
-            return token;
+
         }else{
             //更新Token过期时间
             userToken.setUserId(userid);
@@ -54,8 +65,11 @@ public class UserTokenServiceImpl  implements UserTokenService {
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
             userTokenMapper.updateUserToken(userToken);
-            return userToken.getToken();
+            token= userToken.getToken();
         }
+        tx.commit(transactionStatus);
+        return token;
+
     }
     /**
      * 失效用户Token

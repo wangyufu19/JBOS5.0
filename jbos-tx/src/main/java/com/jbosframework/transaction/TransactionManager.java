@@ -14,17 +14,17 @@ public interface TransactionManager {
      * @return
      * @throws SQLException
      */
-    TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws SQLException;
+    TransactionStatus getTransaction(TransactionDefinition transactionDefinition);
 
     /**
      * 提交事务
      * @param transactionStatus
      */
-    void commit(TransactionStatus transactionStatus) throws SQLException;
+    void commit(TransactionStatus transactionStatus);
 
     /**
      * 回滚事务
      * @param transactionStatus
      */
-    void rollback(TransactionStatus transactionStatus) throws SQLException;
+    void rollback(TransactionStatus transactionStatus);
 }

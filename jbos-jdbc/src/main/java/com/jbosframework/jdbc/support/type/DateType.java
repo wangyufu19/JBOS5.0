@@ -1,4 +1,6 @@
 package com.jbosframework.jdbc.support.type;
+import com.jbosframework.jdbc.core.JdbcTmpltManager;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,7 +56,7 @@ public class DateType {
 	 * @return
 	 */	
 	public static String getdbyyyymmdd(String s,String dialect){
-		if(JDBCDataSource.DB_ORALCE.equals(dialect)){
+		if(JdbcTmpltManager.DB_ORALCE.equals(dialect)){
 			return "to_char("+s+",'YYYY-MM-DD')";
 		}
 		return "";
@@ -66,7 +68,7 @@ public class DateType {
 	 * @return
 	 */
 	public static String getdbyyyymmddhhmiss(String s,String dialect){
-		if(JDBCDataSource.DB_ORALCE.equals(dialect)){
+		if(JdbcTmpltManager.DB_ORALCE.equals(dialect)){
 			return "to_char("+s+",'YYYY-MM-DD HH24:MI:SS')";
 		}
 		return "";
@@ -78,11 +80,11 @@ public class DateType {
      * @return
      */
 	public static String insertdbyyyymmdd(String s,String dialect){
-		if(JDBCDataSource.DB_ORALCE.equals(dialect)){
+		if(JdbcTmpltManager.DB_ORALCE.equals(dialect)){
 			return "to_date('"+s+"','YYYY-MM-DD')";
-		}else if(JDBCDataSource.DB_MYSQL.equals(dialect)){			
+		}else if(JdbcTmpltManager.DB_MYSQL.equals(dialect)){
 			return "convert(datetime,'"+s+"')";
-		}else if(JDBCDataSource.DB_MSSQL.equals(dialect)){
+		}else if(JdbcTmpltManager.DB_MSSQL.equals(dialect)){
 			
 		}
 		return "";	
@@ -94,11 +96,11 @@ public class DateType {
      * @return
      */
 	public static String insertdbyyyymmddhhmiss(String s,String dialect){
-		if(JDBCDataSource.DB_ORALCE.equals(dialect)){
+		if(JdbcTmpltManager.DB_ORALCE.equals(dialect)){
 			return "to_date('"+s+"','YYYY-MM-DD HH24:MI:SS')";
-		}else if(JDBCDataSource.DB_MYSQL.equals(dialect)){
+		}else if(JdbcTmpltManager.DB_MYSQL.equals(dialect)){
 			return "convert(datetime,'"+s+"')"; 
-		}else if(JDBCDataSource.DB_MSSQL.equals(dialect)){
+		}else if(JdbcTmpltManager.DB_MSSQL.equals(dialect)){
 			
 		}
 		return "";	
@@ -108,7 +110,7 @@ public class DateType {
 	 * @return
 	 */
 	public static String insertdbsysdate(String dialect){
-		if(JDBCDataSource.DB_ORALCE.equals(dialect)){
+		if(JdbcTmpltManager.DB_ORALCE.equals(dialect)){
 			return "sysdate";
 		}
 		return "";

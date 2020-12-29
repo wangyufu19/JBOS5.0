@@ -5,19 +5,21 @@ import com.jbosframework.jdbc.core.JdbcSessionFactory;
 import com.jbosframework.jdbc.core.JdbcTmplt;
 import com.jbosframework.jdbc.core.PageParam;
 
+import javax.sql.DataSource;
+
 /**
  * JDBC DAO支撑类
  * @author youfu.wang
  * @version 1.0
  */
 public class JdbcDaoSupport {
-	private JDBCDataSource dataSource;
+	private DataSource dataSource;
 	private JdbcTmplt jdbcTmplt;
 	
 	public JdbcDaoSupport(){
 		
 	}
-	public JdbcDaoSupport(JDBCDataSource dataSource) {
+	public JdbcDaoSupport(DataSource dataSource) {
 		this.dataSource=dataSource;		
 		this.jdbcTmplt=JdbcSessionFactory.createJdbcSession(dataSource).getJdbcTmplt();
 	}
@@ -26,13 +28,13 @@ public class JdbcDaoSupport {
 	 * 得到数据源对象
 	 * @return
 	 */
-	public JDBCDataSource getDataSource(){
+	public DataSource getDataSource(){
 		return this.dataSource;
 	}
 	/**
 	 * 设置数据源对象
 	 */
-	public void setDataSource(JDBCDataSource dataSource) {
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.jdbcTmplt=JdbcSessionFactory.createJdbcSession(dataSource).getJdbcTmplt();
 	}

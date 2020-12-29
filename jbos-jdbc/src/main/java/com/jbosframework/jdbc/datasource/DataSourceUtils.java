@@ -21,7 +21,7 @@ public class DataSourceUtils {
 	 */
 	public static Connection getConnection(DataSource dataSource) throws SQLException{
 		Connection connection=null;
-		ConnectionHolder connectionHolder=TransactionSynchronizationManager.getConnectionHolder(dataSource);
+		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 		if(connectionHolder==null){
 			connection=dataSource.getConnection();
 			ConnectionHolder holderToUser=new ConnectionHolder();
@@ -37,7 +37,7 @@ public class DataSourceUtils {
 	 * @param dataSource
 	 */
 	public static void releaseConnection(DataSource dataSource){
-		ConnectionHolder connectionHolder=TransactionSynchronizationManager.getConnectionHolder(dataSource);
+		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 		if(connectionHolder!=null){
 			Connection connection=connectionHolder.getConnection();
 			if (connection != null) {

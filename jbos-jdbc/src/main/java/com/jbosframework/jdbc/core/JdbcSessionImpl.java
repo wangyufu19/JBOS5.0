@@ -3,13 +3,15 @@ import java.sql.SQLException;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
 import com.jbosframework.transaction.TransactionManager;
 
+import javax.sql.DataSource;
+
 /**
  * JDBC会话实现类
  * @author youfu.wang
  * @version 1.0
  */
 public class JdbcSessionImpl implements JdbcSession{
-	private JDBCDataSource dataSource;
+	private DataSource dataSource;
 	/**
 	 * 构造方法
 	 */
@@ -20,20 +22,20 @@ public class JdbcSessionImpl implements JdbcSession{
 	 * 构造方法
 	 * @param dataSource
 	 */
-	public JdbcSessionImpl(JDBCDataSource dataSource){
+	public JdbcSessionImpl(DataSource dataSource){
 		this.dataSource=dataSource;
 	}
 	/**
 	 * 得到数据源对象
 	 * @return
 	 */
-	public JDBCDataSource getDataSource(){
+	public DataSource getDataSource(){
 		return this.dataSource;
 	}
 	/**
 	 * 设置数据源对象
 	 */
-	public void setDataSource(JDBCDataSource dataSource) {
+	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 	/**

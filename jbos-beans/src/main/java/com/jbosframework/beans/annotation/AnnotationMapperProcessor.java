@@ -52,7 +52,7 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
                 SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.beanFactory.getBean(SqlSessionFactory.class.getName());
                 if(SqlSessionBeanUtils.isMapperBean(sqlSessionFactory,fields[i].getType())){
                     MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(fields[i].getType());
-                    SqlSession sqlSession=sqlSessionFactory.openSession(true);
+                    SqlSession sqlSession=sqlSessionFactory.openSession(false);
                     fieldValue=mapperProxyFactory.newInstance(sqlSession);
                     injectionMetadata.inject(obj,fields[i],fieldValue);
                 }

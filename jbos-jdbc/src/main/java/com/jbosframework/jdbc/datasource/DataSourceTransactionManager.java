@@ -41,9 +41,13 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	public TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws SQLException {
+	public TransactionStatus getTransaction(TransactionDefinition transactionDefinition){
 		DefaultTransactionStatus transactionStatus=new DefaultTransactionStatus();
-		this.begin(transactionStatus,transactionDefinition);
+		try {
+			this.begin(transactionStatus,transactionDefinition);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return transactionStatus;
 	}
 
@@ -52,7 +56,7 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * @param transactionDefinition
 	 * @throws SQLException
 	 */
-	private void begin(DefaultTransactionStatus transactionStatus,TransactionDefinition transactionDefinition) throws SQLException{
+	private void begin(DefaultTransactionStatus transactionStatus,TransactionDefinition transactionDefinition) throws SQLException {
 		DataSourceTransactionManager.DataSourceTransactionObject txObject=new DataSourceTransactionManager.DataSourceTransactionObject();
 		ConnectionHolder connectionHolder=txObject.getConnectionHolder(this.dataSource,true);
 		Connection connection=connectionHolder.getConnection();
@@ -66,26 +70,35 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * 提交事务
 	 * @param transactionStatus
 	 */
-	public void commit(TransactionStatus transactionStatus) throws SQLException {
+	public void commit(TransactionStatus transactionStatus) {
 		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
-		ConnectionHolder connectionHolder=defaultTransactionStatus.getConnectionHolder();
+		ConnectionHolder connectionHolder=(ConnectionHolder)defaultTransactionStatus.getConnectionHolder();
 		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
-			connection.commit();
-			connection.setAutoCommit(true);
+			try {
+				connection.commit();
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 	/**
 	 * 回滚事务
 	 * @param transactionStatus
 	 */
-	public void rollback(TransactionStatus transactionStatus) throws SQLException {
+	public void rollback(TransactionStatus transactionStatus) {
 		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
-		ConnectionHolder connectionHolder=defaultTransactionStatus.getConnectionHolder();
+		ConnectionHolder connectionHolder=(ConnectionHolder)defaultTransactionStatus.getConnectionHolder();
 		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
-			connection.rollback();
-			connection.setAutoCommit(true);
+			try {
+				connection.rollback();
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public class DataSourceTransactionObject{

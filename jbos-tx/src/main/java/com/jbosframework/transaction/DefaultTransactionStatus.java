@@ -1,8 +1,5 @@
 package com.jbosframework.transaction;
 
-
-import com.jbosframework.jdbc.datasource.ConnectionHolder;
-
 /**
  * DefaultTransactionStatus
  * @author youfu.wang
@@ -10,7 +7,7 @@ import com.jbosframework.jdbc.datasource.ConnectionHolder;
  */
 public class DefaultTransactionStatus implements TransactionStatus{
     private boolean isNewTransaction=false;
-    private ConnectionHolder connectionHolder;
+    private Object connectionHolder;
 
     public DefaultTransactionStatus(){
     }
@@ -30,10 +27,10 @@ public class DefaultTransactionStatus implements TransactionStatus{
     public boolean isRollbackOnly() {
         return false;
     }
-    public void setConnectionHolder(ConnectionHolder connectionHolder){
+    public void setConnectionHolder(Object connectionHolder){
         this.connectionHolder=connectionHolder;
     }
-    public ConnectionHolder getConnectionHolder(){
+    public Object getConnectionHolder(){
         return this.connectionHolder;
     }
 }

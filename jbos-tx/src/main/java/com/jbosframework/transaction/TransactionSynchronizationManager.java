@@ -1,6 +1,5 @@
 package com.jbosframework.transaction;
 
-import com.jbosframework.jdbc.datasource.ConnectionHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -18,18 +17,18 @@ public class TransactionSynchronizationManager {
     /**
      * 数据源本地线程副本变量
      */
-    private static ThreadLocal<Map<DataSource, ConnectionHolder>> dataSources=new ThreadLocal<Map<DataSource,ConnectionHolder>>();
+    private static ThreadLocal<Map<Object, Object>> dataSources=new ThreadLocal<Map<Object,Object>>();
 
-    public static ConnectionHolder getConnectionHolder(DataSource dataSource){
-        Map<DataSource, ConnectionHolder> currentDataSource=dataSources.get();
+    public static Object getConnectionHolder(DataSource dataSource){
+        Map<Object, Object> currentDataSource=dataSources.get();
         if(currentDataSource!=null){
             return currentDataSource.get(dataSource);
         }else{
             return null;
         }
     }
-    public static void bindConnectionHolder(DataSource dataSource,ConnectionHolder connectionHolder){
-        Map<DataSource, ConnectionHolder> map=new HashMap<DataSource, ConnectionHolder>();
+    public static void bindConnectionHolder(DataSource dataSource,Object connectionHolder){
+        Map<Object, Object> map=new HashMap<Object, Object>();
         map.put(dataSource,connectionHolder);
         dataSources.set(map);
     }

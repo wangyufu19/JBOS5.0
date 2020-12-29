@@ -1,5 +1,7 @@
 package com.jbosframework.jdbc.core;
 
+import javax.sql.DataSource;
+
 /**
  * JDBC会话工厂类
  * @author youfu.wang
@@ -11,7 +13,7 @@ public class JdbcSessionFactory{
 	 * @param dataSource
 	 * @return
 	 */
-	public static JdbcSession createJdbcSession(JDBCDataSource dataSource){
+	public static JdbcSession createJdbcSession(DataSource dataSource){
 		JdbcSession jdbcSession=new JdbcSessionImpl(dataSource);
 		return jdbcSession;
 	}
