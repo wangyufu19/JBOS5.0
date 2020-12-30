@@ -9,7 +9,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import java.io.IOException;
 
 
@@ -49,7 +48,7 @@ public class SqlSessionFactoryBean {
 		if(sqlSessionFactory==null){
 			synchronized (SqlSessionFactory.class) {
 				if(sqlSessionFactory==null){
-					TransactionFactory transactionFactory = new JdbcTransactionFactory();
+					TransactionFactory transactionFactory = new JbosTransactionFactory();
 					Environment environment = new Environment(id, transactionFactory, dataSource);
 					Configuration configuration = new Configuration(environment);
 					PathMatchResourceSupport pathMatchResourceSupport=new PathMatchResourceSupport();

@@ -1,7 +1,5 @@
 package com.application.sys.mapper;
 
-import com.jbosframework.beans.annotation.Mapper;
-
 import java.util.Map;
 
 /**

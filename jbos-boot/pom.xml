@@ -24,6 +24,18 @@
             <artifactId>jbos-web</artifactId>
             <version>${jbos.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.jbosframework.tx</groupId>
+            <artifactId>jbos-tx</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.orm</groupId>
+            <artifactId>jbos-orm</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

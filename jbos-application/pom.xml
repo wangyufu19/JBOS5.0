@@ -119,6 +119,12 @@
             <version>5.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jbosframework.jdbc</groupId>
+            <artifactId>jbos-jdbc</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

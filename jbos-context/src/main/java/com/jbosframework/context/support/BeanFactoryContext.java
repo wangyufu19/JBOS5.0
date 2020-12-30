@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-
-import com.jbosframework.beans.annotation.AnnotationMapperProcessor;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
@@ -45,7 +43,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 */
 	public BeanFactoryContext(){
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
-		beanPostProcessors.add(new AnnotationMapperProcessor(this));
 	}
 	/**
 	 * 构造方法
@@ -53,7 +50,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	public BeanFactoryContext(Configuration configuration){
 		super(configuration);
 		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
-		beanPostProcessors.add(new AnnotationMapperProcessor(this));
 	}
 
 	/**

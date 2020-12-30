@@ -8,6 +8,7 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AnnotationAspectjProcessor;
+import com.jbosframework.orm.mybatis.support.AnnotationMapperProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -46,6 +47,7 @@ public class JBOSApplication {
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+        ctx.addBeanPostProcessor(new AnnotationMapperProcessor(ctx));
     }
 
     /**

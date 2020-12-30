@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.jbosframework.orm</groupId>
-            <artifactId>jbos-orm</artifactId>
-            <version>${jbos.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.jbosframework.utils</groupId>
             <artifactId>jbos-utils</artifactId>
             <version>${jbos.version}</version>

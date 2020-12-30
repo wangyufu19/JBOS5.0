@@ -1,5 +1,5 @@
 package com.jbosframework.jdbc.datasource;
-import com.jbosframework.transaction.TransactionSynchronizationManager;
+import com.jbosframework.transaction.support.TransactionSynchronizationManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,30 +23,32 @@ public class DataSourceUtils {
 		Connection connection=null;
 		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 		if(connectionHolder==null){
+			log.info("******Datasource connection created");
 			connection=dataSource.getConnection();
 			ConnectionHolder holderToUser=new ConnectionHolder();
 			holderToUser.setConnection(connection);
 			TransactionSynchronizationManager.bindConnectionHolder(dataSource,holderToUser);
 			return connection;
 		}else{
+			log.info("******Fetch Datasource connection from ThreadLocal");
 			return connectionHolder.getConnection();
 		}
 	}
 	/**
-	 * 释放数据源
+	 * 关闭数据源
 	 * @param dataSource
 	 */
-	public static void releaseConnection(DataSource dataSource){
+	public static void closeConnection(Connection connection,DataSource dataSource){
 		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 		if(connectionHolder!=null){
-			Connection connection=connectionHolder.getConnection();
-			if (connection != null) {
+			Connection connectionToUse=connectionHolder.getConnection();
+			if (connectionToUse != null) {
 				try {
-					if (!connection.isClosed()&&connection.getAutoCommit()){
+					if (!connectionToUse.isClosed()&&connectionToUse.getAutoCommit()){
 						if(log.isDebugEnabled()){
 							log.debug("******Datasource connection closed");
 						}
-						connection.close();
+						connectionToUse.close();
 						TransactionSynchronizationManager.removeConnectionHolder(dataSource);
 					}
 				} catch (SQLException e) {

@@ -1,5 +1,4 @@
 package com.jbosframework.beans.config;
-
 /**
  * BeanPostProcessor
  * @author youfu.wang

@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 /**
  * DataSourceAutoConfiguration
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 @Configuration
 @ConditionalOnClass(DataSource.class)

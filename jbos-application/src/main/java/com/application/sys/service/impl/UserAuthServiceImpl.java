@@ -1,8 +1,7 @@
 package com.application.sys.service.impl;
 import com.application.sys.mapper.UserAuthMapper;
 import com.application.sys.service.UserAuthService;
-import com.jbosframework.beans.annotation.Autowired;
-import com.jbosframework.beans.annotation.Mapper;
+import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
 
 import java.util.HashMap;

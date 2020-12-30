@@ -1,4 +1,4 @@
-package com.jbosframework.transaction;
+package com.jbosframework.transaction.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,15 +22,18 @@ public class TransactionSynchronizationManager {
     public static Object getConnectionHolder(DataSource dataSource){
         Map<Object, Object> currentDataSource=dataSources.get();
         if(currentDataSource!=null){
-            return currentDataSource.get(dataSource);
+            return currentDataSource.get(getDataSourceKey(dataSource));
         }else{
             return null;
         }
     }
     public static void bindConnectionHolder(DataSource dataSource,Object connectionHolder){
         Map<Object, Object> map=new HashMap<Object, Object>();
-        map.put(dataSource,connectionHolder);
+        map.put(getDataSourceKey(dataSource),connectionHolder);
         dataSources.set(map);
+    }
+    private static String getDataSourceKey(Object obj){
+        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
     }
     public static void removeConnectionHolder(DataSource dataSource){
         dataSources.remove();

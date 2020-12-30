@@ -6,13 +6,11 @@ import com.application.sys.pojo.UserToken;
 import com.application.sys.service.UserMgrService;
 import com.application.sys.service.UserTokenService;
 import com.jbosframework.beans.annotation.Autowired;
-import com.jbosframework.beans.annotation.Mapper;
+import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.beans.annotation.Service;
-import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
-import com.jbosframework.transaction.DefaultTransactionDefinition;
-import com.jbosframework.transaction.TransactionDefinition;
-import com.jbosframework.transaction.TransactionManager;
-import com.jbosframework.transaction.TransactionStatus;
+import com.jbosframework.transaction.annotation.Isolation;
+import com.jbosframework.transaction.annotation.Propagation;
+import com.jbosframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.Date;
@@ -37,7 +35,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
      * 创建用户Token
      * @param userid
      */
-    //@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
     public String createToken(String userid){
         //当前时间
         Date now = new Date();
@@ -47,9 +45,6 @@ public class UserTokenServiceImpl  implements UserTokenService {
         UserToken userToken=getUserTokenByUserId(userid);
         //生成一个Token
         String token = TokenGenerator.generateValue();
-        TransactionManager tx=new DataSourceTransactionManager(dataSource);
-        TransactionDefinition transactionDefinition=new DefaultTransactionDefinition();
-        TransactionStatus transactionStatus=tx.getTransaction(transactionDefinition);
         if(null==userToken){
             userToken=new UserToken();
             userToken.setUserId(userid);
@@ -57,7 +52,6 @@ public class UserTokenServiceImpl  implements UserTokenService {
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
             userTokenMapper.addUserToken(userToken);
-
         }else{
             //更新Token过期时间
             userToken.setUserId(userid);
@@ -67,7 +61,6 @@ public class UserTokenServiceImpl  implements UserTokenService {
             userTokenMapper.updateUserToken(userToken);
             token= userToken.getToken();
         }
-        tx.commit(transactionStatus);
         return token;
 
     }

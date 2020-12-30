@@ -71,17 +71,19 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * @param transactionStatus
 	 */
 	public void commit(TransactionStatus transactionStatus) {
+		Connection connection=null;
 		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
-		ConnectionHolder connectionHolder=(ConnectionHolder)defaultTransactionStatus.getConnectionHolder();
-		Connection connection=connectionHolder.getConnection();
-		if(connection!=null){
-			try {
+		try {
+			ConnectionHolder connectionHolder=(ConnectionHolder)defaultTransactionStatus.getConnectionHolder();
+			connection=connectionHolder.getConnection();
+			if(connection!=null){
 				connection.commit();
 				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DataSourceUtils.closeConnection(connection,dataSource);
 		}
 	}
 	/**
@@ -102,13 +104,9 @@ public class DataSourceTransactionManager implements TransactionManager {
 		}
 	}
 	public class DataSourceTransactionObject{
-		private ConnectionHolder connectionHolder=new ConnectionHolder();
-
-		public DataSourceTransactionObject(){
-
-		}
 
 		public ConnectionHolder getConnectionHolder(DataSource dataSource,boolean transactionActive) throws SQLException {
+			ConnectionHolder connectionHolder=new ConnectionHolder();
 			connectionHolder.setConnection(DataSourceUtils.getConnection(dataSource));
 			connectionHolder.setTransactionActive(transactionActive);
 			return connectionHolder;

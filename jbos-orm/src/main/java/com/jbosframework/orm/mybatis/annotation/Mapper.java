@@ -1,4 +1,4 @@
-package com.jbosframework.beans.annotation;
+package com.jbosframework.orm.mybatis.annotation;
 
 import java.lang.annotation.*;
 
