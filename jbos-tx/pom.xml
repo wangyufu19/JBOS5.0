@@ -9,9 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jbosframework.tx</groupId>
-    <packaging>jar</packaging>
-
     <artifactId>jbos-tx</artifactId>
+
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.jbosframework.beans</groupId>
+            <artifactId>jbos-beans</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.aop</groupId>
+            <artifactId>jbos-aop</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>
