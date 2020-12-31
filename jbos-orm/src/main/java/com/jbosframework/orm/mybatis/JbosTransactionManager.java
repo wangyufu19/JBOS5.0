@@ -33,6 +33,7 @@ public class JbosTransactionManager implements Transaction {
 
     private void doConnection() throws SQLException {
         this.connection= DataSourceUtils.getConnection(dataSource);
+        this.connection.setAutoCommit(false);
         this.autoCommit=this.connection.getAutoCommit();
     }
     public void commit() throws SQLException {

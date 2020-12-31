@@ -3,6 +3,8 @@ import com.jbosframework.transaction.DefaultTransactionStatus;
 import com.jbosframework.transaction.TransactionDefinition;
 import com.jbosframework.transaction.TransactionManager;
 import com.jbosframework.transaction.TransactionStatus;
+import com.jbosframework.utils.Assert;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
@@ -13,7 +15,12 @@ import javax.sql.DataSource;
  */
 public class DataSourceTransactionManager implements TransactionManager {
 	private DataSource dataSource;
+	/**
+	 * 构造方法
+	 */
+	public DataSourceTransactionManager(){
 
+	}
 	/**
 	 * 构造方法
 	 * @param dataSource
@@ -33,6 +40,7 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * @return
 	 */
 	public DataSource getDataSource(){
+		Assert.notNull(this.dataSource,"The Object must be not null");
 		return this.dataSource;
 	}
 	/**
@@ -58,7 +66,7 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 */
 	private void begin(DefaultTransactionStatus transactionStatus,TransactionDefinition transactionDefinition) throws SQLException {
 		DataSourceTransactionManager.DataSourceTransactionObject txObject=new DataSourceTransactionManager.DataSourceTransactionObject();
-		ConnectionHolder connectionHolder=txObject.getConnectionHolder(this.dataSource,true);
+		ConnectionHolder connectionHolder=txObject.getConnectionHolder(this.getDataSource(),true);
 		Connection connection=connectionHolder.getConnection();
 		if(connection!=null){
 			connection.setTransactionIsolation(transactionDefinition.getIsolationLevel());
@@ -83,7 +91,7 @@ public class DataSourceTransactionManager implements TransactionManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DataSourceUtils.closeConnection(connection,dataSource);
+			DataSourceUtils.closeConnection(connection,this.getDataSource());
 		}
 	}
 	/**
