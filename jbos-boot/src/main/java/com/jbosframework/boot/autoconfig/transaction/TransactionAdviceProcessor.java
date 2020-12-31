@@ -26,6 +26,7 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
         this.beanFactory=beanFactory;
     }
     public void process(Object obj){
+
         if(obj==null){
             return;
         }
