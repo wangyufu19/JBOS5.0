@@ -175,6 +175,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
 			obj = this.doCreateBean(beanDefinition);
 		}
+		this.doBeanPostProcessor(obj);
 		return obj;
 	}
 
@@ -228,8 +229,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
             BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
             ex.printStackTrace();
         }else{
-            this.doBeanBeforeProcessor(obj,beanDefinition);
-            this.doBeanPostProcessor(obj);
+			this.doBeanBeforeProcessor(obj,beanDefinition);
             if(beanDefinition.isSingleton()){
                 this.putBean(beanDefinition.getName(),obj);
             }

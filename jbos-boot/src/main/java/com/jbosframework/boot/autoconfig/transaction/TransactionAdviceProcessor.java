@@ -26,7 +26,6 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
         this.beanFactory=beanFactory;
     }
     public void process(Object obj){
-
         if(obj==null){
             return;
         }
@@ -34,15 +33,17 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
         if(methods==null) {
             return;
         }
+
         Transactional transactional = null;
         for(Method method:methods){
             transactional = method.getDeclaredAnnotation(Transactional.class);
-            if (transactional == null) {
-                continue;
+            if (transactional != null) {
+                break;
             }
         }
 
         if(transactional!=null){
+            log.info("********obj: "+obj);
             ProxyConfig proxyConfig=new ProxyConfig();
             proxyConfig.setTarget(obj);
             TransactionAdviceProxy transactionAdviceProxy=new TransactionAdviceProcessor.TransactionAdviceProxy(this.beanFactory.getBean(DataSourceTransactionManager.class));

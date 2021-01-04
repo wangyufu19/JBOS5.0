@@ -4,7 +4,6 @@ import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.InjectionMetadata;
 import com.jbosframework.beans.factory.InitializingBean;
-import com.jbosframework.boot.autoconfig.jdbc.DataSourceProperties;
 import com.jbosframework.boot.autoconfig.jdbc.DataSourcePropertiesBuilder;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.core.jepl.JEPL;

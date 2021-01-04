@@ -47,7 +47,6 @@ public class JBOSApplication {
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
-        ctx.addBeanPostProcessor(new AnnotationMapperProcessor(ctx));
     }
 
     /**

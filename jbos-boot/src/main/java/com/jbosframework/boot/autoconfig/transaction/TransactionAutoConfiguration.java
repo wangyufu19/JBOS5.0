@@ -35,8 +35,8 @@ public class TransactionAutoConfiguration extends AbstractAutoConfiguration {
         if(enableTransactionManager==null){
             return;
         }
-        this.getApplicationContext().addBeanPostProcessor(new TransactionAdviceProcessor(this.getApplicationContext()));
         if(!this.conditionalOnBean(this.getClass().getAnnotation(ConditionalOnBean.class))){
+            this.getApplicationContext().addBeanPostProcessor(new TransactionAdviceProcessor(this.getApplicationContext()));
             DataSourceTransactionManager dataSourceTransactionManager=new DataSourceTransactionManager();
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(DataSourceTransactionManager.class.getName(),DataSourceTransactionManager.class);
             this.getApplicationContext().putBeanDefinition(annotationBean);
