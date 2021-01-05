@@ -162,23 +162,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		this.singletonInstances.put(name,obj);
 	}
 	/**
-	 * 根据名称得到Bean对象
-	 * @param name
-	 * @return
-	 */
-	private Object getBeanObject(String name){
-		Object obj = null;
-		if(singletonInstances.containsKey(name)){
-			obj=singletonInstances.get(name);
-		}else{
-			BeanDefinition beanDefinition=this.getBeanDefinition(name);
-			obj = this.doCreateBean(beanDefinition);
-		}
-		this.doBeanPostProcessor(obj);
-		return obj;
-	}
-
-	/**
 	 * 自动装配Bean对象
 	 */
 	public void autowired(){
@@ -229,12 +212,28 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
             ex.printStackTrace();
         }else{
 			this.doBeanBeforeProcessor(obj,beanDefinition);
-			BeanAutowiredProcessor annotationBeanAutowiredProcessor=new BeanAutowiredProcessor(this);
-			annotationBeanAutowiredProcessor.process(obj);
+			BeanAutowiredProcessor beanAutowiredProcessor=new BeanAutowiredProcessor(this);
+			beanAutowiredProcessor.process(obj);
             if(beanDefinition.isSingleton()){
                 this.putBean(beanDefinition.getName(),obj);
             }
         }
+		return obj;
+	}
+	/**
+	 * 根据名称得到Bean对象
+	 * @param name
+	 * @return
+	 */
+	private Object getBeanObject(String name){
+		Object obj = null;
+		if(singletonInstances.containsKey(name)){
+			obj=singletonInstances.get(name);
+		}else{
+			BeanDefinition beanDefinition=this.getBeanDefinition(name);
+			obj = this.doCreateBean(beanDefinition);
+		}
+		this.doBeanPostProcessor(obj);
 		return obj;
 	}
 

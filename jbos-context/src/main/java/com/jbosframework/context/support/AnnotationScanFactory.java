@@ -50,14 +50,14 @@ public class AnnotationScanFactory {
 	}
 	/**
 	 * 扫描注解Bean
-	 * @param clses
+	 * @param classes
 	 */
-	public void scan(Class<?>[] clses) {
-		if(clses==null) {
+	public void scan(Class<?>[] classes) {
+		if(classes==null) {
 			return;
 		}
-		for(int i=0;i<clses.length;i++) {
-			this.scan(clses[i]);
+		for(int i=0;i<classes.length;i++) {
+			this.scan(classes[i]);
 		}
 	}
 	/**

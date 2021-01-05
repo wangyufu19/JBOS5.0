@@ -5,6 +5,9 @@ import com.jbosframework.aop.support.ProxyConfig;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;  
 import net.sf.cglib.proxy.MethodProxy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * CglibProxy
  * @author youfu.wang
@@ -12,6 +15,8 @@ import net.sf.cglib.proxy.MethodProxy;
  * @date 2016-11-10
  */
 public class CglibProxy implements AopProxy,MethodInterceptor{
+	private static final Log log= LogFactory.getLog(CglibProxy.class);
+
 	private ProxyConfig proxyConfig;
 
 	/**
@@ -36,6 +41,7 @@ public class CglibProxy implements AopProxy,MethodInterceptor{
 	@Override
 	public Object intercept(Object object, Method method, Object[] arg,
 			MethodProxy methodProxy) throws Throwable {
+		log.info("********obj: "+object+"; method: "+method);
 		Object result = methodProxy.invokeSuper(object, arg);
 		return result;  
 	}

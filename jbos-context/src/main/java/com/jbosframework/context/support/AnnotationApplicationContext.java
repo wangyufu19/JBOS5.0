@@ -50,14 +50,14 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	}
 	/**
 	 * 注册Bean
-	 * @param clses
+	 * @param classes
 	 */
-	public void registry(Class<?>[] clses) {
+	public void registry(Class<?>[] classes) {
 		if(this.isEnableAspectJAutoProxy()){
 			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
 		}
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
-		annotationScanFactory.scan(clses);
+		annotationScanFactory.scan(classes);
 		this.autowired();
 	}
 	/**

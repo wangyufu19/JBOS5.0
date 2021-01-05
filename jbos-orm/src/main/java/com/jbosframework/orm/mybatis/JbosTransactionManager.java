@@ -24,6 +24,11 @@ public class JbosTransactionManager implements Transaction {
         this.dataSource=dataSource;
     }
 
+    /**
+     * 得到数据源连接
+     * @return
+     * @throws SQLException
+     */
     public Connection getConnection() throws SQLException {
         if(this.connection==null){
             this.doConnection();
@@ -31,23 +36,39 @@ public class JbosTransactionManager implements Transaction {
         return this.connection;
     }
 
+    /**
+     * 创建数据源连接
+     * @throws SQLException
+     */
     private void doConnection() throws SQLException {
         this.connection= DataSourceUtils.getConnection(dataSource);
-        this.connection.setAutoCommit(false);
         this.autoCommit=this.connection.getAutoCommit();
     }
+
+    /**
+     * 提交事务
+     * @throws SQLException
+     */
     public void commit() throws SQLException {
         if(this.connection!=null&&!this.autoCommit){
             this.connection.commit();
         }
     }
 
+    /**
+     * 回滚事务
+     * @throws SQLException
+     */
     public void rollback() throws SQLException {
         if(this.connection!=null&&!this.autoCommit){
             this.connection.rollback();
         }
     }
 
+    /**
+     * 关闭事务的数据源连接
+     * @throws SQLException
+     */
     public void close() throws SQLException {
         DataSourceUtils.closeConnection(this.connection,this.dataSource);
     }

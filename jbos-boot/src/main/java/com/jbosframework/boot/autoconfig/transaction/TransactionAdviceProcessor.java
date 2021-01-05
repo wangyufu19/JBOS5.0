@@ -2,6 +2,8 @@ package com.jbosframework.boot.autoconfig.transaction;
 
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.CglibProxy;
+import com.jbosframework.aop.MethodBeforeAdvice;
+import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
 import com.jbosframework.aop.support.ProxyConfig;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
@@ -33,19 +35,19 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
         if(methods==null) {
             return;
         }
-
+        ProxyConfig proxyConfig=new ProxyConfig();
         Transactional transactional = null;
         for(Method method:methods){
             transactional = method.getDeclaredAnnotation(Transactional.class);
             if (transactional != null) {
+                proxyConfig.setTarget(obj);
+                proxyConfig.setMethod(method);
                 break;
             }
         }
-
         if(transactional!=null){
             log.info("********obj: "+obj);
-            ProxyConfig proxyConfig=new ProxyConfig();
-            proxyConfig.setTarget(obj);
+            proxyConfig.setMethodBeforeAdvice(new AspectjMethodBeforeAdvice());
             TransactionAdviceProxy transactionAdviceProxy=new TransactionAdviceProcessor.TransactionAdviceProxy(this.beanFactory.getBean(DataSourceTransactionManager.class));
             obj=transactionAdviceProxy.delegate(proxyConfig);
         }

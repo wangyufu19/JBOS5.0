@@ -19,9 +19,17 @@ public class ProxyConfig {
      * 代理接口
      */
     private Class<?>[] proxyInterfaces;
-
+    /**
+     * 代理方法
+     */
+    private Method method;
+    /**
+     * 方法完成前通知
+     */
     private MethodBeforeAdvice methodBeforeAdvice;
-
+    /**
+     * 方法完成后通知
+     */
     private MethodAfterAdvice methodAfterAdvice;
     /**
      * 得到代理实现类
@@ -53,6 +61,13 @@ public class ProxyConfig {
     }
 
 
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
+    }
     public MethodBeforeAdvice getMethodBeforeAdvice() {
         return methodBeforeAdvice;
     }

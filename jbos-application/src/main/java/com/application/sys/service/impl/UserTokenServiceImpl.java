@@ -90,7 +90,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
      */
     public UserToken getUserTokenByUserId(String userId){
         Map<String, Object> parameterObject=new HashMap<String, Object>();
-        parameterObject.put("userid",userId);
+        parameterObject.put("userId",userId);
         UserToken userToken=userTokenMapper.getUserTokenByUserId(parameterObject);
         return userToken;
     }

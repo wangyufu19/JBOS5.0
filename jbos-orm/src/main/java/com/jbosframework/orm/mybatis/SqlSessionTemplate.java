@@ -144,11 +144,9 @@ public class SqlSessionTemplate implements SqlSession {
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             SqlSession sqlSession=SqlSessionTemplate.this.sqlSessionFactory.openSession(SqlSessionTemplate.this.executorType);
-//            sqlSession.getConnection().setAutoCommit(false);
             Object result;
             try{
                 result=method.invoke(sqlSession,args);
-                //sqlSession.commit(true);
             }catch (Throwable throwable){
                throw throwable;
             }finally {
