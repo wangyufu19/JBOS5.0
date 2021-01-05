@@ -33,28 +33,28 @@ public class UserTokenServiceImpl  implements UserTokenService {
     private DataSource dataSource;
     /**
      * 创建用户Token
-     * @param userid
+     * @param userId
      */
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
-    public String createToken(String userid){
+    public String createToken(String userId){
         //当前时间
         Date now = new Date();
         //过期时间
         Date expireTime = new Date(now.getTime() + EXPIRE * 1000);
         //查询用户Token数据
-        UserToken userToken=getUserTokenByUserId(userid);
+        UserToken userToken=getUserTokenByUserId(userId);
         //生成一个Token
         String token = TokenGenerator.generateValue();
         if(null==userToken){
             userToken=new UserToken();
-            userToken.setUserId(userid);
+            userToken.setUserId(userId);
             userToken.setToken(token);
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
             userTokenMapper.addUserToken(userToken);
         }else{
             //更新Token过期时间
-            userToken.setUserId(userid);
+            userToken.setUserId(userId);
             userToken.setToken(token);
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
@@ -66,12 +66,12 @@ public class UserTokenServiceImpl  implements UserTokenService {
     }
     /**
      * 失效用户Token
-     * @param userid
+     * @param userId
      */
-    //@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
-    public void invalidToken(String userid){
+    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+    public void invalidToken(String userId){
         //查询用户Token数据
-        UserToken userToken=getUserTokenByUserId(userid);
+        UserToken userToken=getUserTokenByUserId(userId);
         if(userToken==null){
             return;
         }else{
@@ -85,12 +85,12 @@ public class UserTokenServiceImpl  implements UserTokenService {
     }
     /**
      * 查询ID用户Token
-     * @param userid
+     * @param userId
      * @return
      */
-    public UserToken getUserTokenByUserId(String userid){
+    public UserToken getUserTokenByUserId(String userId){
         Map<String, Object> parameterObject=new HashMap<String, Object>();
-        parameterObject.put("userid",userid);
+        parameterObject.put("userid",userId);
         UserToken userToken=userTokenMapper.getUserTokenByUserId(parameterObject);
         return userToken;
     }

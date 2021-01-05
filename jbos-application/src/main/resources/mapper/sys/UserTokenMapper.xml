@@ -5,7 +5,7 @@
     <select id="getUserTokenByUserId" parameterType="java.util.Map" resultType="com.application.sys.pojo.UserToken">
         SELECT USERID,TOKEN,EXPIRETIME,UPDATETIME
         FROM JBOS_USER_TOKEN
-        WHERE USERID=#{userid}
+        WHERE USERID=#{userId}
     </select>
     <!--根据accessToken查询用户Token-->
     <select id="getUserTokenByAccessToken" parameterType="java.util.Map" resultType="com.application.sys.pojo.UserToken">
