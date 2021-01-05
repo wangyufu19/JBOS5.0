@@ -1,7 +1,6 @@
 package com.jbosframework.boot.autoconfig.orm;
 
 import com.jbosframework.boot.autoconfig.AbstractAutoConfiguration;
-import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.orm.mybatis.support.AnnotationMapperProcessor;

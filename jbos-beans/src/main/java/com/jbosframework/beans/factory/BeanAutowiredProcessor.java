@@ -1,10 +1,9 @@
-package com.jbosframework.beans.annotation;
+package com.jbosframework.beans.factory;
 
+import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
-import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.beans.factory.BeanTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Field;
@@ -18,11 +17,11 @@ import java.util.Map;
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationBeanAutowiredProcessor implements BeanPostProcessor {
-    private static final Log log= LogFactory.getLog(AnnotationBeanAutowiredProcessor.class);
+public class BeanAutowiredProcessor implements BeanPostProcessor {
+    private static final Log log= LogFactory.getLog(BeanAutowiredProcessor.class);
     private BeanFactory beanFactory;
 
-    public AnnotationBeanAutowiredProcessor(BeanFactory beanFactory){
+    public BeanAutowiredProcessor(BeanFactory beanFactory){
         this.beanFactory=beanFactory;
     }
 

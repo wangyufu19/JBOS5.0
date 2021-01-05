@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;
-import com.jbosframework.beans.annotation.AnnotationBeanAutowiredProcessor;
+import com.jbosframework.beans.factory.BeanAutowiredProcessor;
 import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
@@ -42,14 +42,13 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
-		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
+
 	}
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(Configuration configuration){
 		super(configuration);
-		beanPostProcessors.add(new AnnotationBeanAutowiredProcessor(this));
 	}
 
 	/**
@@ -230,6 +229,8 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
             ex.printStackTrace();
         }else{
 			this.doBeanBeforeProcessor(obj,beanDefinition);
+			BeanAutowiredProcessor annotationBeanAutowiredProcessor=new BeanAutowiredProcessor(this);
+			annotationBeanAutowiredProcessor.process(obj);
             if(beanDefinition.isSingleton()){
                 this.putBean(beanDefinition.getName(),obj);
             }
