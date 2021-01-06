@@ -10,6 +10,8 @@ import com.jbosframework.transaction.annotation.EnableTransactionManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.sql.DataSource;
+
 /**
  * TransactionAutoConfiguration
  * @author youfu.wang
@@ -37,7 +39,7 @@ public class TransactionAutoConfiguration extends AbstractAutoConfiguration {
         }
         if(!this.conditionalOnBean(this.getClass().getAnnotation(ConditionalOnBean.class))){
             this.getApplicationContext().addBeanPostProcessor(new TransactionAdviceProcessor(this.getApplicationContext()));
-            DataSourceTransactionManager dataSourceTransactionManager=new DataSourceTransactionManager();
+            DataSourceTransactionManager dataSourceTransactionManager=new DataSourceTransactionManager(this.getApplicationContext().getBean(DataSource.class));
             AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(DataSourceTransactionManager.class.getName(),DataSourceTransactionManager.class);
             this.getApplicationContext().putBeanDefinition(annotationBean);
             this.getApplicationContext().putBean(DataSourceTransactionManager.class.getName(),dataSourceTransactionManager);

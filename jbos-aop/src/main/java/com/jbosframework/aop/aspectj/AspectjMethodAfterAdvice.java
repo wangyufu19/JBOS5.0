@@ -9,14 +9,18 @@ import java.lang.reflect.Method;
  * @version 5.0
  */
 public class AspectjMethodAfterAdvice implements MethodAfterAdvice {
-    private Class<?> targetClass;
-    private Method method;
+    private Object target;
+    private String method;
+    private Object[] args;
 
-    public void setTargetClass(Class<?> targetClass){
-        this.targetClass=targetClass;
+    public void setTarget(Object target){
+        this.target=target;
     }
-    public void setMethod(Method method){
+    public void setMethod(String method){
         this.method=method;
+    }
+    public void setArgs(Object[] args){
+        this.args=args;
     }
     public void after(Object target, Method method, Object[] args){
 

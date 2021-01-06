@@ -6,5 +6,5 @@ package com.jbosframework.beans.config;
  */
 public interface BeanPostProcessor {
 
-    public void process(Object obj);
+    public Object process(Object obj);
 }

@@ -14,6 +14,10 @@ public class DefaultTransactionDefinition implements TransactionDefinition{
         this.propagationBehavior=TransactionDefinition.PROPAGATION_REQUIRED;
         this.isolationLevel=TransactionDefinition.ISOLATION_READ_COMMITTED;
     }
+    public DefaultTransactionDefinition(int propagationBehavior,int isolationLevel){
+        this.propagationBehavior=propagationBehavior;
+        this.isolationLevel=TransactionDefinition.ISOLATION_READ_COMMITTED;
+    }
     /**
      * 返回事务的传播行为
      * @return

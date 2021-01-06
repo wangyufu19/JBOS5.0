@@ -231,7 +231,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
 			obj = this.doCreateBean(beanDefinition);
 		}
-		this.doBeanPostProcessor(obj);
+		obj=this.doBeanPostProcessor(obj);
 		return obj;
 	}
 
@@ -340,9 +340,11 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	/**
 	 * 处理Bean对象的Processor
 	 */
-	private void doBeanPostProcessor(Object bean){
+	private Object doBeanPostProcessor(Object bean){
+		Object obj=null;
 		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
-			beanPostProcessor.process(bean);
+			obj=beanPostProcessor.process(bean);
 		}
+		return obj;
 	}
 }

@@ -15,11 +15,13 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
     public AnnotationAspectjProcessor(ApplicationContext ApplicationContext){
         this.applicationContext=ApplicationContext;
     }
-    public void process(Object obj){
+    public Object process(Object obj){
+        Object target=obj;
         PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.applicationContext.getAspectProxyBeanContext());
-        if(pointcutMethodMatcher.match(obj)){
+        if(pointcutMethodMatcher.match(target)){
             //判断是否切面AOP代理Bean
-            obj=pointcutMethodMatcher.getAspectAopProxy(obj);
+            target=pointcutMethodMatcher.getAspectAopProxy(target);
         }
+        return target;
     }
 }

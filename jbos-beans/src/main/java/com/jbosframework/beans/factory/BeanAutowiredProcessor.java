@@ -25,15 +25,16 @@ public class BeanAutowiredProcessor implements BeanPostProcessor {
         this.beanFactory=beanFactory;
     }
 
-    public void process(Object obj){
+    public Object process(Object obj){
+        Object target=obj;
         Class<?> cls=null;
         if (obj==null){
-            return;
+            return null;
         }
         cls=obj.getClass();
         Field[] fields=cls.getDeclaredFields();
         if(fields==null) {
-            return;
+            return target;
         }
         InjectionMetadata injectionMetadata=new InjectionMetadata(this.beanFactory);
         for(int i=0;i<fields.length;i++) {
@@ -46,7 +47,7 @@ public class BeanAutowiredProcessor implements BeanPostProcessor {
                 if (log.isWarnEnabled()) {
                     log.warn("Field com.jbosframework.beans.annotation is not supported on static fields: " + fields[i].getName());
                 }
-                return;
+                return target;
             }
             Object fieldValue=null;
             if(fields[i].getType().isInterface()){
@@ -63,7 +64,7 @@ public class BeanAutowiredProcessor implements BeanPostProcessor {
                     if(beanNames.size()>1){
                         BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + fields[i].getType() + "' available:找到多个实现Bean["+beanNameClass+"]");
                         ex.printStackTrace();
-                        return;
+                        return target;
                     }else{
                         fieldValue=this.beanFactory.getBean(beanNames.get(0).getName());
                     }
@@ -71,7 +72,8 @@ public class BeanAutowiredProcessor implements BeanPostProcessor {
             }else{
                 fieldValue=this.beanFactory.getBean(fields[i].getType().getName());
             }
-            injectionMetadata.inject(obj,fields[i],fieldValue);
+            injectionMetadata.inject(target,fields[i],fieldValue);
         }
+        return target;
     }
 }

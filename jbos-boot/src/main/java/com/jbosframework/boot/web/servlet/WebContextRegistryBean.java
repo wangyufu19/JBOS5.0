@@ -37,9 +37,10 @@ public class WebContextRegistryBean implements BeanPostProcessor {
         context.addChild(wrapper);
         context.addServletMappingDecoded(contextPath+"/*", DispatcherServlet.class.getSimpleName());
     }
-    public void process(Object obj){
-        if(obj instanceof FilterRegistryBean){
-            FilterRegistryBean filterRegistryBean=(FilterRegistryBean)obj;
+    public Object process(Object obj){
+        Object target=obj;
+        if(target instanceof FilterRegistryBean){
+            FilterRegistryBean filterRegistryBean=(FilterRegistryBean)target;
             FilterDef filterDef = new FilterDef();
             String filterName=filterRegistryBean.getName();
             Filter filter=filterRegistryBean.getFilter();
@@ -61,8 +62,8 @@ public class WebContextRegistryBean implements BeanPostProcessor {
             context.addFilterMap(mapping);
 
             logger.info("******Registry filter "+filterRegistryBean.getFilter().getClass().getName());
-        }else if(obj instanceof ServletRegistryBean){
-            ServletRegistryBean servletRegistryBean=(ServletRegistryBean)obj;
+        }else if(target instanceof ServletRegistryBean){
+            ServletRegistryBean servletRegistryBean=(ServletRegistryBean)target;
             Wrapper wrapper = context.createWrapper();
             wrapper.setName(servletRegistryBean.getName());
             wrapper.setServletClass(servletRegistryBean.getServlet().getClass().getName());
@@ -70,5 +71,6 @@ public class WebContextRegistryBean implements BeanPostProcessor {
             context.addServletMappingDecoded(servletRegistryBean.getUrlPattern(), servletRegistryBean.getName());
             logger.info("******Registry servlet "+servletRegistryBean.getServlet().getClass().getName());
         }
+        return target;
     }
 }

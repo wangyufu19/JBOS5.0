@@ -39,14 +39,15 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
         }
         return bool;
     }
-    public void process(Object obj) {
+    public Object process(Object obj) {
+        Object target=obj;
         if (obj==null){
-            return;
+            return null;
         }
-        Class<?> cls=obj.getClass();
+        Class<?> cls=target.getClass();
         Field[] fields=cls.getDeclaredFields();
         if(fields==null) {
-            return;
+            return target;
         }
         InjectionMetadata injectionMetadata=new InjectionMetadata(this.beanFactory);
         for(int i=0;i<fields.length;i++) {
@@ -59,7 +60,7 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
                 if (log.isWarnEnabled()) {
                     log.warn("Field "+fields[i].getName()+"is not supported on static fields: " + fields[i].getName());
                 }
-                return;
+                return target;
             }
             Object fieldValue=null;
             if(fields[i].getType().isInterface()) {
@@ -68,9 +69,10 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
                     MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(fields[i].getType());
                     SqlSession sqlSession=new SqlSessionTemplate(sqlSessionFactory);
                     fieldValue=mapperProxyFactory.newInstance(sqlSession);
-                    injectionMetadata.inject(obj,fields[i],fieldValue);
+                    injectionMetadata.inject(target,fields[i],fieldValue);
                 }
             }
         }
+        return target;
     }
 }

@@ -1,6 +1,7 @@
 package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.aspectj.*;
 import com.jbosframework.beans.support.BeanRegistry;
+import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -35,6 +36,7 @@ public class AspectProxyBeanRegister extends BeanRegistry {
         if(cls==null){
             return;
         }
+        Object target=JBOSClassloader.newInstance(cls);
         Method[] methods=cls.getMethods();
         if(methods==null) {
             return;
@@ -52,13 +54,13 @@ public class AspectProxyBeanRegister extends BeanRegistry {
                     metadata.setPointcut(StringUtils.replaceNull(pointcut.value()));
                 }else if(annotations[j] instanceof Before){
                     AspectjMethodBeforeAdvice methodBeforeAdvice=new AspectjMethodBeforeAdvice();
-                    methodBeforeAdvice.setTargetClass(cls);
-                    methodBeforeAdvice.setMethod(methods[i]);
+                    methodBeforeAdvice.setTarget(target);
+                    methodBeforeAdvice.setMethod(methods[i].getName());
                     metadata.setMethodBeforeAdvice(methodBeforeAdvice);
                 }else if(annotations[j] instanceof After){
                     AspectjMethodAfterAdvice methodAfterAdvice=new AspectjMethodAfterAdvice();
-                    methodAfterAdvice.setTargetClass(cls);
-                    methodAfterAdvice.setMethod(methods[i]);
+                    methodAfterAdvice.setTarget(target);
+                    methodAfterAdvice.setMethod(methods[i].getName());
                     metadata.setMethodAfterAdvice(methodAfterAdvice);
                 }
             }
