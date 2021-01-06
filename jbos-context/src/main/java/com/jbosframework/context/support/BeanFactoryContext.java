@@ -184,7 +184,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
 				obj=this.getSingletonInstances().get(beanDefinition.getName());
 			}else{
-				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
 				Object parentObj=this.getBeanObject(beanDefinition.getParentName());
 				MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
 				if(methodMetadata.getMethodParameters().length>0){
@@ -192,9 +191,9 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 					for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
 						parameterValues[i]=this.getBeanObject(methodMetadata.getMethodParameters()[i].getType().getName());
 					}
-					obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
+					obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
 				}else{
-					obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
+					obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
 				}
 			}
         }else {
@@ -202,7 +201,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
                 if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
                     obj=this.getSingletonInstances().get(beanDefinition.getName());
                 }else{
-                    obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+                    obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
                 }
             }else if(beanDefinition.isPrototype()){
                 obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
