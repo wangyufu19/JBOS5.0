@@ -42,13 +42,14 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
-
+		this.addBeanPostProcessor(new BeanAutowiredProcessor(this));
 	}
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(Configuration configuration){
 		super(configuration);
+		this.addBeanPostProcessor(new BeanAutowiredProcessor(this));
 	}
 
 	/**
@@ -184,12 +185,12 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 				obj=this.getSingletonInstances().get(beanDefinition.getName());
 			}else{
 				BeanDefinition parentBeanDefinition=this.getBeanDefinition(beanDefinition.getParentName());
-				Object parentObj=this.doCreateBean(parentBeanDefinition);
+				Object parentObj=this.getBeanObject(beanDefinition.getParentName());
 				MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
 				if(methodMetadata.getMethodParameters().length>0){
 					Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
 					for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
-						parameterValues[i]=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
+						parameterValues[i]=this.getBeanObject(methodMetadata.getMethodParameters()[i].getType().getName());
 					}
 					obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
 				}else{
@@ -212,8 +213,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
             ex.printStackTrace();
         }else{
 			this.doBeanBeforeProcessor(obj,beanDefinition);
-			BeanAutowiredProcessor beanAutowiredProcessor=new BeanAutowiredProcessor(this);
-			beanAutowiredProcessor.process(obj);
             if(beanDefinition.isSingleton()){
                 this.putBean(beanDefinition.getName(),obj);
             }
