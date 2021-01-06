@@ -41,7 +41,6 @@ public class CglibProxy implements AopProxy,MethodInterceptor{
 	@Override
 	public Object intercept(Object object, Method method, Object[] arg,
 			MethodProxy methodProxy) throws Throwable {
-		log.info("********obj: "+object+"; method: "+method);
 		Object result = methodProxy.invokeSuper(object, arg);
 		return result;  
 	}

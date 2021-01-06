@@ -2,9 +2,6 @@ package com.jbosframework.aop.support;
 
 import com.jbosframework.aop.MethodAfterAdvice;
 import com.jbosframework.aop.MethodBeforeAdvice;
-
-import java.lang.reflect.Method;
-
 /**
  * ProxyConfig
  * @author youfu.wang
@@ -20,15 +17,11 @@ public class ProxyConfig {
      */
     private Class<?>[] proxyInterfaces;
     /**
-     * 代理方法
-     */
-    private Method method;
-    /**
-     * 方法完成前通知
+     * 完成前通知
      */
     private MethodBeforeAdvice methodBeforeAdvice;
     /**
-     * 方法完成后通知
+     * 完成后通知
      */
     private MethodAfterAdvice methodAfterAdvice;
     /**
@@ -60,14 +53,6 @@ public class ProxyConfig {
         this.proxyInterfaces = proxyInterfaces;
     }
 
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public void setMethod(Method method) {
-        this.method = method;
-    }
     public MethodBeforeAdvice getMethodBeforeAdvice() {
         return methodBeforeAdvice;
     }

@@ -1,15 +1,14 @@
 package com.jbosframework.aop.aspectj;
 
-import com.jbosframework.aop.MethodBeforeAdvice;
-
+import com.jbosframework.aop.MethodAfterAdvice;
 import java.lang.reflect.Method;
 
 /**
- * AspectjMethodBeforeAdvice
+ * AspectjMethodAfterAdvice
  * @author youfu.wang
  * @version 5.0
  */
-public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
+public class AspectjMethodAfterAdvice implements MethodAfterAdvice {
     private Class<?> targetClass;
     private Method method;
 
@@ -19,7 +18,7 @@ public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
     public void setMethod(Method method){
         this.method=method;
     }
-    public void before(Object target, Method method, Object[] args){
+    public void after(Object target, Method method, Object[] args){
 
     }
 }

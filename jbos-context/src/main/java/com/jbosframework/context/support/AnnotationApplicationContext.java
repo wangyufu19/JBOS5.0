@@ -5,7 +5,7 @@ import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.AnnotationBeanRegistry;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextFactory;
-import com.jbosframework.context.AspectProxyBeanRegister;
+import com.jbosframework.aop.aspectj.support.AspectProxyBeanRegister;
 import com.jbosframework.context.configuration.Configuration;
 
 /**

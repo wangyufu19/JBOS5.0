@@ -10,6 +10,6 @@ import java.lang.reflect.Method;
  */
 public interface MethodAfterAdvice extends AfterAdvice {
 
-    public void before(Object target,Method method,Object[] args);
+    public void after(Object target,Method method,Object[] args);
 
 }

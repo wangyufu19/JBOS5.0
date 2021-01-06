@@ -2,6 +2,10 @@ package com.application;
 
 import com.application.sys.service.UserAuthService;
 import com.application.sys.service.impl.UserAuthServiceImpl;
+import com.application.sys.service.impl.UserTokenServiceImpl;
+import com.jbosframework.aop.AopProxy;
+import com.jbosframework.aop.CglibProxy;
+import com.jbosframework.aop.support.ProxyConfig;
 import com.jbosframework.aop.support.ProxyFactoryBean;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;

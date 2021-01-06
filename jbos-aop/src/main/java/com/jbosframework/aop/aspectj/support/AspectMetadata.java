@@ -1,5 +1,8 @@
 package com.jbosframework.aop.aspectj.support;
 
+import com.jbosframework.aop.MethodAfterAdvice;
+import com.jbosframework.aop.MethodBeforeAdvice;
+
 /**
  * AspectMetadata
  * @author youfu.wang
@@ -10,11 +13,10 @@ public class AspectMetadata {
     private Class<?> aspectClass;
     //连接点
     private String pointcut;
-    //执行前
-    private String beforeMethod;
-    //执行后
-    private String afterMethod;
-
+    //完成前
+    private MethodBeforeAdvice methodBeforeAdvice;
+    //完成后
+    private MethodAfterAdvice methodAfterAdvice;
 
     public Class<?> getAspectClass() {
         return aspectClass;
@@ -31,20 +33,19 @@ public class AspectMetadata {
     public void setPointcut(String pointcut) {
         this.pointcut = pointcut;
     }
-
-    public String getBeforeMethod() {
-        return beforeMethod;
+    public MethodBeforeAdvice getMethodBeforeAdvice() {
+        return methodBeforeAdvice;
     }
 
-    public void setBeforeMethod(String beforeMethod) {
-        this.beforeMethod = beforeMethod;
+    public void setMethodBeforeAdvice(MethodBeforeAdvice methodBeforeAdvice) {
+        this.methodBeforeAdvice = methodBeforeAdvice;
     }
 
-    public String getAfterMethod() {
-        return afterMethod;
+    public MethodAfterAdvice getMethodAfterAdvice() {
+        return methodAfterAdvice;
     }
 
-    public void setAfterMethod(String afterMethod) {
-        this.afterMethod = afterMethod;
+    public void setMethodAfterAdvice(MethodAfterAdvice methodAfterAdvice) {
+        this.methodAfterAdvice = methodAfterAdvice;
     }
 }

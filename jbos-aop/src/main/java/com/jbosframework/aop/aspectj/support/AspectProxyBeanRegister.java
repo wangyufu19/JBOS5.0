@@ -1,10 +1,5 @@
-package com.jbosframework.context;
-import com.jbosframework.aop.aspectj.Aspect;
-import com.jbosframework.aop.aspectj.Pointcut;
-import com.jbosframework.aop.aspectj.Before;
-import com.jbosframework.aop.aspectj.After;
-import com.jbosframework.aop.aspectj.support.AspectMetadata;
-import com.jbosframework.aop.aspectj.support.AspectProxyBeanContext;
+package com.jbosframework.aop.aspectj.support;
+import com.jbosframework.aop.aspectj.*;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
@@ -34,15 +29,9 @@ public class AspectProxyBeanRegister extends BeanRegistry {
         if(aspect==null){
             return;
         }
-        AspectMetadata metadata=new AspectMetadata();
-        metadata.setAspectClass(cls);
-        this.registerMethodMetadata(cls,metadata);
-        if(!"".equals(metadata.getPointcut())){
-            log.debug("******注入切面类["+cls.getName()+"]");
-            this.aspectProxyBeanContext.putMetadata(metadata);
-        }
+        this.doRegisterBean(cls);
     }
-    private void registerMethodMetadata(Class<?> cls, AspectMetadata metadata){
+    private void doRegisterBean(Class<?> cls){
         if(cls==null){
             return;
         }
@@ -50,6 +39,8 @@ public class AspectProxyBeanRegister extends BeanRegistry {
         if(methods==null) {
             return;
         }
+        AspectMetadata metadata=new AspectMetadata();
+        metadata.setAspectClass(cls);
         for(int i=0;i<methods.length;i++) {
             Annotation[] annotations = methods[i].getAnnotations();
             if (annotations == null) {
@@ -60,13 +51,21 @@ public class AspectProxyBeanRegister extends BeanRegistry {
                     Pointcut pointcut=(Pointcut)annotations[j];
                     metadata.setPointcut(StringUtils.replaceNull(pointcut.value()));
                 }else if(annotations[j] instanceof Before){
-                    Before before=(Before)annotations[j];
-                    metadata.setBeforeMethod(methods[i].getName());
+                    AspectjMethodBeforeAdvice methodBeforeAdvice=new AspectjMethodBeforeAdvice();
+                    methodBeforeAdvice.setTargetClass(cls);
+                    methodBeforeAdvice.setMethod(methods[i]);
+                    metadata.setMethodBeforeAdvice(methodBeforeAdvice);
                 }else if(annotations[j] instanceof After){
-                    After after=(After)annotations[j];
-                    metadata.setAfterMethod(methods[i].getName());
+                    AspectjMethodAfterAdvice methodAfterAdvice=new AspectjMethodAfterAdvice();
+                    methodAfterAdvice.setTargetClass(cls);
+                    methodAfterAdvice.setMethod(methods[i]);
+                    metadata.setMethodAfterAdvice(methodAfterAdvice);
                 }
             }
+        }
+        if(!"".equals(metadata.getPointcut())){
+            log.debug("******注入切面类["+cls.getName()+"]");
+            this.aspectProxyBeanContext.putMetadata(metadata);
         }
     }
 }

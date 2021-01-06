@@ -36,19 +36,11 @@ public class AspectCglibProxy implements AopProxy,MethodInterceptor{
     @Override
     public Object intercept(Object object, Method method, Object[] arg,
                             MethodProxy methodProxy) throws Throwable {
-        Class<?> aspectClass=null;
-        if(metadata!=null){
-            aspectClass=metadata.getAspectClass();
-        }
         //调用前
-        if(metadata.getBeforeMethod()!=null&&!"".equals(metadata.getBeforeMethod())){
-            JBOSClassCaller.call(aspectClass,metadata.getBeforeMethod());
-        }
+
         Object result = methodProxy.invokeSuper(object, arg);
         //调用后
-        if(metadata.getAfterMethod()!=null&&!"".equals(metadata.getAfterMethod())){
-            JBOSClassCaller.call(aspectClass,metadata.getAfterMethod());
-        }
+
         return result;
     }
 

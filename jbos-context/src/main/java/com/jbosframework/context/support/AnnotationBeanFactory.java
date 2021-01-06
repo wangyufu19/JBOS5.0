@@ -6,7 +6,7 @@
 //import com.jbosframework.beans.support.BeanReader;
 //import com.jbosframework.beans.support.AnnotationBeanReaderImpl;
 //import com.jbosframework.context.AnnotationBeanRegistry;
-//import com.jbosframework.context.AspectProxyBeanRegister;
+//import com.jbosframework.aop.aspectj.support.AspectProxyBeanRegister;
 //
 //import java.util.Map;
 //

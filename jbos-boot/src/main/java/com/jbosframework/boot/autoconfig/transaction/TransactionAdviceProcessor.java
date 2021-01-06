@@ -1,12 +1,10 @@
 package com.jbosframework.boot.autoconfig.transaction;
 
-import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aop.CglibProxy;
-import com.jbosframework.aop.MethodBeforeAdvice;
+import com.jbosframework.aop.aspectj.AspectjMethodAfterAdvice;
 import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
-import com.jbosframework.aop.support.ProxyConfig;
+import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.config.BeanPostProcessor;
-import com.jbosframework.beans.factory.BeanFactory;
+import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
 import com.jbosframework.transaction.TransactionManager;
 import com.jbosframework.transaction.annotation.Transactional;
@@ -22,10 +20,10 @@ import java.lang.reflect.Method;
 public class TransactionAdviceProcessor implements BeanPostProcessor {
 
     private static final Log log= LogFactory.getLog(TransactionAdviceProcessor.class);
-    private BeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
-    public TransactionAdviceProcessor(BeanFactory beanFactory){
-        this.beanFactory=beanFactory;
+    public TransactionAdviceProcessor(ApplicationContext applicationContext){
+        this.applicationContext=applicationContext;
     }
     public void process(Object obj){
         if(obj==null){
@@ -35,32 +33,22 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
         if(methods==null) {
             return;
         }
-        ProxyConfig proxyConfig=new ProxyConfig();
         Transactional transactional = null;
         for(Method method:methods){
             transactional = method.getDeclaredAnnotation(Transactional.class);
             if (transactional != null) {
-                proxyConfig.setTarget(obj);
-                proxyConfig.setMethod(method);
-                break;
+                TransactionManager tx=this.applicationContext.getBean(DataSourceTransactionManager.class);
+                AspectMetadata aspectMetadata=new AspectMetadata();
+                aspectMetadata.setAspectClass(obj.getClass());
+                aspectMetadata.setPointcut(obj.getClass().getName()+"."+method.getName());
+                AspectjMethodBeforeAdvice methodBeforeAdvice=new AspectjMethodBeforeAdvice();
+                methodBeforeAdvice.setMethod(method);
+                aspectMetadata.setMethodBeforeAdvice(methodBeforeAdvice);
+                AspectjMethodAfterAdvice methodAfterAdvice=new AspectjMethodAfterAdvice();
+                methodAfterAdvice.setMethod(method);
+                aspectMetadata.setMethodAfterAdvice(methodAfterAdvice);
+                applicationContext.getAspectProxyBeanContext().putMetadata(aspectMetadata);
             }
-        }
-        if(transactional!=null){
-            log.info("********obj: "+obj);
-            proxyConfig.setMethodBeforeAdvice(new AspectjMethodBeforeAdvice());
-            TransactionAdviceProxy transactionAdviceProxy=new TransactionAdviceProcessor.TransactionAdviceProxy(this.beanFactory.getBean(DataSourceTransactionManager.class));
-            obj=transactionAdviceProxy.delegate(proxyConfig);
-        }
-    }
-    public class TransactionAdviceProxy {
-        private TransactionManager transactionManager;
-
-        public TransactionAdviceProxy(TransactionManager transactionManager){
-            this.transactionManager=transactionManager;
-        }
-        public  <T> T delegate(ProxyConfig proxyConfig){
-            AopProxy aopProxy=new CglibProxy(proxyConfig);
-            return aopProxy.getProxy();
         }
     }
 }

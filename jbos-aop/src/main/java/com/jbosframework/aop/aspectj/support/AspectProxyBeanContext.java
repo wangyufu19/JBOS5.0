@@ -14,29 +14,29 @@ import java.util.Map;
 public class AspectProxyBeanContext {
     private static Log log= LogFactory.getLog(AspectProxyBeanContext.class);
     //Aspect Metadata Bean
-    protected static Map<String, AspectMetadata> metadatas= Collections.synchronizedMap(new LinkedHashMap<String, AspectMetadata>());
+    protected static Map<String, AspectMetadata> metadataMap= Collections.synchronizedMap(new LinkedHashMap<String, AspectMetadata>());
 
     public boolean contains(String pointcut){
         if(pointcut==null){
             return false;
         }
-        if(metadatas.containsKey(pointcut)){
+        if(metadataMap.containsKey(pointcut)){
             return true;
         }
         return false;
     }
     public void putMetadata(AspectMetadata metadata){
-        if(!metadatas.containsKey(metadata.getPointcut())){
-            metadatas.put(metadata.getPointcut(),metadata);
+        if(!metadataMap.containsKey(metadata.getPointcut())){
+            metadataMap.put(metadata.getPointcut(),metadata);
         }
     }
     public AspectMetadata getMetadata(String pointcut){
-        if(metadatas.containsKey(pointcut)){
-            return metadatas.get(pointcut);
+        if(metadataMap.containsKey(pointcut)){
+            return metadataMap.get(pointcut);
         }
         return null;
     }
-    public Map<String, AspectMetadata> getMetadatas(){
-        return metadatas;
+    public Map<String, AspectMetadata> getMetadataMap(){
+        return metadataMap;
     }
 }

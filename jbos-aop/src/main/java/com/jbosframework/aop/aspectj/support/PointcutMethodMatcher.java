@@ -1,7 +1,5 @@
 package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
-import com.jbosframework.utils.AntPathMatcher;
-import com.jbosframework.utils.PathMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Method;
@@ -14,7 +12,6 @@ import java.lang.reflect.Method;
 public class PointcutMethodMatcher {
     private static Log log= LogFactory.getLog(PointcutMethodMatcher.class);
     private AspectProxyBeanContext aspectProxyBeanContext;
-    private PathMatcher pathMatcher=new AntPathMatcher();
     private AspectMetadata aspectMetadata;
 
     /**
@@ -46,9 +43,8 @@ public class PointcutMethodMatcher {
         }
         return bool;
     }
-
     /**
-     * 得到AOP代理实例
+     * 得到AOP代理对象
      * @param obj
      * @return
      */
@@ -56,5 +52,4 @@ public class PointcutMethodMatcher {
         AopProxy aopProxy=new AspectCglibProxy(aspectMetadata,obj.getClass());
         return aopProxy.getProxy();
     }
-
 }
