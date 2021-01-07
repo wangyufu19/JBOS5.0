@@ -4,6 +4,7 @@ import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
+import com.jbosframework.core.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Field;
@@ -20,11 +21,21 @@ import java.util.Map;
 public class BeanAutowiredProcessor implements BeanPostProcessor {
     private static final Log log= LogFactory.getLog(BeanAutowiredProcessor.class);
     private BeanFactory beanFactory;
+    private int order= Order.MIN;
 
     public BeanAutowiredProcessor(BeanFactory beanFactory){
         this.beanFactory=beanFactory;
     }
 
+    public void setOrder(int order){
+        this.order=order;
+    }
+    public int getOrder() {
+        return this.order;
+    }
+    public int compareTo(BeanPostProcessor beanPostProcessor) {
+    return this.order - beanPostProcessor.getOrder();
+    }
     public Object process(Object obj){
         Object target=obj;
         Class<?> cls=null;
@@ -76,4 +87,5 @@ public class BeanAutowiredProcessor implements BeanPostProcessor {
         }
         return target;
     }
+
 }

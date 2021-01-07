@@ -5,6 +5,7 @@ import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.core.Order;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
 import com.jbosframework.transaction.DefaultTransactionDefinition;
 import com.jbosframework.transaction.TransactionDefinition;
@@ -23,9 +24,20 @@ public class TransactionAdviceProcessor implements BeanPostProcessor {
 
     private static final Log log= LogFactory.getLog(TransactionAdviceProcessor.class);
     private ApplicationContext applicationContext;
+    private int order= Order.MIN;
 
     public TransactionAdviceProcessor(ApplicationContext applicationContext){
         this.applicationContext=applicationContext;
+    }
+
+    public void setOrder(int order){
+        this.order=order;
+    }
+    public int getOrder() {
+        return this.order;
+    }
+    public int compareTo(BeanPostProcessor beanPostProcessor) {
+        return this.order - beanPostProcessor.getOrder();
     }
     public Object process(Object obj){
         Object target=obj;

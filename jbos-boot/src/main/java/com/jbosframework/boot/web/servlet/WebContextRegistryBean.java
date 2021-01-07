@@ -2,6 +2,7 @@ package com.jbosframework.boot.web.servlet;
 
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.core.Order;
 import com.jbosframework.web.filter.DelegatingFilterProxy;
 import com.jbosframework.web.servlet.DispatcherServlet;
 import org.apache.catalina.Context;
@@ -24,12 +25,22 @@ public class WebContextRegistryBean implements BeanPostProcessor {
     public static final Log logger= LogFactory.getLog(WebContextRegistryBean.class);
     private Context context;
     private ApplicationContext applicationContext;
+    private int order= Order.MIN;
 
     public WebContextRegistryBean(Context context,ApplicationContext applicationContext){
         this.context=context;
         this.applicationContext=applicationContext;
     }
 
+    public void setOrder(int order){
+        this.order=order;
+    }
+    public int getOrder() {
+        return this.order;
+    }
+    public int compareTo(BeanPostProcessor beanPostProcessor) {
+        return this.order - beanPostProcessor.getOrder();
+    }
     public void initDispatcherServlet(String contextPath){
         Wrapper wrapper = context.createWrapper();
         wrapper.setName(DispatcherServlet.class.getSimpleName());

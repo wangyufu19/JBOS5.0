@@ -1,5 +1,6 @@
 package com.jbosframework.orm.mybatis.support;
 
+import com.jbosframework.core.Order;
 import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
@@ -20,9 +21,20 @@ import java.lang.reflect.Modifier;
 public class AnnotationMapperProcessor implements BeanPostProcessor {
     private static final Log log= LogFactory.getLog(AnnotationMapperProcessor.class);
     private BeanFactory beanFactory;
+    private int order= Order.MIN;
 
     public AnnotationMapperProcessor(BeanFactory beanFactory){
         this.beanFactory=beanFactory;
+    }
+
+    public void setOrder(int order){
+        this.order=order;
+    }
+    public int getOrder() {
+        return this.order;
+    }
+    public int compareTo(BeanPostProcessor beanPostProcessor) {
+        return this.order - beanPostProcessor.getOrder();
     }
     /**
      * isMapperBean

@@ -3,6 +3,7 @@ package com.jbosframework.context.support;
 import com.jbosframework.aop.aspectj.support.PointcutMethodMatcher;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.core.Order;
 
 /**
  * AnnotationAspectjProcessor
@@ -11,9 +12,23 @@ import com.jbosframework.context.ApplicationContext;
  */
 public class AnnotationAspectjProcessor implements BeanPostProcessor {
     private ApplicationContext applicationContext;
+    private int order= Order.MIN;
 
+    public AnnotationAspectjProcessor(){
+
+    }
     public AnnotationAspectjProcessor(ApplicationContext ApplicationContext){
         this.applicationContext=ApplicationContext;
+    }
+
+    public void setOrder(int order){
+        this.order=order;
+    }
+    public int getOrder() {
+        return this.order;
+    }
+    public int compareTo(BeanPostProcessor beanPostProcessor) {
+        return this.order - beanPostProcessor.getOrder();
     }
     public Object process(Object obj){
         Object target=obj;

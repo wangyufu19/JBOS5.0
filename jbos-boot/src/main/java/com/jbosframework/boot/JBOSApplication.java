@@ -1,5 +1,6 @@
 package com.jbosframework.boot;
 
+import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
@@ -8,7 +9,6 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AnnotationAspectjProcessor;
-import com.jbosframework.orm.mybatis.support.AnnotationMapperProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,7 +41,9 @@ public class JBOSApplication {
         EnableAspectJAutoProxy enableAspectJAutoProxy= this.jbosBootClass.getAnnotation(EnableAspectJAutoProxy.class);
         if(enableAspectJAutoProxy!=null){
             ctx.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-            ctx.addBeanPostProcessor(new AnnotationAspectjProcessor(ctx));
+            AnnotationAspectjProcessor annotationAspectjProcessor=new AnnotationAspectjProcessor(ctx);
+            annotationAspectjProcessor.setOrder(20);
+            ctx.addBeanPostProcessor(annotationAspectjProcessor);
         }
 
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();

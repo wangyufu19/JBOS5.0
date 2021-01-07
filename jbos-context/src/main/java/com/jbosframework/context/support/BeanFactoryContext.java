@@ -1,17 +1,11 @@
 package com.jbosframework.context.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import com.jbosframework.beans.config.MethodMetadata;
+import java.text.Collator;
+import java.util.*;
+
+import com.jbosframework.beans.config.*;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.factory.BeanAutowiredProcessor;
-import com.jbosframework.beans.config.BeanBeforeProcessor;
-import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
@@ -36,20 +30,24 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 
 	private static List<BeanBeforeProcessor> beanBeforeProcessors=Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
 
-	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new ArrayList<BeanPostProcessor>());
+	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new LinkedList<BeanPostProcessor>());
 
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(){
-		this.addBeanPostProcessor(new BeanAutowiredProcessor(this));
+		BeanAutowiredProcessor beanAutowiredProcessor=new BeanAutowiredProcessor(this);
+		beanAutowiredProcessor.setOrder(1);
+		this.addBeanPostProcessor(beanAutowiredProcessor);
 	}
 	/**
 	 * 构造方法
 	 */
 	public BeanFactoryContext(Configuration configuration){
 		super(configuration);
-		this.addBeanPostProcessor(new BeanAutowiredProcessor(this));
+		BeanAutowiredProcessor beanAutowiredProcessor=new BeanAutowiredProcessor(this);
+		beanAutowiredProcessor.setOrder(1);
+		this.addBeanPostProcessor(beanAutowiredProcessor);
 	}
 
 	/**
@@ -318,6 +316,12 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 */
 	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
 		beanPostProcessors.add(beanPostProcessor);
+		Collections.sort(this.getBeanPostProcessors(), new Comparator<BeanPostProcessor>() {
+			@Override
+			public int compare(BeanPostProcessor o1, BeanPostProcessor o2) {
+				return o1.getOrder()-o2.getOrder();
+			}
+		});
 	}
 	public List<BeanBeforeProcessor> getBeanBeforeProcessors(){
 		return beanBeforeProcessors;
@@ -342,6 +346,9 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 */
 	private Object doBeanPostProcessor(Object bean){
 		Object obj=null;
+		if(bean==null){
+			return null;
+		}
 		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
 			obj=beanPostProcessor.process(bean);
 		}
