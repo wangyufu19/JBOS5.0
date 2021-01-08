@@ -1,6 +1,8 @@
 package com.jbosframework.aop.aspectj;
 
 import com.jbosframework.aop.MethodAfterAdvice;
+import org.aopalliance.intercept.Joinpoint;
+
 import java.lang.reflect.Method;
 
 /**
@@ -9,18 +11,10 @@ import java.lang.reflect.Method;
  * @version 5.0
  */
 public class AspectjMethodAfterAdvice implements MethodAfterAdvice {
-    private Object target;
-    private String method;
-    private Object[] args;
+    private Joinpoint joinpoint;
 
-    public void setTarget(Object target){
-        this.target=target;
-    }
-    public void setMethod(String method){
-        this.method=method;
-    }
-    public void setArgs(Object[] args){
-        this.args=args;
+    public AspectjMethodAfterAdvice(Joinpoint joinpoint){
+        this.joinpoint=joinpoint;
     }
     public void after(Object target, Method method, Object[] args){
 

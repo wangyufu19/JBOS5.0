@@ -1,5 +1,9 @@
 package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
+import com.jbosframework.aop.aspectj.AspectAdvice;
+import com.jbosframework.aop.aspectj.AspectJMethodInvocation;
+import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
+import com.jbosframework.aop.support.ProxyConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Method;
@@ -38,6 +42,7 @@ public class PointcutMethodMatcher {
             String pointcut=obj.getClass().getName()+"."+method.getName();
             if(aspectProxyBeanContext.contains(pointcut)){
                 aspectMetadata=aspectProxyBeanContext.getMetadata(pointcut);
+                aspectMetadata.getAspectAdvice().setMethod(method.getName());
                 bool=true;
                 break;
             }
@@ -50,7 +55,9 @@ public class PointcutMethodMatcher {
      * @return
      */
     public Object getAspectAopProxy(Object obj){
-        AopProxy aopProxy=new AspectCglibProxy(aspectMetadata,obj.getClass());
+        AspectAdvice aspectAdvice=aspectMetadata.getAspectAdvice();
+        aspectAdvice.setTarget(obj);
+        AopProxy aopProxy=new AspectCglibProxy(aspectAdvice);
         return aopProxy.getProxy();
     }
 }

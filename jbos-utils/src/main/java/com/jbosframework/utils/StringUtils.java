@@ -29,6 +29,17 @@ public class StringUtils {
 			return false;
 	}
 	/**
+	 * 判断非空值
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNotNUll(String str){
+		if(null==str||"null".equals(str)||"".equals(str)){
+			return false;
+		}else
+			return true;
+	}
+	/**
 	 * 判断是空值
 	 * @param obj
 	 * @return

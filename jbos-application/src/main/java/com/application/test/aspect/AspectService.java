@@ -1,4 +1,4 @@
-package com.jbosframework.test.aspect;
+package com.application.test.aspect;
 
 import com.jbosframework.aop.aspectj.Aspect;
 import com.jbosframework.aop.aspectj.Before;
@@ -6,7 +6,7 @@ import com.jbosframework.aop.aspectj.Pointcut;
 
 @Aspect
 public class AspectService {
-    @Pointcut("com.jbosframework.test.aspect.invoke")
+    @Pointcut("com.application.test.aspect.AspectInvoker.invoke")
     @Before
     public void before(){
         System.out.println("*******before");

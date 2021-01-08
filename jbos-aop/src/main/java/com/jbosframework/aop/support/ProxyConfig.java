@@ -17,11 +17,11 @@ public class ProxyConfig {
      */
     private Class<?>[] proxyInterfaces;
     /**
-     * 完成前通知
+     * 完成前
      */
     private MethodBeforeAdvice methodBeforeAdvice;
     /**
-     * 完成后通知
+     * 完成后
      */
     private MethodAfterAdvice methodAfterAdvice;
     /**

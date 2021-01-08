@@ -1,6 +1,7 @@
 package com.jbosframework.aop.aspectj;
 
 import com.jbosframework.aop.MethodBeforeAdvice;
+import org.aopalliance.intercept.Joinpoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,20 +14,14 @@ import java.lang.reflect.Method;
  */
 public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
     private static final Log log= LogFactory.getLog(AspectjMethodBeforeAdvice.class);
-    private Object target;
-    private String method;
-    private Object[] args;
+    private Joinpoint joinpoint;
 
-    public void setTarget(Object target){
-        this.target=target;
-    }
-    public void setMethod(String method){
-        this.method=method;
-    }
-    public void setArgs(Object[] args){
-        this.args=args;
+    public AspectjMethodBeforeAdvice(Joinpoint joinpoint){
+        this.joinpoint=joinpoint;
     }
     public void before(Object target, Method method, Object[] args){
-        log.info("********target="+target+";method="+this.method+";args="+this.args);
+        if(method==null){
+            return;
+        }
     }
 }
