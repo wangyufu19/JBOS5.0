@@ -19,9 +19,10 @@ public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
     public AspectjMethodBeforeAdvice(Joinpoint joinpoint){
         this.joinpoint=joinpoint;
     }
-    public void before(Object target, Method method, Object[] args){
+    public void before(Object target, Method method, Object[] args) throws Throwable {
         if(method==null){
             return;
         }
+        joinpoint.proceed();
     }
 }

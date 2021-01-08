@@ -1,9 +1,6 @@
 package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.aspectj.AspectAdvice;
-import com.jbosframework.aop.aspectj.AspectJMethodInvocation;
-import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
-import com.jbosframework.aop.support.ProxyConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Method;

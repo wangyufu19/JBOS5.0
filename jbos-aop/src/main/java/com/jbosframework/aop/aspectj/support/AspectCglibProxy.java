@@ -39,12 +39,12 @@ public class AspectCglibProxy implements AopProxy,MethodInterceptor{
     public Object intercept(Object object, Method method, Object[] arg,
                             MethodProxy methodProxy) throws Throwable {
         //调用前
-        if(this.aspectAdvice.getMethod().equals(method)&&this.aspectAdvice.getMethodBeforeAdvice()!=null){
+        if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodBeforeAdvice()!=null){
             this.aspectAdvice.getMethodBeforeAdvice().before(object,method,arg);
         }
         Object result = methodProxy.invokeSuper(object, arg);
         //调用后
-        if(this.aspectAdvice.getMethod().equals(method)&&this.aspectAdvice.getMethodAfterAdvice()!=null){
+        if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodAfterAdvice()!=null){
             this.aspectAdvice.getMethodAfterAdvice().after(object,method,arg);
         }
         return result;
