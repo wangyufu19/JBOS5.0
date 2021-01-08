@@ -1,8 +1,9 @@
 package com.jbosframework.jdbc.support;
 import java.sql.SQLException;
 import java.util.List;
-import com.jbosframework.jdbc.core.JdbcSessionFactory;
+
 import com.jbosframework.jdbc.core.JdbcTmplt;
+import com.jbosframework.jdbc.core.JdbcTmpltManager;
 import com.jbosframework.jdbc.core.PageParam;
 
 import javax.sql.DataSource;
@@ -20,8 +21,8 @@ public class JdbcDaoSupport {
 		
 	}
 	public JdbcDaoSupport(DataSource dataSource) {
-		this.dataSource=dataSource;		
-		this.jdbcTmplt=JdbcSessionFactory.createJdbcSession(dataSource).getJdbcTmplt();
+		this.dataSource=dataSource;
+		this.jdbcTmplt=new JdbcTmpltManager(this.dataSource);
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class JdbcDaoSupport {
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-		this.jdbcTmplt=JdbcSessionFactory.createJdbcSession(dataSource).getJdbcTmplt();
+		this.jdbcTmplt=new JdbcTmpltManager(this.dataSource);
 	}
 	/**
 	 * 得到JdbcTmplt
@@ -146,7 +147,7 @@ public class JdbcDaoSupport {
 	 * 执行给定的SQL语句，该语句返回分页List列表
 	 * 
 	 * @param sql
-	 * @param args
+	 * @param pageParam
 	 * @return
 	 * @throws SQLException
 	 */
