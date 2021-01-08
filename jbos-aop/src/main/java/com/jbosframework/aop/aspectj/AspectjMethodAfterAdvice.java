@@ -16,7 +16,7 @@ public class AspectjMethodAfterAdvice implements MethodAfterAdvice {
     public AspectjMethodAfterAdvice(Joinpoint joinpoint){
         this.joinpoint=joinpoint;
     }
-    public void after(Object target, Method method, Object[] args){
-
+    public void after(Object target, Method method, Object[] args) throws Throwable {
+       this.joinpoint.proceed();
     }
 }
