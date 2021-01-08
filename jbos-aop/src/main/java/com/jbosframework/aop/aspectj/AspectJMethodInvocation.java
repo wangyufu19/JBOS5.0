@@ -1,6 +1,7 @@
 package com.jbosframework.aop.aspectj;
 
 import com.jbosframework.utils.JBOSClassCaller;
+import com.jbosframework.utils.JBOSClassloader;
 import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.reflect.AccessibleObject;
@@ -30,7 +31,7 @@ public class AspectJMethodInvocation implements MethodInvocation {
     }
 
     public Object proceed() throws Throwable {
-        return this.method.invoke(this.target,this.args);
+        return this.method.invoke(JBOSClassloader.newInstance(this.target),this.args);
     }
 
     public Object getThis() {
