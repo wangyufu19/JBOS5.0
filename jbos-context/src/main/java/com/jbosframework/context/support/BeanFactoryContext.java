@@ -345,12 +345,12 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * 处理Bean对象的Processor
 	 */
 	private Object doBeanPostProcessor(Object bean){
-		Object obj=null;
-		if(bean==null){
+		Object obj=bean;
+		if(obj==null){
 			return null;
 		}
 		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
-			obj=beanPostProcessor.process(bean);
+			obj=beanPostProcessor.process(obj);
 		}
 		return obj;
 	}

@@ -30,15 +30,16 @@ public class PointcutMethodMatcher {
         if(obj==null){
             return false;
         }
-        Method[] methods=obj.getClass().getMethods();
-        if(methods!=null){
-            for(Method method:methods){
-                String pointcut=obj.getClass().getName()+"."+method.getName();
-                if(aspectProxyBeanContext.contains(pointcut)){
-                    aspectMetadata=aspectProxyBeanContext.getMetadata(pointcut);
-                    bool=true;
-                    break;
-                }
+        Method[] methods=obj.getClass().getDeclaredMethods();
+        if(methods==null){
+            return false;
+        }
+        for(Method method:methods){
+            String pointcut=obj.getClass().getName()+"."+method.getName();
+            if(aspectProxyBeanContext.contains(pointcut)){
+                aspectMetadata=aspectProxyBeanContext.getMetadata(pointcut);
+                bool=true;
+                break;
             }
         }
         return bool;
