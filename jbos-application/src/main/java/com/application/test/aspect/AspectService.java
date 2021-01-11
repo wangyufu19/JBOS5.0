@@ -7,6 +7,7 @@ import com.jbosframework.aop.aspectj.Pointcut;
 
 @Aspect
 public class AspectService {
+
     @Pointcut("com.application.test.aspect.AspectInvoker.invoke")
     @Before
     public void before(){

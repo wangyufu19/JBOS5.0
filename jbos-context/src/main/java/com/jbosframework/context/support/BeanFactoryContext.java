@@ -1,6 +1,5 @@
 package com.jbosframework.context.support;
 
-import java.text.Collator;
 import java.util.*;
 
 import com.jbosframework.beans.config.*;
