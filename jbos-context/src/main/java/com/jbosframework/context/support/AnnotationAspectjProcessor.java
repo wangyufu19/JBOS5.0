@@ -90,7 +90,6 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
 
         /**
          * 得到AOP代理对象
-         *
          * @param obj
          * @return
          */

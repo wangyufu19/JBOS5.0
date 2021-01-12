@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * @author youfu.wang
  * @version 5.0
  */
-public class AspectCglibProxy implements AopProxy,MethodInterceptor{
+public class AspectCglibProxy implements AopProxy{
     private static final Log log= LogFactory.getLog(AspectCglibProxy.class);
     private AspectAdvice aspectAdvice;
     /**
@@ -31,23 +31,32 @@ public class AspectCglibProxy implements AopProxy,MethodInterceptor{
         Object obj=null;
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(this.aspectAdvice.getTarget().getClass());
-        enhancer.setCallback(this);
+        enhancer.setCallback(new CglibMethodInterceptor(this.aspectAdvice));
         obj=enhancer.create();
         return obj;
     }
-    @Override
-    public Object intercept(Object object, Method method, Object[] arg,
-                            MethodProxy methodProxy) throws Throwable {
-        //调用前
-        if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodBeforeAdvice()!=null){
-            this.aspectAdvice.getMethodBeforeAdvice().before(object,method,arg);
+    public class CglibMethodInterceptor implements MethodInterceptor{
+        public AspectAdvice aspectAdvice;
+
+        public CglibMethodInterceptor(AspectAdvice aspectAdvice){
+            this.aspectAdvice=aspectAdvice;
         }
-        Object result = methodProxy.invokeSuper(object, arg);
-        //调用后
-        if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodAfterAdvice()!=null){
-            this.aspectAdvice.getMethodAfterAdvice().after(object,method,arg);
+        @Override
+        public Object intercept(Object object, Method method, Object[] arg,
+                                MethodProxy methodProxy) throws Throwable {
+            //调用前
+            if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodBeforeAdvice()!=null){
+                this.aspectAdvice.getMethodBeforeAdvice().before(object,method,arg);
+            }
+            //Object result = methodProxy.invokeSuper(object, arg);
+            Object result = methodProxy.invoke(this.aspectAdvice.getTarget(),arg);
+            //调用后
+            if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodAfterAdvice()!=null){
+                this.aspectAdvice.getMethodAfterAdvice().after(object,method,arg);
+            }
+            return result;
         }
-        return result;
     }
+
 
 }
