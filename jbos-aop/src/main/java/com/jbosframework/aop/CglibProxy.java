@@ -56,7 +56,6 @@ public class CglibProxy implements AopProxy{
 			if(this.methodBeforeAdvice!=null){
 				this.methodBeforeAdvice.before(object,method,arg);
 			}
-			//Object result = methodProxy.invokeSuper(object, arg);
 			Object result = methodProxy.invoke(this.target,arg);
 			//调用后
 			if(this.methodAfterAdvice!=null){
