@@ -1,6 +1,6 @@
 package com.jbosframework.boot.autoconfig.transaction;
 
-import com.jbosframework.aop.aspectj.AspectAdvice;
+import com.jbosframework.aop.aspectj.AdviceConfig;
 import com.jbosframework.aop.aspectj.AspectJMethodInvocation;
 import com.jbosframework.aop.aspectj.AspectjMethodAfterAdvice;
 import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
@@ -10,7 +10,6 @@ import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
 import com.jbosframework.transaction.DefaultTransactionDefinition;
 import com.jbosframework.transaction.TransactionDefinition;
-import com.jbosframework.transaction.TransactionManager;
 import com.jbosframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +47,7 @@ public class TransactionAdviceRegistry extends BeanRegistry {
                 AspectMetadata aspectMetadata=new AspectMetadata();
                 String pointcut=cls+"."+method.getName();
                 aspectMetadata.setPointcut(pointcut);
-                AspectAdvice aspectAdvice=new AspectAdvice();
+                AdviceConfig aspectAdvice=new AdviceConfig();
                 AspectJMethodInvocation aspectJBeforePointcut=new AspectJMethodInvocation(DataSourceTransactionManager.class,method,new Object[]{transactionDefinition});
                 AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice=new AspectjMethodBeforeAdvice(aspectJBeforePointcut);
                 aspectAdvice.setMethodBeforeAdvice(aspectjMethodBeforeAdvice);

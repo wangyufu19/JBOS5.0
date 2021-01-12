@@ -40,7 +40,7 @@ public class AspectProxyBeanRegister extends BeanRegistry {
             return;
         }
         AspectMetadata metadata=new AspectMetadata();
-        AspectAdvice aspectAdvice=new AspectAdvice();
+        AdviceConfig aspectAdvice=new AdviceConfig();
         for(int i=0;i<methods.length;i++) {
             Annotation[] annotations = methods[i].getAnnotations();
             if (annotations == null) {

@@ -1,7 +1,7 @@
 package com.jbosframework.context.support;
 
 import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aop.aspectj.AspectAdvice;
+import com.jbosframework.aop.aspectj.AdviceConfig;
 import com.jbosframework.aop.aspectj.support.AspectCglibProxy;
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.config.BeanPostProcessor;
@@ -94,7 +94,7 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
          * @return
          */
         public Object getAspectAopProxy(Object obj) {
-            AspectAdvice aspectAdvice = aspectMetadata.getAspectAdvice();
+            AdviceConfig aspectAdvice = aspectMetadata.getAspectAdvice();
             aspectAdvice.setTarget(obj);
             AopProxy aopProxy = new AspectCglibProxy(aspectAdvice);
             return aopProxy.getProxy();

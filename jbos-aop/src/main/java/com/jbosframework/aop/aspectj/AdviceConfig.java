@@ -2,11 +2,11 @@ package com.jbosframework.aop.aspectj;
 
 import com.jbosframework.aop.support.ProxyConfig;
 /**
- * AspectAdvice
+ * AdviceConfig
  * @author youfu.wang
  * @version 5.0
  */
-public class AspectAdvice extends ProxyConfig {
+public class AdviceConfig extends ProxyConfig {
     /**
      * 通知方法
      */

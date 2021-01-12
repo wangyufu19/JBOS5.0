@@ -1,6 +1,6 @@
 package com.jbosframework.aop.aspectj.support;
 import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aop.aspectj.AspectAdvice;
+import com.jbosframework.aop.aspectj.AdviceConfig;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -15,13 +15,13 @@ import java.lang.reflect.Method;
  */
 public class AspectCglibProxy implements AopProxy{
     private static final Log log= LogFactory.getLog(AspectCglibProxy.class);
-    private AspectAdvice aspectAdvice;
+    private AdviceConfig adviceConfig;
     /**
      * 构造方法
-     * @param aspectAdvice
+     * @param adviceConfig
      */
-    public AspectCglibProxy(AspectAdvice aspectAdvice){
-        this.aspectAdvice=aspectAdvice;
+    public AspectCglibProxy(AdviceConfig adviceConfig){
+        this.adviceConfig=adviceConfig;
     }
     /**
      * 得到代理类对象
@@ -30,29 +30,29 @@ public class AspectCglibProxy implements AopProxy{
     public Object getProxy(){
         Object obj=null;
         Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(this.aspectAdvice.getTarget().getClass());
-        enhancer.setCallback(new CglibMethodInterceptor(this.aspectAdvice));
+        enhancer.setSuperclass(this.adviceConfig.getTarget().getClass());
+        enhancer.setCallback(new CglibMethodInterceptor(this.adviceConfig));
         obj=enhancer.create();
         return obj;
     }
     public class CglibMethodInterceptor implements MethodInterceptor{
-        public AspectAdvice aspectAdvice;
+        public AdviceConfig adviceConfig;
 
-        public CglibMethodInterceptor(AspectAdvice aspectAdvice){
-            this.aspectAdvice=aspectAdvice;
+        public CglibMethodInterceptor(AdviceConfig adviceConfig){
+            this.adviceConfig=adviceConfig;
         }
         @Override
         public Object intercept(Object object, Method method, Object[] arg,
                                 MethodProxy methodProxy) throws Throwable {
             //调用前
-            if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodBeforeAdvice()!=null){
-                this.aspectAdvice.getMethodBeforeAdvice().before(object,method,arg);
+            if(this.adviceConfig.getMethod().equals(method.getName())&&this.adviceConfig.getMethodBeforeAdvice()!=null){
+                this.adviceConfig.getMethodBeforeAdvice().before(object,method,arg);
             }
             //Object result = methodProxy.invokeSuper(object, arg);
-            Object result = methodProxy.invoke(this.aspectAdvice.getTarget(),arg);
+            Object result = methodProxy.invoke(this.adviceConfig.getTarget(),arg);
             //调用后
-            if(this.aspectAdvice.getMethod().equals(method.getName())&&this.aspectAdvice.getMethodAfterAdvice()!=null){
-                this.aspectAdvice.getMethodAfterAdvice().after(object,method,arg);
+            if(this.adviceConfig.getMethod().equals(method.getName())&&this.adviceConfig.getMethodAfterAdvice()!=null){
+                this.adviceConfig.getMethodAfterAdvice().after(object,method,arg);
             }
             return result;
         }

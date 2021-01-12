@@ -1,6 +1,6 @@
 package com.jbosframework.aop.aspectj.support;
 
-import com.jbosframework.aop.aspectj.AspectAdvice;
+import com.jbosframework.aop.aspectj.AdviceConfig;
 
 /**
  * AspectMetadata
@@ -11,13 +11,13 @@ public class AspectMetadata {
     //连接点
     private String pointcut;
 
-    private AspectAdvice aspectAdvice;
+    private AdviceConfig aspectAdvice;
 
-    public AspectAdvice getAspectAdvice() {
+    public AdviceConfig getAspectAdvice() {
         return aspectAdvice;
     }
 
-    public void setAspectAdvice(AspectAdvice aspectAdvice) {
+    public void setAspectAdvice(AdviceConfig aspectAdvice) {
         this.aspectAdvice = aspectAdvice;
     }
 
