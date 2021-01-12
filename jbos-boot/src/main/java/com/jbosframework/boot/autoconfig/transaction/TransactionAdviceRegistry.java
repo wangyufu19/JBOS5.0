@@ -1,20 +1,18 @@
 package com.jbosframework.boot.autoconfig.transaction;
 
 import com.jbosframework.aop.AdviceConfig;
-import com.jbosframework.aop.aspectj.AspectJMethodInvocation;
 import com.jbosframework.aop.aspectj.AspectjMethodAfterAdvice;
 import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
-import com.jbosframework.aop.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.beans.support.BeanRegistry;
-import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
+import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.transaction.DefaultTransactionDefinition;
 import com.jbosframework.transaction.TransactionDefinition;
 import com.jbosframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.reflect.Method;
-
+import com.jbosframework.boot.autoconfig.transaction.DataSourceTransactionAdvice;
 /**
  * TransactionAdviceRegistry
  * @author youfu.wang
@@ -23,12 +21,12 @@ import java.lang.reflect.Method;
 public class TransactionAdviceRegistry extends BeanRegistry {
 
     private static final Log log= LogFactory.getLog(TransactionAdviceRegistry.class);
-    private AspectProxyBeanContext aspectProxyBeanContext;
+    private ApplicationContext applicationContext;
     /**
      * 构造方法
      */
-    public TransactionAdviceRegistry(AspectProxyBeanContext aspectProxyBeanContext){
-        this.aspectProxyBeanContext=aspectProxyBeanContext;
+    public TransactionAdviceRegistry(ApplicationContext applicationContext){
+        this.applicationContext=applicationContext;
     }
 
     public void registerBean(Class<?> cls){
@@ -48,15 +46,13 @@ public class TransactionAdviceRegistry extends BeanRegistry {
                 String pointcut=cls+"."+method.getName();
                 aspectMetadata.setPointcut(pointcut);
                 AdviceConfig aspectAdvice=new AdviceConfig();
-                AspectJMethodInvocation aspectJBeforePointcut=new AspectJMethodInvocation(DataSourceTransactionManager.class,method,new Object[]{transactionDefinition});
-                AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice=new AspectjMethodBeforeAdvice(aspectJBeforePointcut);
+                AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice=new AspectjMethodBeforeAdvice(new DataSourceTransactionAdvice(this.applicationContext,"getTransaction",new Object[]{transactionDefinition}));
                 aspectAdvice.setMethodBeforeAdvice(aspectjMethodBeforeAdvice);
 
-                AspectJMethodInvocation aspectJAfterPointcut=new AspectJMethodInvocation(cls,method,new Object[]{transactionDefinition});
-                AspectjMethodAfterAdvice aspectjMethodAfterAdvice=new AspectjMethodAfterAdvice(aspectJAfterPointcut);
+                AspectjMethodAfterAdvice aspectjMethodAfterAdvice=new AspectjMethodAfterAdvice(new DataSourceTransactionAdvice(this.applicationContext,"commit",new Object[]{transactionDefinition}));
                 aspectAdvice.setMethodAfterAdvice(aspectjMethodAfterAdvice);
 
-                this.aspectProxyBeanContext.putMetadata(aspectMetadata);
+                this.applicationContext.getAspectProxyBeanContext().putMetadata(aspectMetadata);
             }
         }
     }
