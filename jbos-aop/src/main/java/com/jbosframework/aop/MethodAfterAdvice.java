@@ -1,6 +1,8 @@
 package com.jbosframework.aop;
 
-import com.jbosframework.aop.aspectj.AfterAdvice;
+import com.jbosframework.aop.aspectj.MethodAdvice;
+import org.aopalliance.aop.Advice;
+
 import java.lang.reflect.Method;
 
 /**
@@ -8,7 +10,7 @@ import java.lang.reflect.Method;
  * @author youfu.wang
  * @version 5.0
  */
-public interface MethodAfterAdvice extends AfterAdvice {
+public interface MethodAfterAdvice extends MethodAdvice {
 
     public void after(Object target,Method method,Object[] args) throws Throwable;
 

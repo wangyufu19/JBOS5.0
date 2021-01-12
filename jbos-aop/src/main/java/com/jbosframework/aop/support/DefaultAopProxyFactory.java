@@ -13,7 +13,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory {
      * 创建AOP代理
      * @return
      */
-    public AopProxy createAopProxy(ProxyConfig proxyConfig){
-        return proxyConfig.getProxyInterfaces()==null?new CglibProxy(proxyConfig):new JdkDynamicProxy(proxyConfig);
+    public AopProxy createAopProxy(AdviceConfig adviceConfig){
+        return adviceConfig.getProxyInterfaces()==null?new CglibProxy(adviceConfig):new JdkDynamicProxy(adviceConfig);
     }
 }

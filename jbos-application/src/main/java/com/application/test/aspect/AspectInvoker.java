@@ -16,6 +16,6 @@ public class AspectInvoker {
     }
 
     public void callback(){
-
+        System.out.println("*******callback");
     }
 }

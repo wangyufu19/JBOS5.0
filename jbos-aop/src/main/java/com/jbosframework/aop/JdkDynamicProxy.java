@@ -1,7 +1,6 @@
 package com.jbosframework.aop;
 import java.lang.reflect.*;
 
-import com.jbosframework.aop.support.ProxyConfig;
 import com.jbosframework.utils.JBOSClassloader;
 
 /**
@@ -11,14 +10,14 @@ import com.jbosframework.utils.JBOSClassloader;
  * @date 2016-11-10
  */
 public class JdkDynamicProxy implements AopProxy,InvocationHandler{
-	private ProxyConfig proxyConfig;
+	private AdviceConfig adviceConfig;
 
 	/**
 	 * 构造方法
-	 * @param proxyConfig
+	 * @param adviceConfig
 	 */
-	public JdkDynamicProxy(ProxyConfig proxyConfig){
-		this.proxyConfig=proxyConfig;
+	public JdkDynamicProxy(AdviceConfig adviceConfig){
+		this.adviceConfig=adviceConfig;
 	}
 	/**
 	 * 得到代理类对象
@@ -26,7 +25,7 @@ public class JdkDynamicProxy implements AopProxy,InvocationHandler{
 	 */
 	public Object getProxy(){
 		Object obj=null;
-		obj=Proxy.newProxyInstance(JBOSClassloader.getClassLoader(), proxyConfig.getProxyInterfaces(), this);
+		obj=Proxy.newProxyInstance(JBOSClassloader.getClassLoader(), adviceConfig.getProxyInterfaces(), this);
 		return obj;
 	}
 	@Override
@@ -34,9 +33,9 @@ public class JdkDynamicProxy implements AopProxy,InvocationHandler{
 			throws Throwable {
 		Object result=null;
 		if(args==null){
-			result=call(this.proxyConfig.getTarget(), method);
+			result=call(this.adviceConfig.getTarget(), method);
 		}else{
-			result=call(this.proxyConfig.getTarget(), method,args);
+			result=call(this.adviceConfig.getTarget(), method,args);
 		}
 		return result;
 	}

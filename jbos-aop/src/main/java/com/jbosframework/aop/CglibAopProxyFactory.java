@@ -1,7 +1,5 @@
 package com.jbosframework.aop;
 
-import com.jbosframework.aop.support.ProxyConfig;
-
 /**
  * CglibAopProxyFactory
  * @author youfu.wang
@@ -20,8 +18,8 @@ public class CglibAopProxyFactory implements AopProxyFactory{
 	 * @return
 	 */
 	@Override
-	public AopProxy createAopProxy(ProxyConfig proxyConfig) {
-		AopProxy aopProxy=new CglibProxy(proxyConfig);
+	public AopProxy createAopProxy(AdviceConfig adviceConfig) {
+		AopProxy aopProxy=new CglibProxy(adviceConfig);
 		return aopProxy;
 	}
 }

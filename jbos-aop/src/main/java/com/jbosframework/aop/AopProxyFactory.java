@@ -1,7 +1,5 @@
 package com.jbosframework.aop;
 
-import com.jbosframework.aop.support.ProxyConfig;
-
 /**
  * AopProxyFactory
  * @author youfu.wang
@@ -13,5 +11,5 @@ public interface AopProxyFactory {
 	 * 创建AOP代理
 	 * @return
 	 */
-	public AopProxy createAopProxy(ProxyConfig proxyConfig);
+	public AopProxy createAopProxy(AdviceConfig adviceConfig);
 }

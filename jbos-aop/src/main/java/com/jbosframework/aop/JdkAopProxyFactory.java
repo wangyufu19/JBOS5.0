@@ -1,7 +1,5 @@
 package com.jbosframework.aop;
 
-import com.jbosframework.aop.support.ProxyConfig;
-
 /**
  * JdkAopProxyFactory
  * @author youfu.wang
@@ -20,8 +18,8 @@ public class JdkAopProxyFactory implements AopProxyFactory{
 	 * @return
 	 */
 	@Override
-	public AopProxy createAopProxy(ProxyConfig proxyConfig){
-		AopProxy aopProxy=new JdkDynamicProxy(proxyConfig);
+	public AopProxy createAopProxy(AdviceConfig adviceConfig){
+		AopProxy aopProxy=new JdkDynamicProxy(adviceConfig);
 		return aopProxy;
 	}
 }

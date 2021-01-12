@@ -1,8 +1,8 @@
 package com.jbosframework.context.support;
 
 import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aop.aspectj.AdviceConfig;
-import com.jbosframework.aop.aspectj.support.AspectCglibProxy;
+import com.jbosframework.aop.AdviceConfig;
+import com.jbosframework.aop.CglibProxy;
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
@@ -80,7 +80,8 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
                 String pointcut = obj.getClass().getName() + "." + method.getName();
                 if (this.applicationContext.getAspectProxyBeanContext().contains(pointcut)) {
                     aspectMetadata = this.applicationContext.getAspectProxyBeanContext().getMetadata(pointcut);
-                    aspectMetadata.getAspectAdvice().setMethod(method.getName());
+                    aspectMetadata.getAdviceConfig().getMethodBeforeAdvice().setAdviceMethod(method.getName());
+                    aspectMetadata.getAdviceConfig().getMethodAfterAdvice().setAdviceMethod(method.getName());
                     bool = true;
                     break;
                 }
@@ -94,9 +95,9 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
          * @return
          */
         public Object getAspectAopProxy(Object obj) {
-            AdviceConfig aspectAdvice = aspectMetadata.getAspectAdvice();
-            aspectAdvice.setTarget(obj);
-            AopProxy aopProxy = new AspectCglibProxy(aspectAdvice);
+            AdviceConfig adviceConfig = aspectMetadata.getAdviceConfig();
+            adviceConfig.setTarget(obj);
+            AopProxy aopProxy = new CglibProxy(adviceConfig);
             return aopProxy.getProxy();
         }
     }

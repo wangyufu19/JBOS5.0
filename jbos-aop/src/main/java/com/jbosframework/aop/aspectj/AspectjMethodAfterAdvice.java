@@ -11,12 +11,28 @@ import java.lang.reflect.Method;
  * @version 5.0
  */
 public class AspectjMethodAfterAdvice implements MethodAfterAdvice {
+    private String adviceMethod;
+
     private Joinpoint joinpoint;
 
     public AspectjMethodAfterAdvice(Joinpoint joinpoint){
         this.joinpoint=joinpoint;
     }
+
+    public String getAdviceMethod() {
+        return adviceMethod;
+    }
+
+    public void setAdviceMethod(String adviceMethod) {
+        this.adviceMethod = adviceMethod;
+    }
+
     public void after(Object target, Method method, Object[] args) throws Throwable {
-       this.joinpoint.proceed();
+        if(method==null){
+            return;
+        }
+        if(this.adviceMethod.equals(method.getName())){
+            joinpoint.proceed();
+        }
     }
 }

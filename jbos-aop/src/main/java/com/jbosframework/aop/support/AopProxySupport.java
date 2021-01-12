@@ -1,5 +1,6 @@
 package com.jbosframework.aop.support;
 
+import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.AopProxyFactory;
 /**
@@ -7,7 +8,7 @@ import com.jbosframework.aop.AopProxyFactory;
  * @author youfu.wang
  * @version 5.0
  */
-public class AopProxySupport extends ProxyConfig{
+public class AopProxySupport extends AdviceConfig {
 
     private AopProxyFactory aopProxyFactory=new DefaultAopProxyFactory();
 

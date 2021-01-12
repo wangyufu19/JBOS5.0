@@ -1,6 +1,6 @@
 package com.jbosframework.boot.autoconfig.transaction;
 
-import com.jbosframework.aop.aspectj.AdviceConfig;
+import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.aspectj.AspectJMethodInvocation;
 import com.jbosframework.aop.aspectj.AspectjMethodAfterAdvice;
 import com.jbosframework.aop.aspectj.AspectjMethodBeforeAdvice;

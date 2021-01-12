@@ -1,4 +1,5 @@
 package com.jbosframework.aop.aspectj.support;
+import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.aspectj.*;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
@@ -40,7 +41,7 @@ public class AspectProxyBeanRegister extends BeanRegistry {
             return;
         }
         AspectMetadata metadata=new AspectMetadata();
-        AdviceConfig aspectAdvice=new AdviceConfig();
+        AdviceConfig adviceConfig=new AdviceConfig();
         for(int i=0;i<methods.length;i++) {
             Annotation[] annotations = methods[i].getAnnotations();
             if (annotations == null) {
@@ -58,7 +59,7 @@ public class AspectProxyBeanRegister extends BeanRegistry {
                     }
                     AspectJMethodInvocation aspectJPointcut=new AspectJMethodInvocation(cls,methods[i],null);
                     AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice=new AspectjMethodBeforeAdvice(aspectJPointcut);
-                    aspectAdvice.setMethodBeforeAdvice(aspectjMethodBeforeAdvice);
+                    adviceConfig.setMethodBeforeAdvice(aspectjMethodBeforeAdvice);
 
                 }else if(annotations[j] instanceof After){
                     After pointcut=(After)annotations[j];
@@ -67,11 +68,11 @@ public class AspectProxyBeanRegister extends BeanRegistry {
                     }
                     AspectJMethodInvocation aspectJPointcut=new AspectJMethodInvocation(cls,methods[i],null);
                     AspectjMethodAfterAdvice aspectjMethodAfterAdvice=new AspectjMethodAfterAdvice(aspectJPointcut);
-                    aspectAdvice.setMethodAfterAdvice(aspectjMethodAfterAdvice);
+                    adviceConfig.setMethodAfterAdvice(aspectjMethodAfterAdvice);
                 }
             }
         }
-        metadata.setAspectAdvice(aspectAdvice);
+        metadata.setAdviceConfig(adviceConfig);
         if(!"".equals(metadata.getPointcut())){
             log.debug("******注入切面类["+cls.getName()+"]");
             this.aspectProxyBeanContext.putMetadata(metadata);

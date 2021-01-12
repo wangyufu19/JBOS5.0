@@ -1,13 +1,11 @@
-package com.jbosframework.aop.support;
+package com.jbosframework.aop;
 
-import com.jbosframework.aop.MethodAfterAdvice;
-import com.jbosframework.aop.MethodBeforeAdvice;
 /**
- * ProxyConfig
+ * AdviceConfig
  * @author youfu.wang
  * @version 5.0
  */
-public class ProxyConfig {
+public class AdviceConfig  {
     /**
      * 代理实现类
      */
@@ -68,4 +66,5 @@ public class ProxyConfig {
     public void setMethodAfterAdvice(MethodAfterAdvice methodAfterAdvice) {
         this.methodAfterAdvice = methodAfterAdvice;
     }
+
 }
