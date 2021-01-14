@@ -18,7 +18,7 @@ public class JbosTransactionManager implements Transaction {
     private static Log log= LogFactory.getLog(JbosTransactionManager.class);
     private DataSource dataSource;
     private Connection connection;
-    private boolean autoCommit;
+    private boolean autoCommit=false;
 
     public JbosTransactionManager(DataSource dataSource){
         this.dataSource=dataSource;

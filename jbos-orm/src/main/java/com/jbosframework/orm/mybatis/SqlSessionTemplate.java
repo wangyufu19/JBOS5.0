@@ -147,6 +147,7 @@ public class SqlSessionTemplate implements SqlSession {
             Object result;
             try{
                 result=method.invoke(sqlSession,args);
+                sqlSession.commit(true);
             }catch (Throwable throwable){
                throw throwable;
             }finally {

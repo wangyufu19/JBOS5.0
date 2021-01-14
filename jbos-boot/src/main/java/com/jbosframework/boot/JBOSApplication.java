@@ -1,6 +1,5 @@
 package com.jbosframework.boot;
 
-import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
