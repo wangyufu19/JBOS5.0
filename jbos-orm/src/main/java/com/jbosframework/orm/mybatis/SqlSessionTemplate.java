@@ -153,7 +153,6 @@ public class SqlSessionTemplate implements SqlSession {
             }finally {
                 if(sqlSession!=null){
                     sqlSession.close();
-                    sqlSession=null;
                 }
             }
             return result;
