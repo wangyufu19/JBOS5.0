@@ -45,7 +45,6 @@ public class DataSourceUtils {
 			connection=dataSource.getConnection();
 			ConnectionHolder holderToUser=new ConnectionHolder();
 			holderToUser.setConnection(connection);
-			TransactionSynchronizationManager.bindConnectionHolder(dataSource,holderToUser);
 			return connection;
 		}else{
 			log.info("******Fetch Datasource connection from ThreadLocal");

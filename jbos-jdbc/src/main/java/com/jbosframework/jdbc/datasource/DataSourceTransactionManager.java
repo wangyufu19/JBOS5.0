@@ -3,6 +3,7 @@ import com.jbosframework.transaction.DefaultTransactionStatus;
 import com.jbosframework.transaction.TransactionDefinition;
 import com.jbosframework.transaction.TransactionManager;
 import com.jbosframework.transaction.TransactionStatus;
+import com.jbosframework.transaction.support.TransactionSynchronizationManager;
 import com.jbosframework.utils.Assert;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -114,8 +115,9 @@ public class DataSourceTransactionManager implements TransactionManager {
 
 		public ConnectionHolder getConnectionHolder(DataSource dataSource,boolean transactionActive) throws SQLException {
 			ConnectionHolder connectionHolder=new ConnectionHolder();
-			connectionHolder.setConnection(DataSourceUtils.getConnection(dataSource));
 			connectionHolder.setTransactionActive(transactionActive);
+			connectionHolder.setConnection(dataSource.getConnection());
+			TransactionSynchronizationManager.bindConnectionHolder(dataSource,connectionHolder);
 			return connectionHolder;
 		}
 	}
