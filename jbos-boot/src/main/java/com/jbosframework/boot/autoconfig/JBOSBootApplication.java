@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 @Inherited
 @Configuration
 @ComponentScan
+@EnableAspectJAutoProxy
 @EnableAutoConfiguration
 public @interface JBOSBootApplication {
 

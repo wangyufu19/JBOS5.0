@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @JBOSBootApplication
-@EnableAspectJAutoProxy
 @Slf4j
 public class JBOSStarter {
 
@@ -21,8 +20,8 @@ public class JBOSStarter {
 //		proxyFactoryBean.setProxyInterfaces(new Class[]{UserAuthService.class});
 //		UserAuthService obj=(UserAuthService)proxyFactoryBean.getObject();
 //		System.out.println(obj.toString());
-//		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
-//		aspectInvoker.invoke();
+		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
+		aspectInvoker.invoke();
 	}
 
 }

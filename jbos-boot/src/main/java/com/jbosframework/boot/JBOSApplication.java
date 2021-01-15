@@ -2,6 +2,7 @@ package com.jbosframework.boot;
 
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
+import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
@@ -37,14 +38,16 @@ public class JBOSApplication {
         Configuration configuration=new Configuration();
         ctx=new AnnotationApplicationContext(configuration);
         //开启切面自动代理
-        EnableAspectJAutoProxy enableAspectJAutoProxy= this.jbosBootClass.getAnnotation(EnableAspectJAutoProxy.class);
-        if(enableAspectJAutoProxy!=null){
-            ctx.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-            AnnotationAspectjProcessor annotationAspectjProcessor=new AnnotationAspectjProcessor(ctx);
-            annotationAspectjProcessor.setOrder(20);
-            ctx.addBeanPostProcessor(annotationAspectjProcessor);
+        JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
+        if(jbosBootApplication!=null){
+            EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
+            if(enableAspectJAutoProxy!=null){
+                ctx.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+                AnnotationAspectjProcessor annotationAspectjProcessor=new AnnotationAspectjProcessor(ctx);
+                annotationAspectjProcessor.setOrder(20);
+                ctx.addBeanPostProcessor(annotationAspectjProcessor);
+            }
         }
-
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
