@@ -6,7 +6,6 @@ import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.jdbc.DataSourceAutoConfiguration;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
-import com.jbosframework.transaction.annotation.EnableTransactionManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -18,7 +17,6 @@ import javax.sql.DataSource;
  * @version 5.0
  */
 @Configuration
-@EnableTransactionManager
 @ConditionalOnBean(DataSourceTransactionManager.class)
 public class TransactionAutoConfiguration extends AbstractAutoConfiguration {
 
@@ -31,10 +29,6 @@ public class TransactionAutoConfiguration extends AbstractAutoConfiguration {
     public void registry() {
         Configuration configuration = this.getClass().getAnnotation(Configuration.class);
         if (configuration == null) {
-            return;
-        }
-        EnableTransactionManager enableTransactionManager=this.getClass().getAnnotation(EnableTransactionManager.class);
-        if(enableTransactionManager==null){
             return;
         }
         if(!this.conditionalOnBean(this.getClass().getAnnotation(ConditionalOnBean.class))){

@@ -9,6 +9,7 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AnnotationAspectjProcessor;
+import com.jbosframework.boot.autoconfig.transaction.TransactionAspectRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -46,6 +47,7 @@ public class JBOSApplication {
                 AnnotationAspectjProcessor annotationAspectjProcessor=new AnnotationAspectjProcessor(ctx);
                 annotationAspectjProcessor.setOrder(20);
                 ctx.addBeanPostProcessor(annotationAspectjProcessor);
+                ctx.addBeanRegistry(new TransactionAspectRegistry(ctx));
             }
         }
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();

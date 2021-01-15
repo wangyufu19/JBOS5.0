@@ -13,6 +13,24 @@ import javax.sql.DataSource;
  */
 public class DataSourceUtils {
 	private static final Log log= LogFactory.getLog(DataSourceUtils.class);
+
+	/**
+	 * 连接事务
+	 * @param connection
+	 * @param dataSource
+	 * @return
+	 */
+	public static boolean isConnectionTransactional(Connection connection,DataSource dataSource){
+		if(dataSource==null){
+			return false;
+		}else{
+			ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
+			if(connectionHolder!=null){
+				return connection==connectionHolder.getConnection();
+			}
+		}
+		return false;
+	}
 	/**
 	 * 得到数据源
 	 * @param dataSource

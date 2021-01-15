@@ -19,6 +19,7 @@ public class JbosTransactionManager implements Transaction {
     private DataSource dataSource;
     private Connection connection;
     private boolean autoCommit=false;
+    private boolean isConnectionTransactional=false;
 
     public JbosTransactionManager(DataSource dataSource){
         this.dataSource=dataSource;
@@ -43,6 +44,7 @@ public class JbosTransactionManager implements Transaction {
     private void doConnection() throws SQLException {
         this.connection= DataSourceUtils.getConnection(dataSource);
         this.autoCommit=this.connection.getAutoCommit();
+        this.isConnectionTransactional=DataSourceUtils.isConnectionTransactional(connection,dataSource);
     }
 
     /**
@@ -50,7 +52,7 @@ public class JbosTransactionManager implements Transaction {
      * @throws SQLException
      */
     public void commit() throws SQLException {
-        if(this.connection!=null&&!this.autoCommit){
+        if(this.connection!=null&&!this.isConnectionTransactional&&!this.autoCommit){
             this.connection.commit();
         }
     }
@@ -60,7 +62,7 @@ public class JbosTransactionManager implements Transaction {
      * @throws SQLException
      */
     public void rollback() throws SQLException {
-        if(this.connection!=null&&!this.autoCommit){
+        if(this.connection!=null&&!this.isConnectionTransactional&&!this.autoCommit){
             this.connection.rollback();
         }
     }
