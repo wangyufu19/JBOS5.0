@@ -83,11 +83,13 @@ public class DataSourceTransactionManager implements TransactionManager {
 		DefaultTransactionStatus defaultTransactionStatus=(DefaultTransactionStatus)transactionStatus;
 		try {
 			ConnectionHolder connectionHolder=(ConnectionHolder)defaultTransactionStatus.getConnectionHolder();
+			connectionHolder.setTransactionActive(false);
 			connection=connectionHolder.getConnection();
 			if(connection!=null){
 				connection.commit();
 				connection.setAutoCommit(true);
 			}
+			TransactionSynchronizationManager.bindConnectionHolder(dataSource,connectionHolder);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
