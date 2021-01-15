@@ -26,7 +26,7 @@ public class DataSourceUtils {
 		}else{
 			ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 			if(connectionHolder!=null){
-				return connection==connectionHolder.getConnection();
+				return connection==connectionHolder.getConnection()&&connectionHolder.isTransactionActive();
 			}
 		}
 		return false;
