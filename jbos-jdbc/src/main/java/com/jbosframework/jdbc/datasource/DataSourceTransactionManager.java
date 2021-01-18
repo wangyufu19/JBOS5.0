@@ -49,13 +49,9 @@ public class DataSourceTransactionManager implements TransactionManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	public TransactionStatus getTransaction(TransactionDefinition transactionDefinition){
+	public TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws SQLException {
 		DefaultTransactionStatus transactionStatus=new DefaultTransactionStatus();
-		try {
-			this.begin(transactionStatus,transactionDefinition);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		this.begin(transactionStatus,transactionDefinition);
 		return transactionStatus;
 	}
 
@@ -110,6 +106,8 @@ public class DataSourceTransactionManager implements TransactionManager {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				DataSourceUtils.closeConnection(connection,this.getDataSource());
 			}
 		}
 	}

@@ -14,7 +14,7 @@ public interface TransactionManager {
      * @return
      * @throws SQLException
      */
-    TransactionStatus getTransaction(TransactionDefinition transactionDefinition);
+    TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws SQLException;
 
     /**
      * 提交事务
