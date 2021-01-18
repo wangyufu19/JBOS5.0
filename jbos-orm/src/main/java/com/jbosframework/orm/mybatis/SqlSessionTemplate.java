@@ -1,10 +1,14 @@
 package com.jbosframework.orm.mybatis;
 
+import com.jbosframework.jdbc.datasource.ConnectionHolder;
+import com.jbosframework.jdbc.datasource.DataSourceUtils;
+import com.jbosframework.transaction.support.TransactionSynchronizationManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.*;
 
+import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -145,12 +149,23 @@ public class SqlSessionTemplate implements SqlSession {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             SqlSession sqlSession=SqlSessionTemplate.this.sqlSessionFactory.openSession(SqlSessionTemplate.this.executorType);
             Object result;
+            Connection connection=sqlSession.getConnection();
+            DataSource dataSource=sqlSessionFactory.getConfiguration().getEnvironment().getDataSource();
             try{
                 result=method.invoke(sqlSession,args);
-                sqlSession.commit(true);
             }catch (Throwable throwable){
+                if(sqlSession!=null){
+                    if(DataSourceUtils.isConnectionTransactional(connection,dataSource)){
+                        ConnectionHolder connectionHolder=(ConnectionHolder) TransactionSynchronizationManager.getConnectionHolder(dataSource);
+                        connectionHolder.setTransactionActive(false);
+                        TransactionSynchronizationManager.bindConnectionHolder(dataSource,connectionHolder);
+                        connection.rollback();
+                        connection.setAutoCommit(true);
+                        DataSourceUtils.closeConnection(connection,dataSource);
+                    }
+                }
                throw throwable;
-            }finally {
+            } finally {
                 if(sqlSession!=null){
                     sqlSession.close();
                 }

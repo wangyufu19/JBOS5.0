@@ -35,4 +35,5 @@ public interface UserMgrService {
 	 * @param user
 	 */
 	public void updateUserInfo(UserInfo user);
+
 }

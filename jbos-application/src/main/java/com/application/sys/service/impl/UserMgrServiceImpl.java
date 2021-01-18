@@ -5,6 +5,7 @@ import com.application.sys.pojo.UserInfo;
 import com.application.sys.service.UserMgrService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Service;
+import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.utils.StringUtils;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.Map;
 @Service
 public class UserMgrServiceImpl implements UserMgrService {
 
-	@Autowired
+	@Mapper
 	private UserMapper userMapper;
 	/**
 	 * 查询用户数据列表
@@ -67,6 +68,6 @@ public class UserMgrServiceImpl implements UserMgrService {
 	 */
 	//@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	public void updateUserInfo(UserInfo user){
-
+		userMapper.updateUserInfo(null);
 	}
 }

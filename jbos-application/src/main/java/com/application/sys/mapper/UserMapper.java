@@ -26,4 +26,10 @@ public interface UserMapper{
 	 * @return
 	 */
 	public List<UserInfo> getUserList();
+
+	/**
+	 * 更新用户信息
+	 * @param parameterObject
+	 */
+	public void updateUserInfo(Map<String, Object> parameterObject);
 }

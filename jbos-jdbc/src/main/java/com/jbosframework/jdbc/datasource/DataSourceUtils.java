@@ -62,9 +62,7 @@ public class DataSourceUtils {
 			if (connectionToUse != null) {
 				try {
 					if (!connectionToUse.isClosed()&&!connectionHolder.isTransactionActive()){
-						if(log.isDebugEnabled()){
-							log.debug("******Datasource connection closed");
-						}
+						log.info("******Datasource connection closed");
 						connectionToUse.close();
 						TransactionSynchronizationManager.removeConnectionHolder(dataSource);
 					}
