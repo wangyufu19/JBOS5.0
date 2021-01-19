@@ -59,7 +59,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
             userToken.setExpireTime(expireTime);
             userToken.setUpdateTime(now);
             userTokenMapper.updateUserToken(userToken);
-            userMgrService.updateUserInfo(null);
+            //userMgrService.updateUserInfo(null);
             token= userToken.getToken();
         }
         return token;

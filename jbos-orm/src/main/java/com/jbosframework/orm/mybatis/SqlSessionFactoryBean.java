@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 import com.jbosframework.core.io.PathMatchResourceSupport;
 import com.jbosframework.core.io.Resource;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.logging.log4j.Log4jImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,6 +24,7 @@ public class SqlSessionFactoryBean {
 	//development和work
 	private String id="work";
 	private String mapperLocations;
+	private String logImpl;
 	private DataSource dataSource;
 	private static SqlSessionFactory sqlSessionFactory=null;
 
@@ -39,7 +41,9 @@ public class SqlSessionFactoryBean {
 	public void setMapperLocations(String mapperLocations) {
 		this.mapperLocations = mapperLocations;
 	}
-
+	public void setLogImpl(String logImpl){
+		this.logImpl=logImpl;
+	}
 	/**
 	 * 构建SqlSessionFactory
 	 * @return
@@ -51,6 +55,11 @@ public class SqlSessionFactoryBean {
 					TransactionFactory transactionFactory = new JbosTransactionFactory();
 					Environment environment = new Environment(id, transactionFactory, dataSource);
 					Configuration configuration = new Configuration(environment);
+					switch (this.logImpl){
+						case "LOG4J":
+							configuration.setLogImpl(Log4jImpl.class);
+					}
+
 					PathMatchResourceSupport pathMatchResourceSupport=new PathMatchResourceSupport();
 					Resource[] resources=pathMatchResourceSupport.getResources(mapperLocations);
 					if(resources!=null){

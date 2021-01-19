@@ -41,13 +41,17 @@ public class DataSourceUtils {
 		Connection connection=null;
 		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
 		if(connectionHolder==null){
-			log.info("******Datasource connection created");
+			if(log.isDebugEnabled()){
+				log.debug("******Datasource connection created");
+			}
 			connection=dataSource.getConnection();
 			ConnectionHolder holderToUser=new ConnectionHolder();
 			holderToUser.setConnection(connection);
 			return connection;
 		}else{
-			log.info("******Fetch Datasource connection from ThreadLocal");
+			if(log.isDebugEnabled()) {
+				log.debug("******Fetch Datasource connection from ThreadLocal");
+			}
 			return connectionHolder.getConnection();
 		}
 	}
@@ -62,7 +66,9 @@ public class DataSourceUtils {
 			if (connectionToUse != null) {
 				try {
 					if (!connectionToUse.isClosed()&&!connectionHolder.isTransactionActive()){
-						log.info("******Datasource connection closed");
+						if(log.isDebugEnabled()) {
+							log.debug("******Datasource connection closed");
+						}
 						connectionToUse.close();
 						TransactionSynchronizationManager.removeConnectionHolder(dataSource);
 					}

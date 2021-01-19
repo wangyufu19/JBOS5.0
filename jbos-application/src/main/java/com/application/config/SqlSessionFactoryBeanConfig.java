@@ -19,6 +19,8 @@ import java.io.IOException;
 public class SqlSessionFactoryBeanConfig {
     @Value("${jbos.mybatis.mapperLocations}")
     private String mapperLocations;
+    @Value("${jbos.mybatis.logImpl}")
+    private String logImpl;
     @Autowired
     private DataSource defaultDataSource;
 
@@ -27,6 +29,7 @@ public class SqlSessionFactoryBeanConfig {
         SqlSessionFactoryBean sqlSessionFactoryBean=new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(defaultDataSource);
         sqlSessionFactoryBean.setMapperLocations(mapperLocations);
+        sqlSessionFactoryBean.setLogImpl(logImpl);
         return sqlSessionFactoryBean.build();
     }
 }

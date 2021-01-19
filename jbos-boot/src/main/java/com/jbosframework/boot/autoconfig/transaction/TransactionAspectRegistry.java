@@ -47,7 +47,9 @@ public class TransactionAspectRegistry extends BeanRegistry {
                 adviceConfig.setMethodAfterAdvice(transactionMethodAdvice.new TransactionMethodAfterAdvice());
                 metadata.setAdviceConfig(adviceConfig);
                 if(!"".equals(metadata.getPointcut())){
-                    log.debug("******注入切面类["+cls.getName()+"]");
+                    if(log.isDebugEnabled()){
+                        log.debug("******注入切面类["+cls.getName()+"]");
+                    }
                     this.applicationContext.getAspectProxyBeanContext().putMetadata(metadata);
                 }
             }

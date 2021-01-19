@@ -9,3 +9,4 @@ jbos:
   #MyBatis配置
   mybatis:
     mapperLocations: classpath:mapper/**/*.xml
+    logImpl: LOG4J
