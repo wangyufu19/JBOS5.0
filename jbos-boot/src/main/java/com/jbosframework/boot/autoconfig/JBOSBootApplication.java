@@ -1,6 +1,7 @@
 package com.jbosframework.boot.autoconfig;
 import com.jbosframework.context.annotation.ComponentScan;
 import com.jbosframework.context.annotation.Configuration;
+import com.jbosframework.transaction.annotation.EnableTransactionManager;
 
 import java.lang.annotation.*;
 
@@ -10,6 +11,7 @@ import java.lang.annotation.*;
 @Inherited
 @Configuration
 @ComponentScan
+@EnableTransactionManager
 @EnableAspectJAutoProxy
 @EnableAutoConfiguration
 public @interface JBOSBootApplication {

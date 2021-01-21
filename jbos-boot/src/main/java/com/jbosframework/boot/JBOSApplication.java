@@ -3,13 +3,14 @@ package com.jbosframework.boot;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
+import com.jbosframework.boot.autoconfig.transaction.TransactionBeanProcessor;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
-import com.jbosframework.boot.autoconfig.transaction.TransactionAspectRegistry;
 import com.jbosframework.context.support.AspectProxyContext;
+import com.jbosframework.transaction.annotation.EnableTransactionManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,16 +39,23 @@ public class JBOSApplication {
         //初始化上下文配置
         Configuration configuration=new Configuration();
         ctx=new AnnotationApplicationContext(configuration);
-        //开启切面自动代理
         JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
         if(jbosBootApplication!=null){
+            //开启切面自动代理
             EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
             if(enableAspectJAutoProxy!=null){
                 AspectProxyContext aspectProxyContext=new AspectProxyContext(ctx);
                 aspectProxyContext.enableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-                ctx.addBeanRegistry(new TransactionAspectRegistry(aspectProxyContext));
+            }
+            //开户事务管理
+            EnableTransactionManager enableTransactionManage=JBOSBootApplication.class.getAnnotation(EnableTransactionManager.class);
+            if(enableTransactionManage!=null){
+                TransactionBeanProcessor transactionBeanProcessor=new TransactionBeanProcessor(ctx);
+                transactionBeanProcessor.setOrder(15);
+                ctx.addBeanPostProcessor(transactionBeanProcessor);
             }
         }
+
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
