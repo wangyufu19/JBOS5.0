@@ -36,27 +36,36 @@ public class TransactionBeanProcessor implements BeanPostProcessor {
         return this.order - beanPostProcessor.getOrder();
     }
     public Object process(Object obj) {
+        boolean isTransactionalBean=false;
         Object target = obj;
         Class<?> cls=obj.getClass();
         if(cls==null){
             return target;
         }
-        Method[] methods=cls.getDeclaredMethods();
-        if(methods==null){
-            return target;
-        }
-        for(Method method:methods) {
-            Transactional transactional = method.getDeclaredAnnotation(Transactional.class);
-            if(transactional!=null){
-                AdviceConfig adviceConfig = new AdviceConfig();
-                TransactionMethodAdvice transactionMethodAdvice=new TransactionMethodAdvice(this.beanFactory);
-                adviceConfig.setMethodBeforeAdvice(transactionMethodAdvice.new TransactionMethodBeforeAdvice());
-                adviceConfig.setMethodAfterAdvice(transactionMethodAdvice.new TransactionMethodAfterAdvice());
-                adviceConfig.setTarget(obj);
-                AopProxy aopProxy = new CglibProxy(adviceConfig);
-                target=aopProxy.getProxy();
-                break;
+        Transactional transactional = cls.getDeclaredAnnotation(Transactional.class);
+        if(transactional!=null){
+            isTransactionalBean=true;
+        }else{
+            Method[] methods=cls.getDeclaredMethods();
+            if(methods==null){
+                return target;
             }
+            for(Method method:methods) {
+                transactional = method.getDeclaredAnnotation(Transactional.class);
+                if(transactional!=null){
+                    isTransactionalBean=true;
+                    break;
+                }
+            }
+        }
+        if(isTransactionalBean){
+            AdviceConfig adviceConfig = new AdviceConfig();
+            TransactionMethodAdvice transactionMethodAdvice=new TransactionMethodAdvice(this.beanFactory);
+            adviceConfig.setMethodBeforeAdvice(transactionMethodAdvice.new TransactionMethodBeforeAdvice());
+            adviceConfig.setMethodAfterAdvice(transactionMethodAdvice.new TransactionMethodAfterAdvice());
+            adviceConfig.setTarget(obj);
+            AopProxy aopProxy = new CglibProxy(adviceConfig);
+            target=aopProxy.getProxy();
         }
         return target;
     }
