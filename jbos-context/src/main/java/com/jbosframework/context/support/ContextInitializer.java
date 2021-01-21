@@ -1,5 +1,4 @@
 package com.jbosframework.context.support;
-import com.jbosframework.aop.aspectj.support.AspectProxyBeanContext;
 import com.jbosframework.context.configuration.Configuration;
 /**
  * ContextInitializer
@@ -8,11 +7,7 @@ import com.jbosframework.context.configuration.Configuration;
  */
 public class ContextInitializer {
 
-    private AspectProxyBeanContext aspectProxyBeanContext=new AspectProxyBeanContext();
-
     private Configuration configuration;
-
-    private boolean enableAspectJAutoProxy=false;
 
     public ContextInitializer(){
 
@@ -32,25 +27,6 @@ public class ContextInitializer {
     public Configuration getContextConfiguration(){
         return configuration;
     }
-    /**
-     * 设置启用切面
-     * @param enableAspectJAutoProxy
-     */
-    public void setEnableAspectJAutoProxy(boolean enableAspectJAutoProxy){
-        this.enableAspectJAutoProxy=enableAspectJAutoProxy;
-    }
 
-    /**
-     * 是否启用切面
-     * @return
-     */
-    public boolean isEnableAspectJAutoProxy(){
-        return this.enableAspectJAutoProxy;
-    }
-
-
-    public AspectProxyBeanContext getAspectProxyBeanContext(){
-        return aspectProxyBeanContext;
-    }
 
 }

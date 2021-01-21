@@ -1,6 +1,7 @@
-package com.jbosframework.aop.aspectj.support;
+package com.jbosframework.context.support;
 import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.aspectj.*;
+import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
@@ -8,17 +9,17 @@ import java.lang.reflect.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /**
- * AopProxyBeanRegister
+ * AspectProxyRegistry
  * @author youfu.wang
  * @version 5.0
  */
-public class AspectProxyBeanRegister extends BeanRegistry {
-    private static Log log=LogFactory.getLog(AspectProxyBeanRegister.class);
-    private AspectProxyBeanContext aspectProxyBeanContext;
+public class AspectProxyRegistry extends BeanRegistry {
+    private static Log log=LogFactory.getLog(AspectProxyRegistry.class);
+    private AspectProxyContext aspectProxyBeanContext;
     /**
      * 构造方法
      */
-    public AspectProxyBeanRegister(AspectProxyBeanContext aspectProxyBeanContext){
+    public AspectProxyRegistry(AspectProxyContext aspectProxyBeanContext){
         this.aspectProxyBeanContext=aspectProxyBeanContext;
     }
     /**

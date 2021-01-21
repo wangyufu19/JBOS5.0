@@ -5,7 +5,6 @@ import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.AnnotationBeanRegistry;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextFactory;
-import com.jbosframework.aop.aspectj.support.AspectProxyBeanRegister;
 import com.jbosframework.context.configuration.Configuration;
 
 /**
@@ -41,9 +40,6 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 * @param cls
 	 */
 	public void registry(Class<?> cls) {
-		if(this.isEnableAspectJAutoProxy()){
-			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
-		}
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(cls);
 		this.autowired();
@@ -53,9 +49,6 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 * @param classes
 	 */
 	public void registry(Class<?>[] classes) {
-		if(this.isEnableAspectJAutoProxy()){
-			beanReader.addBeanRegistry(new AspectProxyBeanRegister(this.getAspectProxyBeanContext()));
-		}
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(classes);
 		this.autowired();

@@ -10,6 +10,7 @@ import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AnnotationAspectjProcessor;
 import com.jbosframework.boot.autoconfig.transaction.TransactionAspectRegistry;
+import com.jbosframework.context.support.AspectProxyContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,11 +44,9 @@ public class JBOSApplication {
         if(jbosBootApplication!=null){
             EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
             if(enableAspectJAutoProxy!=null){
-                ctx.setEnableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-                AnnotationAspectjProcessor annotationAspectjProcessor=new AnnotationAspectjProcessor(ctx);
-                annotationAspectjProcessor.setOrder(20);
-                ctx.addBeanPostProcessor(annotationAspectjProcessor);
-                ctx.addBeanRegistry(new TransactionAspectRegistry(ctx));
+                AspectProxyContext aspectProxyContext=new AspectProxyContext(ctx);
+                aspectProxyContext.enableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+                ctx.addBeanRegistry(new TransactionAspectRegistry(aspectProxyContext));
             }
         }
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();

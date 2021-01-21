@@ -5,7 +5,6 @@ import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.CglibProxy;
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.beans.config.BeanPostProcessor;
-import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.core.Order;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,11 +18,11 @@ import java.lang.reflect.Method;
  */
 public class AnnotationAspectjProcessor implements BeanPostProcessor {
     private static final Log log= LogFactory.getLog(AnnotationAspectjProcessor.class);
-    private ApplicationContext applicationContext;
+    private AspectProxyContext aspectProxyContext;
     private int order= Order.MIN;
 
-    public AnnotationAspectjProcessor(ApplicationContext ApplicationContext){
-        this.applicationContext=ApplicationContext;
+    public AnnotationAspectjProcessor(AspectProxyContext aspectProxyContext){
+        this.aspectProxyContext=aspectProxyContext;
     }
 
     public void setOrder(int order){
@@ -37,7 +36,7 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
     }
     public Object process(Object obj){
         Object target=obj;
-        PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.applicationContext);
+        PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.aspectProxyContext);
         if(pointcutMethodMatcher.match(target)){
             //判断是否切面AOP代理Bean
             target=pointcutMethodMatcher.getAspectAopProxy(target);
@@ -50,16 +49,16 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
      * @version 5.0
      */
     public class PointcutMethodMatcher {
-        private ApplicationContext applicationContext;
+        private AspectProxyContext aspectProxyContext;
         private AspectMetadata aspectMetadata;
 
         /**
          * 构造方法
          *
-         * @param applicationContext
+         * @param aspectProxyContext
          */
-        public PointcutMethodMatcher(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
+        public PointcutMethodMatcher(AspectProxyContext aspectProxyContext) {
+            this.aspectProxyContext = aspectProxyContext;
         }
 
         /**
@@ -78,8 +77,8 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
             }
             for (Method method : methods) {
                 String pointcut = obj.getClass().getName() + "." + method.getName();
-                if (this.applicationContext.getAspectProxyBeanContext().contains(pointcut)) {
-                    aspectMetadata = this.applicationContext.getAspectProxyBeanContext().getMetadata(pointcut);
+                if (this.aspectProxyContext.contains(pointcut)) {
+                    aspectMetadata = this.aspectProxyContext.getMetadata(pointcut);
                     aspectMetadata.getAdviceConfig().getMethodBeforeAdvice().setAdviceMethod(method.getName());
                     aspectMetadata.getAdviceConfig().getMethodAfterAdvice().setAdviceMethod(method.getName());
                     bool = true;

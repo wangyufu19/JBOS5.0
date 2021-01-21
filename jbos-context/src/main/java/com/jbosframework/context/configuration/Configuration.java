@@ -4,11 +4,8 @@ import com.jbosframework.core.io.ClassPathResource;
 import com.jbosframework.core.io.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+
 
 /**
  * Configuration
@@ -17,7 +14,6 @@ import java.util.Map;
  */
 public class Configuration {
     private static Log log= LogFactory.getLog(Configuration.class);
-    private static Map<String, Object> properties= Collections.synchronizedMap(new LinkedHashMap<String,Object>());
     private String configLocation;
     private String configClassPath;
     private YamlConfig yamlConfig=new YamlConfig();
