@@ -47,7 +47,7 @@ public class JBOSApplication {
                 AspectProxyContext aspectProxyContext=new AspectProxyContext(ctx);
                 aspectProxyContext.enableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
             }
-            //开户事务管理
+            //开启事务管理
             EnableTransactionManager enableTransactionManage=JBOSBootApplication.class.getAnnotation(EnableTransactionManager.class);
             if(enableTransactionManage!=null){
                 TransactionBeanProcessor transactionBeanProcessor=new TransactionBeanProcessor(ctx);
