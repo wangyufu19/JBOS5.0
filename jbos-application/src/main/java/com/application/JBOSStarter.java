@@ -1,6 +1,5 @@
 package com.application;
 
-import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
