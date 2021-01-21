@@ -8,7 +8,6 @@ import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
-import com.jbosframework.context.support.AnnotationAspectjProcessor;
 import com.jbosframework.boot.autoconfig.transaction.TransactionAspectRegistry;
 import com.jbosframework.context.support.AspectProxyContext;
 import org.apache.commons.logging.Log;
