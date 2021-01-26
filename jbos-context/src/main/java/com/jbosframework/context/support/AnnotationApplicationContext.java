@@ -42,7 +42,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	public void registry(Class<?> cls) {
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(cls);
-		this.init();
+		this.initBeans();
 	}
 	/**
 	 * 注册Bean
@@ -51,7 +51,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	public void registry(Class<?>[] classes) {
 		AnnotationScanFactory annotationScanFactory=new AnnotationScanFactory(beanReader);
 		annotationScanFactory.scan(classes);
-		this.init();
+		this.initBeans();
 	}
 	/**
 	 * 刷新容器上下文

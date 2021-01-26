@@ -162,7 +162,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	/**
 	 * 初始化Bean
 	 */
-	public void init(){
+	public void initBeans(){
 		for(Map.Entry<String,BeanDefinition> entry:beanDefinitions.entrySet()){
 			BeanDefinition beanDefinition=entry.getValue();
 			//初始化Bean
