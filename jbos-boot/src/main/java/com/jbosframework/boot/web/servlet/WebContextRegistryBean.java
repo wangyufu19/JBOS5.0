@@ -74,7 +74,7 @@ public class WebContextRegistryBean implements BeanBeforeProcessor {
             mapping.addURLPattern(filterRegistryBean.getUrlPattern());
             context.addFilterMap(mapping);
 
-            logger.info("******Registry filter "+filterRegistryBean.getFilter().getClass().getName());
+            logger.debug("******Registry filter "+filterRegistryBean.getFilter().getClass().getName());
         }else if(target instanceof ServletRegistryBean){
             ServletRegistryBean servletRegistryBean=(ServletRegistryBean)target;
             Wrapper wrapper = context.createWrapper();
@@ -82,7 +82,7 @@ public class WebContextRegistryBean implements BeanBeforeProcessor {
             wrapper.setServletClass(servletRegistryBean.getServlet().getClass().getName());
             context.addChild(wrapper);
             context.addServletMappingDecoded(servletRegistryBean.getUrlPattern(), servletRegistryBean.getName());
-            logger.info("******Registry servlet "+servletRegistryBean.getServlet().getClass().getName());
+            logger.debug("******Registry servlet "+servletRegistryBean.getServlet().getClass().getName());
         }
     }
 }
