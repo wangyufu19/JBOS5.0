@@ -175,10 +175,14 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			return null;
 		}
 		//Bean实例化
-		if (beanDefinition.isMethodBean()){
-			obj=this.doCreateMethodBean(beanDefinition);
+		if(singletonInstances.containsKey(beanDefinition.getName())){
+			obj=singletonInstances.get(beanDefinition.getName());
 		}else{
-			obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+			if (beanDefinition.isMethodBean()){
+				obj=this.doCreateMethodBean(beanDefinition);
+			}else{
+				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+			}
 		}
 		//执行初始化方法
 		//执行BeanBeforeProcessor
@@ -190,9 +194,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	}
 	public Object doCreateMethodBean(BeanDefinition beanDefinition){
 		Object obj=null;
-		if(singletonInstances.containsKey(beanDefinition.getName())){
-			return singletonInstances.get(beanDefinition.getName());
-		}
 		Object parentObj=this.getBeanObject(beanDefinition.getParentName());
 		MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
 		if(methodMetadata.getMethodParameters().length>0){
