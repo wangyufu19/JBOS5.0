@@ -1,5 +1,7 @@
 package com.jbosframework.boot.web.servlet;
 
+import com.jbosframework.beans.config.BeanBeforeProcessor;
+import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.core.Order;
@@ -21,7 +23,7 @@ import java.util.Map;
  * @version 5.0
  * @date 2020-11-27
  */
-public class WebContextRegistryBean implements BeanPostProcessor {
+public class WebContextRegistryBean implements BeanBeforeProcessor {
     public static final Log logger= LogFactory.getLog(WebContextRegistryBean.class);
     private Context context;
     private ApplicationContext applicationContext;
@@ -48,7 +50,7 @@ public class WebContextRegistryBean implements BeanPostProcessor {
         context.addChild(wrapper);
         context.addServletMappingDecoded(contextPath+"/*", DispatcherServlet.class.getSimpleName());
     }
-    public Object process(Object obj){
+    public void process(Object obj, BeanDefinition beanDefinition){
         Object target=obj;
         if(target instanceof FilterRegistryBean){
             FilterRegistryBean filterRegistryBean=(FilterRegistryBean)target;
@@ -82,6 +84,5 @@ public class WebContextRegistryBean implements BeanPostProcessor {
             context.addServletMappingDecoded(servletRegistryBean.getUrlPattern(), servletRegistryBean.getName());
             logger.info("******Registry servlet "+servletRegistryBean.getServlet().getClass().getName());
         }
-        return target;
     }
 }

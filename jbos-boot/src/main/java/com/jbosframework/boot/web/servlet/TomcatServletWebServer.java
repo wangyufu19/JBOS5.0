@@ -36,7 +36,7 @@ public class TomcatServletWebServer extends AbstractServletWebServer{
         WebContextRegistryBean webContextRegistryBean=new WebContextRegistryBean(context,this.getApplicationContext());
         webContextRegistryBean.setOrder(1000);
         webContextRegistryBean.initDispatcherServlet(this.getContextPath());
-        this.getApplicationContext().addBeanPostProcessor(webContextRegistryBean);
+        this.getApplicationContext().addBeanBeforeProcessor(webContextRegistryBean);
 
         WebServer webServer=new TomcatWebServer(tomcat);
         return webServer;

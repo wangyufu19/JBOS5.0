@@ -11,7 +11,7 @@ import com.jbosframework.web.filter.DelegatingFilterProxy;
  * @author youfu.wang
  * @data 2020-12-27
  */
-//@Configuration
+@Configuration
 public class FilterConfig {
 
     @Bean
