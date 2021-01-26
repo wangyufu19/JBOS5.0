@@ -14,13 +14,6 @@ public class JBOSStarter {
 	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-//		ProxyFactoryBean proxyFactoryBean=new ProxyFactoryBean();
-//		proxyFactoryBean.setTarget(new UserAuthServiceImpl());
-//		proxyFactoryBean.setProxyInterfaces(new Class[]{UserAuthService.class});
-//		UserAuthService obj=(UserAuthService)proxyFactoryBean.getObject();
-//		System.out.println(obj.toString());
-//		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
-//		aspectInvoker.invoke();
-	}
+    }
 
 }

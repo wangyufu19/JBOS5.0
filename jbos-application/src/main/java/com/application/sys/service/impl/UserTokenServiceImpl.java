@@ -69,7 +69,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
      * 失效用户Token
      * @param userId
      */
-    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+    //@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
     public void invalidToken(String userId){
         //查询用户Token数据
         UserToken userToken=getUserTokenByUserId(userId);

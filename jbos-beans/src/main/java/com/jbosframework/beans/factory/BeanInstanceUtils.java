@@ -28,7 +28,7 @@ public class BeanInstanceUtils {
 	public static Object newBeanInstance(Class<?> cls){
 		Object obj=null;
 		try {
-			if(cls==null) return obj;
+			if(cls==null) return null;
 			if(!cls.isInterface()){
 				obj=cls.newInstance();
 			}			
@@ -54,6 +54,11 @@ public class BeanInstanceUtils {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+		if(obj==null){
+			BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + clazz + "' available");
+			ex.printStackTrace();
+			return null;
 		}
 		return obj;
 	}

@@ -1,7 +1,6 @@
 package com.jbosframework.context.support;
 
 import java.util.*;
-
 import com.jbosframework.beans.config.*;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.factory.BeanAutowiredProcessor;
@@ -159,60 +158,52 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			singletonInstances.remove(name);
 		this.singletonInstances.put(name,obj);
 	}
+
 	/**
-	 * 自动装配Bean对象
+	 * 初始化Bean
 	 */
-	public void autowired(){
+	public void init(){
 		for(Map.Entry<String,BeanDefinition> entry:beanDefinitions.entrySet()){
-			this.doCreateBean(entry.getValue());
+			BeanDefinition beanDefinition=entry.getValue();
+			//初始化Bean
+			this.initBean(beanDefinition);
 		}
 	}
-	/**
-	 * 创建Bean对象
-	 * @param beanDefinition
-	 * @return
-	 */
-	private Object doCreateBean(BeanDefinition beanDefinition){
+	private Object initBean(BeanDefinition beanDefinition){
 		Object obj=null;
 		if(beanDefinition==null){
 			return null;
 		}
-        if (beanDefinition.isMethodBean()){
-			if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
-				obj=this.getSingletonInstances().get(beanDefinition.getName());
-			}else{
-				Object parentObj=this.getBeanObject(beanDefinition.getParentName());
-				MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
-				if(methodMetadata.getMethodParameters().length>0){
-					Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
-					for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
-						parameterValues[i]=this.getBeanObject(methodMetadata.getMethodParameters()[i].getType().getName());
-					}
-					obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
-				}else{
-					obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
-				}
+		//Bean实例化
+		if (beanDefinition.isMethodBean()){
+			obj=this.doCreateMethodBean(beanDefinition);
+		}else{
+			obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+		}
+		//执行初始化方法
+		//执行BeanBeforeProcessor
+		this.doBeanBeforeProcessor(obj,beanDefinition);
+		if(beanDefinition.isSingleton()){
+			this.putBean(beanDefinition.getName(),obj);
+		}
+		return obj;
+	}
+	public Object doCreateMethodBean(BeanDefinition beanDefinition){
+		Object obj=null;
+		if(singletonInstances.containsKey(beanDefinition.getName())){
+			return singletonInstances.get(beanDefinition.getName());
+		}
+		Object parentObj=this.getBeanObject(beanDefinition.getParentName());
+		MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
+		if(methodMetadata.getMethodParameters().length>0){
+			Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
+			for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
+				parameterValues[i]=this.getBeanObject(methodMetadata.getMethodParameters()[i].getType().getName());
 			}
-        }else {
-            if(beanDefinition.isSingleton()){
-                if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
-                    obj=this.getSingletonInstances().get(beanDefinition.getName());
-                }else{
-                    obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-                }
-            }else if(beanDefinition.isPrototype()){
-                obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-            }
-        }
-        if(obj==null){
-            BeanTypeException ex = new BeanTypeException("Qualifying bean of type '" + beanDefinition.getName() + "' available");
-            ex.printStackTrace();
-        }else{
-			this.doBeanBeforeProcessor(obj,beanDefinition);
-            if(beanDefinition.isSingleton()){
-                this.putBean(beanDefinition.getName(),obj);
-            }
-        }
+			obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
+		}else{
+			obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
+		}
 		return obj;
 	}
 	/**
@@ -226,8 +217,9 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			obj=singletonInstances.get(name);
 		}else{
 			BeanDefinition beanDefinition=this.getBeanDefinition(name);
-			obj = this.doCreateBean(beanDefinition);
+			obj = this.initBean(beanDefinition);
 		}
+		//执行BeanPostProcessor
 		obj=this.doBeanPostProcessor(obj);
 		return obj;
 	}
