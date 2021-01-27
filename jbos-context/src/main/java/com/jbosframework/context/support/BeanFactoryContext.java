@@ -5,7 +5,6 @@ import com.jbosframework.beans.config.*;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.beans.factory.BeanAutowiredProcessor;
 import com.jbosframework.context.configuration.Configuration;
-import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -17,8 +16,9 @@ import org.apache.commons.logging.LogFactory;
  * @date 2016-11-14
  */
 
-public class BeanFactoryContext extends ContextInitializer implements BeanFactory {
+public class BeanFactoryContext extends AbstractFactoryBean{
 	private static final Log log= LogFactory.getLog(BeanFactoryContext.class);
+	private Configuration configuration;
 	//XML and Annotation IoC Bean Singleton Instance
 	protected static Map<String,Object> singletonInstances= Collections.synchronizedMap(new LinkedHashMap<String,Object>());
 	//XML and Annotation IoC Bean 
@@ -26,9 +26,6 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	//Bean Interface Map
 	protected static Map<String, List<BeanDefinition>> beanInterfaces=Collections.synchronizedMap(new LinkedHashMap<String,List<BeanDefinition>>());
 
-	private static List<BeanBeforeProcessor> beanBeforeProcessors=Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
-
-	private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new LinkedList<BeanPostProcessor>());
 
 	/**
 	 * 构造方法
@@ -42,10 +39,17 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 	 * 构造方法
 	 */
 	public BeanFactoryContext(Configuration configuration){
-		super(configuration);
+		this.configuration=configuration;
 		BeanAutowiredProcessor beanAutowiredProcessor=new BeanAutowiredProcessor(this);
 		beanAutowiredProcessor.setOrder(1);
 		this.addBeanPostProcessor(beanAutowiredProcessor);
+	}
+	/**
+	 * 得到上下文配置
+	 * @return
+	 */
+	public Configuration getContextConfiguration(){
+		return configuration;
 	}
 
 	/**
@@ -91,9 +95,8 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		singletonInstances.clear();
 		beanDefinitions.clear();
 		beanInterfaces.clear();
-		beanBeforeProcessors.clear();
-		beanPostProcessors.clear();
-		getContextConfiguration().clear();
+		configuration.clear();
+		super.clear();
 	}
 	/**
 	 * 得到Bean定义
@@ -169,44 +172,7 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 			this.initBean(beanDefinition);
 		}
 	}
-	private Object initBean(BeanDefinition beanDefinition){
-		Object obj=null;
-		if(beanDefinition==null){
-			return null;
-		}
-		//Bean实例化
-		if(singletonInstances.containsKey(beanDefinition.getName())){
-			obj=singletonInstances.get(beanDefinition.getName());
-		}else{
-			if (beanDefinition.isMethodBean()){
-				obj=this.doCreateMethodBean(beanDefinition);
-			}else{
-				obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-			}
-		}
-		//执行初始化方法
-		//执行BeanBeforeProcessor
-		this.doBeanBeforeProcessor(obj,beanDefinition);
-		if(beanDefinition.isSingleton()){
-			this.putBean(beanDefinition.getName(),obj);
-		}
-		return obj;
-	}
-	public Object doCreateMethodBean(BeanDefinition beanDefinition){
-		Object obj=null;
-		Object parentObj=this.getBeanObject(beanDefinition.getParentName());
-		MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
-		if(methodMetadata.getMethodParameters().length>0){
-			Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
-			for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
-				parameterValues[i]=this.getBeanObject(methodMetadata.getMethodParameters()[i].getType().getName());
-			}
-			obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
-		}else{
-			obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
-		}
-		return obj;
-	}
+
 	/**
 	 * 根据名称得到Bean对象
 	 * @param name
@@ -295,55 +261,5 @@ public class BeanFactoryContext extends ContextInitializer implements BeanFactor
 		return beansTypesMap;
 	}
 
-	/**
-	 * 添加BeanBeforeProcessor
-	 * @param beanBeforeProcessor
-	 */
-	public void addBeanBeforeProcessor(BeanBeforeProcessor beanBeforeProcessor){
-		beanBeforeProcessors.add(beanBeforeProcessor);
-	}
-	/**
-	 * 添加BeanPostProcessor
-	 * @param beanPostProcessor
-	 */
-	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
-		beanPostProcessors.add(beanPostProcessor);
-		Collections.sort(this.getBeanPostProcessors(), new Comparator<BeanPostProcessor>() {
-			@Override
-			public int compare(BeanPostProcessor o1, BeanPostProcessor o2) {
-				return o1.getOrder()-o2.getOrder();
-			}
-		});
-	}
-	public List<BeanBeforeProcessor> getBeanBeforeProcessors(){
-		return beanBeforeProcessors;
-	}
-	public List<BeanPostProcessor> getBeanPostProcessors(){
-		return beanPostProcessors;
-	}
 
-	/**
-	 * 处理Bean对象的Processor
-	 * @param bean
-	 * @param beanDefinition
-	 * @return
-	 */
-	private void doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
-		for(BeanBeforeProcessor beanBeforeProcessor:this.getBeanBeforeProcessors()){
-			beanBeforeProcessor.process(bean,beanDefinition);
-		}
-	}
-	/**
-	 * 处理Bean对象的Processor
-	 */
-	private Object doBeanPostProcessor(Object bean){
-		Object obj=bean;
-		if(obj==null){
-			return null;
-		}
-		for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
-			obj=beanPostProcessor.process(obj);
-		}
-		return obj;
-	}
 }
