@@ -2,27 +2,43 @@ package com.jbosframework.context.configuration;
 
 import com.jbosframework.core.io.ClassPathResource;
 import com.jbosframework.core.io.Resource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * YamlConfig
- * @author youfu.wang
- * @date 2020-10-10
- */
 
-public class YamlConfig {
+/**
+ * Configuration
+ * @author youfu.wang
+ * @version 1.0
+ */
+public class YamlConfiguration extends Configuration {
+    private static Log log= LogFactory.getLog(YamlConfiguration.class);
     private String configLocation;
-    private static Map<String, Object> properties=Collections.synchronizedMap(new LinkedHashMap<String,Object>());
-    private Environment environment;
+    private static Map<String, Object> properties= Collections.synchronizedMap(new LinkedHashMap<String,Object>());
+    private Environment environment=new Environment();
+    public static final String CTX_PROPERTY_PROFILES_ACTIVE="jbos.profiles.active";
+    public static final String CTX_PROPERTY_CLASSPATH="jbos.classpath";
     /**
      * 构造方法
      */
-    public YamlConfig(){
+    public YamlConfiguration(){
         configLocation="jbosContext";
+        this.load();
+    }
+
+    /**
+     * 构造方法
+     * @param configLocation
+     */
+    public YamlConfiguration(String configLocation){
+        this.configLocation=configLocation;
     }
     /**
      * 设置上下文环境
@@ -38,27 +54,32 @@ public class YamlConfig {
         return this.environment;
     }
     /**
-     * 构造方法
-     * @param configLocation
+     * 加载配置属性
      */
-    public YamlConfig(String configLocation){
-        this.configLocation=configLocation;
+    public void load() {
+        Resource resource=new ClassPathResource(configLocation+".yml");
+        this.load(resource);
+        try {
+            String configClassPath=resource.getFile().getParentFile().getAbsolutePath();
+            this.putContextProperty(YamlConfiguration.CTX_PROPERTY_CLASSPATH,configClassPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /**
      * 加载配置属性
      */
-    public void load(Resource resource){
+    private void load(Resource resource){
         //加载主配置
         properties=this.getConfigProperties(resource);
         String activeProfile="";
-        if(this.getValue(Configuration.CTX_PROPERTY_PROFILES_ACTIVE)!=null){
-            activeProfile=String.valueOf(this.getValue(Configuration.CTX_PROPERTY_PROFILES_ACTIVE));
+        if(this.getValue(YamlConfiguration.CTX_PROPERTY_PROFILES_ACTIVE)!=null){
+            activeProfile=String.valueOf(this.getValue(YamlConfiguration.CTX_PROPERTY_PROFILES_ACTIVE));
         }
         this.environment.setActiveProfile(activeProfile);
         //加载Profile配置
         this.loadProfileConfig(activeProfile);
     }
-
     /**
      * 得到配置属性
      * @param resource
@@ -73,7 +94,6 @@ public class YamlConfig {
         }
         return configPros;
     }
-
     /**
      * 加载Profile配置
      * @param activeProfile
@@ -95,22 +115,56 @@ public class YamlConfig {
         }
     }
     /**
+     * 注入上下文属性
+     * @param name
+     * @param value
+     */
+    public void putContextProperty(String name,Object value){
+        if(name==null){
+            return;
+        }
+        this.setValue(name,value,properties);
+    }
+
+    /**
      * 设置属性值
      * @param key
      * @param value
      */
-    public void setValue(String key,Object value){
-        properties.put(key,value);
+    private void setValue(String key,Object value, Map<String,Object> yamlMap){
+        if(key==null){
+            return;
+        }
+        String[] keys = key.split("[.]");
+        Object proValue= yamlMap.get(keys[0]);
+        if(keys.length>1&&proValue instanceof Map){
+            setValue(key.substring(key.indexOf(".")+1),value,( Map<String, Object>)proValue);
+        }else{
+            yamlMap.put(key,value);
+        }
+    }
+
+    /**
+     * 得到上下文属性
+     * @param name
+     * @return
+     */
+    public Object getContextProperty(String name){
+        Object value=null;
+        value=this.getValue(name);
+        if(value==null){
+            return "";
+        }
+        return value;
     }
     /**
      * 得到属性值
      * @param key
      * @return
      */
-    public Object getValue(String key){
-       return this.getValue(key,properties);
+    private Object getValue(String key){
+        return this.getValue(key,properties);
     }
-
     /**
      * 得到属性值
      * @param key

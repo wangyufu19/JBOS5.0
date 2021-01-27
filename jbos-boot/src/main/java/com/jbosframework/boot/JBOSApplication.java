@@ -1,5 +1,6 @@
 package com.jbosframework.boot;
 
+import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
@@ -7,7 +8,7 @@ import com.jbosframework.boot.autoconfig.transaction.TransactionBeanProcessor;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.configuration.Configuration;
+import com.jbosframework.context.configuration.YamlConfiguration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AspectProxyContext;
 import com.jbosframework.transaction.annotation.EnableTransactionManager;
@@ -37,7 +38,7 @@ public class JBOSApplication {
      */
     private void prepareContext(String... args){
         //初始化上下文配置
-        Configuration configuration=new Configuration();
+        Configuration configuration=new YamlConfiguration();
         ctx=new AnnotationApplicationContext(configuration);
         JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
         if(jbosBootApplication!=null){

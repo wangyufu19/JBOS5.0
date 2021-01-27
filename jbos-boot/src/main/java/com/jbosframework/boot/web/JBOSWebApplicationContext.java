@@ -2,6 +2,7 @@ package com.jbosframework.boot.web;
 
 import com.jbosframework.boot.web.servlet.TomcatServletWebServer;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.configuration.YamlConfiguration;
 import com.jbosframework.web.context.WebAnnotationApplicationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +27,7 @@ public class JBOSWebApplicationContext {
     }
     public void onStartup(){
         String contextPath="";
-        String classPath=applicationContext.getContextConfiguration().getConfigClassPath();
+        String classPath=String.valueOf(applicationContext.getContextConfiguration().getContextProperty(YamlConfiguration.CTX_PROPERTY_CLASSPATH));
         if(applicationContext.getContextConfiguration().getContextProperty(CTX_PROPERTY_SERVER_TOMCAT_PORT)!=null){
             port=Integer.parseInt(String.valueOf(applicationContext.getContextConfiguration().getContextProperty(CTX_PROPERTY_SERVER_TOMCAT_PORT)));
         }
