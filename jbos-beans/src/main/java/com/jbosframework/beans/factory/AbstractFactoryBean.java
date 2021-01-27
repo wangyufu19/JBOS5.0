@@ -1,14 +1,9 @@
 package com.jbosframework.beans.factory;
 
-import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.beans.config.*;
-import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -16,7 +11,7 @@ import java.util.*;
  * @author youfu.wang
  * @version 5.0
  */
-public abstract class AbstractFactoryBean implements BeanFactory{
+public abstract class AbstractFactoryBean implements  BeanFactory{
     private static final Log log= LogFactory.getLog(AbstractFactoryBean.class);
 
     private static List<BeanBeforeProcessor> beanBeforeProcessors= Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
