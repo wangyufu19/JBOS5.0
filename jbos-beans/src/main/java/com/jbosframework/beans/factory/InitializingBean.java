@@ -6,5 +6,5 @@ package com.jbosframework.beans.factory;
  */
 public interface InitializingBean {
 
-    void afterPropertiesSet() throws Exception;
+    void afterPropertiesSet(Object obj) throws Exception;
 }

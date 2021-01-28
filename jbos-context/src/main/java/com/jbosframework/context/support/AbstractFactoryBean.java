@@ -1,9 +1,18 @@
-package com.jbosframework.beans.factory;
+package com.jbosframework.context.support;
 
+import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.beans.config.*;
+import com.jbosframework.beans.factory.BeanFactory;
+import com.jbosframework.beans.factory.BeanInstanceUtils;
+import com.jbosframework.beans.factory.InitializingBean;
+import com.jbosframework.context.configuration.Configuration;
+import com.jbosframework.core.jepl.JEPL;
 import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -11,7 +20,7 @@ import java.util.*;
  * @author youfu.wang
  * @version 5.0
  */
-public abstract class AbstractFactoryBean implements  BeanFactory{
+public abstract class AbstractFactoryBean implements InitializingBean,BeanFactory {
     private static final Log log= LogFactory.getLog(AbstractFactoryBean.class);
 
     private static List<BeanBeforeProcessor> beanBeforeProcessors= Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
@@ -19,7 +28,11 @@ public abstract class AbstractFactoryBean implements  BeanFactory{
     private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new LinkedList<BeanPostProcessor>());
 
     public abstract Map<String,Object> getSingletonInstances();
-
+    /**
+     * 得到上下文配置
+     * @return
+     */
+    public abstract Configuration getContextConfiguration();
     /**
      * 初始化Bean
      * @param beanDefinition
@@ -37,9 +50,11 @@ public abstract class AbstractFactoryBean implements  BeanFactory{
             if (beanDefinition.isMethodBean()){
                 obj=this.doCreateMethodBean(beanDefinition);
             }else{
-                obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+                obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
             }
         }
+        //初始化Bean
+        this.afterPropertiesSet(obj);
         //执行初始化方法
         //执行BeanBeforeProcessor
         this.doBeanBeforeProcessor(obj,beanDefinition);
@@ -47,6 +62,39 @@ public abstract class AbstractFactoryBean implements  BeanFactory{
             this.putBean(beanDefinition.getName(),obj);
         }
         return obj;
+    }
+    public void afterPropertiesSet(Object obj){
+        Class<?> cls=null;
+        if (obj==null){
+            return;
+        }
+        cls=obj.getClass();
+        Field[] fields=cls.getDeclaredFields();
+        if(fields==null) {
+            return;
+        }
+        InjectionMetadata injectionMetadata=new InjectionMetadata(this);
+        for(int i=0;i<fields.length;i++) {
+            Value valueAnnotation=fields[i].getDeclaredAnnotation(Value.class);
+            if(valueAnnotation!=null){
+                //校验字段注解是否用在了static方法上
+                if (Modifier.isStatic(fields[i].getModifiers())) {
+                    if (log.isWarnEnabled()) {
+                        log.warn("Field com.jbosframework.beans.annotation is not supported on static fields: " + fields[i].getName());
+                    }
+                    return;
+                }
+                Object fieldValue=null;
+                String s1;
+                s1=valueAnnotation.value();
+                //判断值引用JEPL表达式的值
+                if(JEPL.matches(s1)){
+                    s1=s1.replace(JEPL.JEPL_PATTERN_PREFIX, "").replace(JEPL.JEPL_PATTERN_SUFFIX, "");
+                    fieldValue=this.getContextConfiguration().getContextProperty(s1);
+                    injectionMetadata.inject(obj,fields[i],fieldValue);
+                }
+            }
+        }
     }
     /**
      * 创建方法Bean
