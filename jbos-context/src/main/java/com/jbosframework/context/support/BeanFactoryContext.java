@@ -169,10 +169,39 @@ public class BeanFactoryContext extends AbstractFactoryBean{
 		for(Map.Entry<String,BeanDefinition> entry:beanDefinitions.entrySet()){
 			BeanDefinition beanDefinition=entry.getValue();
 			//初始化Bean
-			this.initBean(beanDefinition);
+			Object obj=this.initBean(beanDefinition);
+            //执行初始化方法
 		}
 	}
-
+    /**
+     * 初始化Bean
+     * @param beanDefinition
+     * @return
+     */
+    private Object initBean(BeanDefinition beanDefinition){
+        Object obj=null;
+        if(beanDefinition==null){
+            return null;
+        }
+        //Bean实例化
+        if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
+            obj=getSingletonInstances().get(beanDefinition.getName());
+        }else{
+            if (beanDefinition.isMethodBean()){
+                obj=this.doCreateMethodBean(beanDefinition);
+            }else{
+                obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
+            }
+        }
+        //初始化Bean
+        this.afterPropertiesSet(obj);
+        //执行BeanBeforeProcessor
+        this.doBeanBeforeProcessor(obj,beanDefinition);
+        if(beanDefinition.isSingleton()){
+            this.putBean(beanDefinition.getName(),obj);
+        }
+        return obj;
+    }
 	/**
 	 * 根据名称得到Bean对象
 	 * @param name
@@ -260,6 +289,4 @@ public class BeanFactoryContext extends AbstractFactoryBean{
 		}
 		return beansTypesMap;
 	}
-
-
 }

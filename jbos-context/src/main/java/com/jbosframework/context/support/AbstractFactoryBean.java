@@ -26,43 +26,12 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
     private static List<BeanBeforeProcessor> beanBeforeProcessors= Collections.synchronizedList(new ArrayList<BeanBeforeProcessor>());
 
     private static List<BeanPostProcessor> beanPostProcessors=Collections.synchronizedList(new LinkedList<BeanPostProcessor>());
-
-    public abstract Map<String,Object> getSingletonInstances();
     /**
      * 得到上下文配置
      * @return
      */
     public abstract Configuration getContextConfiguration();
-    /**
-     * 初始化Bean
-     * @param beanDefinition
-     * @return
-     */
-    public Object initBean(BeanDefinition beanDefinition){
-        Object obj=null;
-        if(beanDefinition==null){
-            return null;
-        }
-        //Bean实例化
-        if(this.getSingletonInstances().containsKey(beanDefinition.getName())){
-            obj=getSingletonInstances().get(beanDefinition.getName());
-        }else{
-            if (beanDefinition.isMethodBean()){
-                obj=this.doCreateMethodBean(beanDefinition);
-            }else{
-                obj= BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
-            }
-        }
-        //初始化Bean
-        this.afterPropertiesSet(obj);
-        //执行初始化方法
-        //执行BeanBeforeProcessor
-        this.doBeanBeforeProcessor(obj,beanDefinition);
-        if(beanDefinition.isSingleton()){
-            this.putBean(beanDefinition.getName(),obj);
-        }
-        return obj;
-    }
+
     public void afterPropertiesSet(Object obj){
         Class<?> cls=null;
         if (obj==null){
@@ -101,7 +70,7 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
      * @param beanDefinition
      * @return
      */
-    private Object doCreateMethodBean(BeanDefinition beanDefinition){
+    public Object doCreateMethodBean(BeanDefinition beanDefinition){
         Object obj=null;
         Object parentObj=this.getBean(beanDefinition.getParentName());
         MethodMetadata methodMetadata=beanDefinition.getMethodMetadata();
@@ -150,7 +119,7 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
      * @param beanDefinition
      * @return
      */
-    private void doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
+    public void doBeanBeforeProcessor(Object bean,BeanDefinition beanDefinition){
         for(BeanBeforeProcessor beanBeforeProcessor:this.getBeanBeforeProcessors()){
             beanBeforeProcessor.process(bean,beanDefinition);
         }
