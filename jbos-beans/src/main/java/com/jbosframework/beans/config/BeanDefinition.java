@@ -15,6 +15,8 @@ public class BeanDefinition extends BeanPropertyAccessor {
 	private boolean isMethodBean=false;
 	private MethodMetadata methodMetadata;
 	private String scope;
+	private String initMethod;
+
 	private Annotation[] annotations;
 
 	public BeanDefinition(){	
@@ -87,6 +89,12 @@ public class BeanDefinition extends BeanPropertyAccessor {
 		return this.parentName;
 	}
 
+	public void setInitMethod(String initMethod){
+		this.initMethod=initMethod;
+	}
+	public String getInitMethod(){
+		return this.initMethod;
+	}
 	public Annotation[] getAnnotations() {
 		return annotations;
 	}

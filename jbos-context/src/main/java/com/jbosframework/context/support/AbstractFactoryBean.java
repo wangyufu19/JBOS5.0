@@ -77,7 +77,11 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
         if(methodMetadata.getMethodParameters().length>0){
             Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
             for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
-                parameterValues[i]=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
+                Object refObj=this.getBean(methodMetadata.getMethodParameters()[i].getName());
+                if(refObj==null){
+                    refObj=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
+                }
+                parameterValues[i]=refObj;
             }
             obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
         }else{
@@ -86,6 +90,17 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
         return obj;
     }
 
+    /**
+     * 调用Bean初始化方法
+     * @param beanDefinition
+     */
+    public void invokeBeanMethod(BeanDefinition beanDefinition){
+        String initMethod=beanDefinition.getInitMethod();
+        if(initMethod!=null&&!"".equals(initMethod)){
+            Object parentObj=this.getBean(beanDefinition.getParentName());
+            JBOSClassCaller.call(parentObj,initMethod);
+        }
+    }
     /**
      * 添加BeanBeforeProcessor
      * @param beanBeforeProcessor

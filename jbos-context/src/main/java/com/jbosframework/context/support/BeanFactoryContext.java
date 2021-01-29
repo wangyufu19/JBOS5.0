@@ -8,7 +8,6 @@ import com.jbosframework.context.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 /**
  * BeanFactoryContext
  * @author youfu.wang
@@ -86,7 +85,6 @@ public class BeanFactoryContext extends AbstractFactoryBean{
                 beanDefinitions.put(beanDefinition.getId(), beanDefinition);
             }
         }
-        beanDefinitions.put(beanDefinition.getClassName(),beanDefinition);
 	}
 	/**
 	 * 销毁Bean对象内存
@@ -171,6 +169,7 @@ public class BeanFactoryContext extends AbstractFactoryBean{
 			//初始化Bean
 			Object obj=this.initBean(beanDefinition);
             //执行初始化方法
+			this.invokeBeanMethod(beanDefinition);
 		}
 	}
     /**

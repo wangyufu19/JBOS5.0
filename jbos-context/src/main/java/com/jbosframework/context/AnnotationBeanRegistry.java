@@ -77,6 +77,7 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     if(scope!=null){
                         annotationBean.setScope(scope.value());
                     }
+                    annotationBean.setInitMethod(((Bean)annotation).initMethod());
                     annotationBean.setAnnotations(annotations);
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setIsMethodBean(true);
@@ -84,6 +85,9 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     if(methods[i].getReturnType().isInterface()){
                         this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
                     }
+                    this.getBeanFactory().putBeanDefinition(annotationBean);
+                    annotationBean.setId(annotationBean.getClassName());
+                    annotationBean.setName(annotationBean.getClassName());
                     this.getBeanFactory().putBeanDefinition(annotationBean);
                 }
             }
