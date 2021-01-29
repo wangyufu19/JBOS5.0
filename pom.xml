@@ -21,6 +21,7 @@
         <module>jbos-test</module>
         <module>jbos-application</module>
         <module>jbos-tx</module>
+        <module>jbos-schedule</module>
     </modules>
     <name>jbos Maven Webapp</name>
     <url>http://maven.apache.org</url>
