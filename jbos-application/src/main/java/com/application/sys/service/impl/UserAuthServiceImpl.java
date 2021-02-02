@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 用户认证服务类
  */
-//@Service
+@Service
 public class UserAuthServiceImpl implements UserAuthService {
     @Mapper
     private UserAuthMapper userAuthMapper;

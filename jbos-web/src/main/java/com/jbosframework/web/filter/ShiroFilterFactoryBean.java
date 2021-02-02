@@ -1,5 +1,6 @@
 package com.jbosframework.web.filter;
 
+import com.jbosframework.context.ApplicationContext;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
@@ -32,6 +33,7 @@ public class ShiroFilterFactoryBean extends AbstractShiroFilter {
     public void setFilterChainMap(Map<String, String> filterChainMap){
         this.filterChainMap=filterChainMap;
     }
+
     private FilterChainManager createFilterChainManager(ServletRequest servletRequest){
         DefaultFilterChainManager manager=new DefaultFilterChainManager();
         if(this.filters!=null){

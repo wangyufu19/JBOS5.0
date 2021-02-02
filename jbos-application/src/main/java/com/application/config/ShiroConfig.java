@@ -2,8 +2,8 @@ package com.application.config;
 
 import com.application.common.shiro.AuthRealm;
 import com.application.common.shiro.AuthTokenFilter;
-import com.application.sys.service.UserAuthService;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.web.filter.ShiroFilterFactoryBean;
@@ -25,12 +25,14 @@ public class ShiroConfig {
     private String contextPath;
 
     @Bean
-    public SecurityManager securityManager(AuthRealm authRealm,UserAuthService userAuthService) {
+    @Scope(value=Scope.SCOPE_PROTOTYPE)
+    public SecurityManager securityManager(AuthRealm authRealm) {
         DefaultWebSecurityManager securityManager=new DefaultWebSecurityManager();
         securityManager.setRealm(authRealm);
         return securityManager;
     }
     @Bean("shiroFilter")
+    @Scope(value=Scope.SCOPE_PROTOTYPE)
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean=new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);

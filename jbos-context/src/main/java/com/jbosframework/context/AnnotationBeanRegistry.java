@@ -73,7 +73,7 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     annotationBean.setId(id);
                     annotationBean.setName(id);
                     annotationBean.setClassName(methods[i].getReturnType().getName());
-                    Scope scope=cls.getAnnotation(Scope.class);
+                    Scope scope=methods[i].getDeclaredAnnotation(Scope.class);
                     if(scope!=null){
                         annotationBean.setScope(scope.value());
                     }
