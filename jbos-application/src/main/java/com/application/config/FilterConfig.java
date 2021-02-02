@@ -14,14 +14,14 @@ import com.jbosframework.web.filter.DelegatingFilterProxy;
 @Configuration
 public class FilterConfig {
 
-    @Bean
+    @Bean("shiroFilterRegistry")
     public FilterRegistryBean shiroFilterRegistry(){
         FilterRegistryBean filterRegistryBean=new FilterRegistryBean();
         filterRegistryBean.setFilter(new DelegatingFilterProxy("shiroFilter"));
         filterRegistryBean.setUrlPattern("/*");
         return filterRegistryBean;
     }
-    @Bean
+    @Bean("characterEncodingFilter")
     public FilterRegistryBean characterEncodingFilter(){
         FilterRegistryBean filterRegistryBean=new FilterRegistryBean();
         filterRegistryBean.setFilter(new CharacterEncodingFilter());

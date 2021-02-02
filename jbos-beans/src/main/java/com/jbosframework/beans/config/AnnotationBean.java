@@ -8,7 +8,7 @@ import com.jbosframework.utils.StringUtils;
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationBean extends BeanDefinition{
+public class AnnotationBean extends BeanDefinition implements Cloneable{
 
 	public static AnnotationBean createAnnotationBean(String id,Class<?> cls){
 		AnnotationBean annotationBean=new AnnotationBean();
@@ -21,6 +21,15 @@ public class AnnotationBean extends BeanDefinition{
 		Scope scope=cls.getAnnotation(Scope.class);
 		if(scope!=null){
 			annotationBean.setScope(scope.value());
+		}
+		return annotationBean;
+	}
+	public Object clone() {
+		AnnotationBean annotationBean = null;
+		try{
+			annotationBean = (AnnotationBean)super.clone();
+		}catch(CloneNotSupportedException e) {
+			e.printStackTrace();
 		}
 		return annotationBean;
 	}

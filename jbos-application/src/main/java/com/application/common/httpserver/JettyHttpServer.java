@@ -31,7 +31,7 @@ public class JettyHttpServer {
      * 启动一个HTTP服务
      * @throws Exception
      */
-    public void start() throws Exception {
+    public void start() {
         _server = new Server();
         // HTTP connector
         ServerConnector http = new ServerConnector(_server);
@@ -42,8 +42,13 @@ public class JettyHttpServer {
         _server.addConnector(http);
         // Set a handler
         _server.setHandler(_jettyHandler);
-        _server.start();
-        _server.join();
+        try {
+            _server.start();
+            _server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

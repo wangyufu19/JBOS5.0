@@ -68,7 +68,7 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     AnnotationBean annotationBean=new AnnotationBean();
                     String id=((Bean)annotation).value();
                     if(StringUtils.isNUll(id)) {
-                        id=methods[i].getName();
+                        id=methods[i].getReturnType().getName();
                     }
                     annotationBean.setId(id);
                     annotationBean.setName(id);
@@ -82,12 +82,10 @@ public class AnnotationBeanRegistry extends BeanRegistry {
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setIsMethodBean(true);
                     annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
+
                     if(methods[i].getReturnType().isInterface()){
                         this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
                     }
-                    this.getBeanFactory().putBeanDefinition(annotationBean);
-                    annotationBean.setId(annotationBean.getClassName());
-                    annotationBean.setName(annotationBean.getClassName());
                     this.getBeanFactory().putBeanDefinition(annotationBean);
                 }
             }

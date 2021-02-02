@@ -169,7 +169,7 @@ public class BeanFactoryContext extends AbstractFactoryBean{
 			//初始化Bean
 			Object obj=this.initBean(beanDefinition);
             //执行初始化方法
-			this.invokeBeanMethod(beanDefinition);
+			this.invokeBeanMethod(obj,beanDefinition);
 		}
 	}
     /**
