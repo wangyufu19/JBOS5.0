@@ -2,6 +2,7 @@ package com.application.config;
 
 import com.application.common.shiro.AuthRealm;
 import com.application.common.shiro.AuthTokenFilter;
+import com.application.sys.service.UserAuthService;
 import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ public class ShiroConfig {
     private String contextPath;
 
     @Bean
-    public SecurityManager securityManager(AuthRealm authRealm) {
+    public SecurityManager securityManager(AuthRealm authRealm,UserAuthService userAuthService) {
         DefaultWebSecurityManager securityManager=new DefaultWebSecurityManager();
         securityManager.setRealm(authRealm);
         return securityManager;

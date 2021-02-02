@@ -1,17 +1,20 @@
 package com.application.common.shiro;
 
 import com.application.common.UserObject;
+import com.application.sys.mapper.UserTokenMapper;
 import com.application.sys.pojo.UserToken;
 import com.application.sys.service.UserAuthService;
 import com.application.sys.service.UserTokenService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.utils.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import javax.sql.DataSource;
 import java.util.Map;
 
 /**

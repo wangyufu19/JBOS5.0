@@ -29,8 +29,7 @@ public class UserTokenServiceImpl  implements UserTokenService {
     private UserMgrService userMgrService;
     @Mapper
     private UserTokenMapper userTokenMapper;
-    @Autowired
-    private DataSource dataSource;
+
     /**
      * 创建用户Token
      * @param userId
