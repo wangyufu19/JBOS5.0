@@ -1,6 +1,5 @@
 package com.jbosframework.web.filter;
 
-import com.jbosframework.context.ApplicationContext;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.FilterChainManager;
