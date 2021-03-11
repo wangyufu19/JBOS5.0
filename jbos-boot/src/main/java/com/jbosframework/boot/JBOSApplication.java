@@ -56,7 +56,7 @@ public class JBOSApplication {
                 ctx.addBeanPostProcessor(transactionBeanProcessor);
             }
         }
-
+        //添加配置属性检查器
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);
         ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
