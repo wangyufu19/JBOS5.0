@@ -79,8 +79,7 @@ public class AnnotationAspectjProcessor implements BeanPostProcessor {
                 String pointcut = obj.getClass().getName() + "." + method.getName();
                 if (this.aspectProxyContext.contains(pointcut)) {
                     aspectMetadata = this.aspectProxyContext.getMetadata(pointcut);
-                    aspectMetadata.getAdviceConfig().getMethodBeforeAdvice().setAdviceMethod(method.getName());
-                    aspectMetadata.getAdviceConfig().getMethodAfterAdvice().setAdviceMethod(method.getName());
+                    aspectMetadata.getAdviceConfig().getMethodCaller().setAdviceMethod(method.getName());
                     bool = true;
                     break;
                 }

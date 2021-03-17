@@ -43,6 +43,7 @@ public class AspectProxyRegistry extends BeanRegistry {
         }
         AspectMetadata metadata=new AspectMetadata();
         AdviceConfig adviceConfig=new AdviceConfig();
+        AspectjMethodAdvice aspectjMethodAdvice=new AspectjMethodAdvice();
         for(int i=0;i<methods.length;i++) {
             Annotation[] annotations = methods[i].getAnnotations();
             if (annotations == null) {
@@ -60,8 +61,7 @@ public class AspectProxyRegistry extends BeanRegistry {
                     }
                     AspectJMethodInvocation aspectJPointcut=new AspectJMethodInvocation(cls,methods[i],null);
                     AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice=new AspectjMethodBeforeAdvice(aspectJPointcut);
-                    adviceConfig.setMethodBeforeAdvice(aspectjMethodBeforeAdvice);
-
+                    aspectjMethodAdvice.setAspectjMethodBeforeAdvice(aspectjMethodBeforeAdvice);
                 }else if(annotations[j] instanceof After){
                     After pointcut=(After)annotations[j];
                     if(StringUtils.isNotNUll(pointcut.value())){
@@ -69,10 +69,11 @@ public class AspectProxyRegistry extends BeanRegistry {
                     }
                     AspectJMethodInvocation aspectJPointcut=new AspectJMethodInvocation(cls,methods[i],null);
                     AspectjMethodAfterAdvice aspectjMethodAfterAdvice=new AspectjMethodAfterAdvice(aspectJPointcut);
-                    adviceConfig.setMethodAfterAdvice(aspectjMethodAfterAdvice);
+                    aspectjMethodAdvice.setAspectjMethodAfterAdvice(aspectjMethodAfterAdvice);
                 }
             }
         }
+        adviceConfig.setMethodCaller(aspectjMethodAdvice);
         metadata.setAdviceConfig(adviceConfig);
         if(!"".equals(metadata.getPointcut())){
             log.debug("******注入切面类["+cls.getName()+"]");

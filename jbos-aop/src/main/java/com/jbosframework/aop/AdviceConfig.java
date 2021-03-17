@@ -15,13 +15,10 @@ public class AdviceConfig  {
      */
     private Class<?>[] proxyInterfaces;
     /**
-     * 完成前
+     * 方法调用器
      */
-    private MethodBeforeAdvice methodBeforeAdvice;
-    /**
-     * 完成后
-     */
-    private MethodAfterAdvice methodAfterAdvice;
+    private MethodCaller methodCaller;
+
     /**
      * 得到代理实现类
      * @return
@@ -51,20 +48,12 @@ public class AdviceConfig  {
         this.proxyInterfaces = proxyInterfaces;
     }
 
-    public MethodBeforeAdvice getMethodBeforeAdvice() {
-        return methodBeforeAdvice;
+    public MethodCaller getMethodCaller() {
+        return methodCaller;
     }
 
-    public void setMethodBeforeAdvice(MethodBeforeAdvice methodBeforeAdvice) {
-        this.methodBeforeAdvice = methodBeforeAdvice;
-    }
-
-    public MethodAfterAdvice getMethodAfterAdvice() {
-        return methodAfterAdvice;
-    }
-
-    public void setMethodAfterAdvice(MethodAfterAdvice methodAfterAdvice) {
-        this.methodAfterAdvice = methodAfterAdvice;
+    public void setMethodCaller(MethodCaller methodCaller) {
+        this.methodCaller = methodCaller;
     }
 
 }

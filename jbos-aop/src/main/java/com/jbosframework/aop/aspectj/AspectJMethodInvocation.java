@@ -1,6 +1,5 @@
 package com.jbosframework.aop.aspectj;
 
-import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.utils.JBOSClassloader;
 import org.aopalliance.intercept.MethodInvocation;
 

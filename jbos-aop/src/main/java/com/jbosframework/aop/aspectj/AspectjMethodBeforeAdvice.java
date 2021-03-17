@@ -31,12 +31,16 @@ public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
         this.adviceMethod = adviceMethod;
     }
 
-    public void before(Object target, Method method, Object[] args) throws Throwable {
+    public void before(Object target, Method method, Object[] args)  {
         if(method==null){
             return;
         }
         if(this.adviceMethod.equals(method.getName())){
-            joinpoint.proceed();
+            try {
+                joinpoint.proceed();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 }

@@ -3,13 +3,13 @@ package com.jbosframework.schedule.annotation;
 import java.lang.annotation.*;
 
 /**
- * Async
+ * EnableAsync
  * @author youfu.wang
  * @date 2021-01-29
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface Async {
-    public String value() default "";
+@Target({ElementType.TYPE})
+public @interface EnableAsync {
+    public boolean proxyTargetClass () default true;
 }

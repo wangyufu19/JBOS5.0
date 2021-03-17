@@ -36,6 +36,12 @@
             <version>5.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jbosframework.schedule</groupId>
+            <artifactId>jbos-schedule</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

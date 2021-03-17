@@ -11,7 +11,26 @@
     <groupId>com.jbosframework.schedule</groupId>
     <artifactId>jbos-schedule</artifactId>
     <packaging>jar</packaging>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.jbosframework.beans</groupId>
+            <artifactId>jbos-beans</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.aop</groupId>
+            <artifactId>jbos-aop</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jbosframework.aop</groupId>
+            <artifactId>jbos-aop</artifactId>
+            <version>5.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>

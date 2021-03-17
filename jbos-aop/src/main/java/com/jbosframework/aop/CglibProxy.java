@@ -1,5 +1,6 @@
 package com.jbosframework.aop;
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;  
@@ -33,36 +34,85 @@ public class CglibProxy implements AopProxy{
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(this.adviceConfig.getTarget().getClass());
 		enhancer.setCallback(new CglibProxy.CglibMethodInterceptor(
-				this.adviceConfig.getTarget(),
-				this.adviceConfig.getMethodBeforeAdvice(),
-				this.adviceConfig.getMethodAfterAdvice()));
+				this.adviceConfig));
 		obj=enhancer.create();
 		return obj;
 	}
 	public class CglibMethodInterceptor implements MethodInterceptor{
-		private Object target;
-		private MethodBeforeAdvice methodBeforeAdvice;
-		private MethodAfterAdvice methodAfterAdvice;
+		private AdviceConfig adviceConfig;
 
-		public CglibMethodInterceptor(Object target,MethodBeforeAdvice methodBeforeAdvice,MethodAfterAdvice methodAfterAdvice){
-			this.target=target;
-			this.methodBeforeAdvice=methodBeforeAdvice;
-			this.methodAfterAdvice=methodAfterAdvice;
+		public CglibMethodInterceptor(AdviceConfig adviceConfig){
+			this.adviceConfig=adviceConfig;
 		}
 		@Override
-		public Object intercept(Object object, Method method, Object[] arg,
+		public Object intercept(Object object, Method method, Object[] args,
 								MethodProxy methodProxy) throws Throwable {
+			MethodCaller methodCaller=this.adviceConfig.getMethodCaller();
+			AdviceMethodCaller caller=new AdviceMethodCaller(methodProxy,methodCaller);
+			if(methodCaller.async()){
+				return caller;
+			}else{
+				return caller.call();
+			}
+		}
+	}
+	public class AdviceMethodCaller implements Callable<Object> {
+		private MethodProxy methodProxy;
+		private MethodCaller methodCaller;
+		private Object target;
+		private Object object;
+		private Method method;
+		private Object[] args;
+
+		public AdviceMethodCaller(MethodProxy methodProxy,MethodCaller methodCaller){
+			this.methodProxy=methodProxy;
+			this.methodCaller=methodCaller;
+		}
+
+		public Object getTarget() {
+			return target;
+		}
+
+		public void setTarget(Object target) {
+			this.target = target;
+		}
+
+		public Object getObject() {
+			return object;
+		}
+
+		public void setObject(Object object) {
+			this.object = object;
+		}
+
+		public Method getMethod() {
+			return method;
+		}
+
+		public void setMethod(Method method) {
+			this.method = method;
+		}
+
+		public Object[] getArgs() {
+			return args;
+		}
+
+		public void setArgs(Object[] args) {
+			this.args = args;
+		}
+
+		public Object call() throws Exception {
 			//调用前
-			if(this.methodBeforeAdvice!=null){
-				this.methodBeforeAdvice.before(object,method,arg);
+			methodCaller.before(object,method,args);
+			Object result = null;
+			try {
+				result = methodProxy.invoke(this.getTarget(),this.getArgs());
+			} catch (Throwable throwable) {
+				throwable.printStackTrace();
 			}
-			Object result = methodProxy.invoke(this.target,arg);
 			//调用后
-			if(this.methodAfterAdvice!=null){
-				this.methodAfterAdvice.after(object,method,arg);
-			}
+			methodCaller.after(object,method,args);
 			return result;
 		}
 	}
-
 }

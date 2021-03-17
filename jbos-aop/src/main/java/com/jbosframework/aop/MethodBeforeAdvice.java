@@ -10,5 +10,5 @@ import java.lang.reflect.Method;
  */
 public interface MethodBeforeAdvice extends MethodAdvice {
 
-    public void before(Object target,Method method,Object[] args) throws Throwable;
+    public void before(Object target,Method method,Object[] args) throws Exception;
 }
