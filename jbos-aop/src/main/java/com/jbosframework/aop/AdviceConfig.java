@@ -1,5 +1,7 @@
 package com.jbosframework.aop;
 
+import net.sf.cglib.proxy.MethodInterceptor;
+
 /**
  * AdviceConfig
  * @author youfu.wang
@@ -15,9 +17,9 @@ public class AdviceConfig  {
      */
     private Class<?>[] proxyInterfaces;
     /**
-     * 方法调用器
+     * 方法通知器
      */
-    private MethodCaller methodCaller;
+    private MethodAdvisor methodAdvisor;
 
     /**
      * 得到代理实现类
@@ -48,12 +50,13 @@ public class AdviceConfig  {
         this.proxyInterfaces = proxyInterfaces;
     }
 
-    public MethodCaller getMethodCaller() {
-        return methodCaller;
+
+    public MethodAdvisor getMethodAdvisor() {
+        return methodAdvisor;
     }
 
-    public void setMethodCaller(MethodCaller methodCaller) {
-        this.methodCaller = methodCaller;
+    public void setMethodAdvisor(MethodAdvisor methodAdvisor) {
+        this.methodAdvisor = methodAdvisor;
     }
 
 }

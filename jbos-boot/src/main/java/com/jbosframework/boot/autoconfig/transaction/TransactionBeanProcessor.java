@@ -9,6 +9,7 @@ import com.jbosframework.core.Order;
 import com.jbosframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import java.lang.reflect.Method;
 
 /**
@@ -61,8 +62,9 @@ public class TransactionBeanProcessor implements BeanPostProcessor {
         if(isTransactionalBean){
             AdviceConfig adviceConfig = new AdviceConfig();
             TransactionMethodAdvice transactionMethodAdvice=new TransactionMethodAdvice(this.beanFactory);
-            adviceConfig.setMethodCaller(transactionMethodAdvice);
+            transactionMethodAdvice.setTarget(obj);
             adviceConfig.setTarget(obj);
+            adviceConfig.setMethodAdvisor(transactionMethodAdvice);
             AopProxy aopProxy = new CglibProxy(adviceConfig);
             target=aopProxy.getProxy();
         }

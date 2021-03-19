@@ -1,7 +1,8 @@
 package com.jbosframework.aop.aspectj;
 
-import com.jbosframework.aop.MethodCaller;
-import com.jbosframework.beans.factory.BeanFactory;
+import com.jbosframework.aop.MethodAdvisor;
+import net.sf.cglib.proxy.MethodProxy;
+
 import java.lang.reflect.Method;
 
 /**
@@ -9,18 +10,15 @@ import java.lang.reflect.Method;
  * @author youfu.wang
  * @version 5.0
  */
-public class AspectjMethodAdvice extends MethodCaller {
+public class AspectjMethodAdvice extends MethodAdvisor {
 
     private AspectjMethodBeforeAdvice aspectjMethodBeforeAdvice;
 
 
     private AspectjMethodAfterAdvice aspectjMethodAfterAdvice;
-    private String adviceMethod;
 
 
-    public boolean async(){
-        return false;
-    }
+
     public AspectjMethodBeforeAdvice getAspectjMethodBeforeAdvice() {
         return aspectjMethodBeforeAdvice;
     }
@@ -37,26 +35,35 @@ public class AspectjMethodAdvice extends MethodCaller {
         this.aspectjMethodAfterAdvice = aspectjMethodAfterAdvice;
     }
 
-    public String getAdviceMethod() {
-        return adviceMethod;
+
+    @Override
+    public Object intercept(Object object, Method method, Object[] args,
+                            MethodProxy methodProxy) throws Throwable {
+        //调用前
+        this.before(object,method,args);
+        Object result = doIntercept(object,method,args,methodProxy);
+        //调用后
+        this.after(object,method,args);
+        return result;
     }
 
-    public void setAdviceMethod(String adviceMethod) {
-        this.adviceMethod = adviceMethod;
-    }
     public void before(Object target, Method method, Object[] args) throws Exception {
         if(method==null){
             return;
         }
-        aspectjMethodBeforeAdvice.setAdviceMethod(this.adviceMethod);
-        aspectjMethodBeforeAdvice.before(target,method,args);
+        if(this.getAdviceMethod().equals(method.getName())){
+            aspectjMethodBeforeAdvice.before(target,method,args);
+        }
+
 
     }
     public void after(Object target, Method method, Object[] args)  {
         if(method==null){
             return;
         }
-        aspectjMethodAfterAdvice.setAdviceMethod(this.adviceMethod);
-        aspectjMethodAfterAdvice.after(target,method,args);
+        if(this.getAdviceMethod().equals(method.getName())){
+            aspectjMethodAfterAdvice.after(target,method,args);
+        }
+
     }
 }

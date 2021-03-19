@@ -73,7 +73,7 @@ public class AspectProxyRegistry extends BeanRegistry {
                 }
             }
         }
-        adviceConfig.setMethodCaller(aspectjMethodAdvice);
+        adviceConfig.setMethodAdvisor(aspectjMethodAdvice);
         metadata.setAdviceConfig(adviceConfig);
         if(!"".equals(metadata.getPointcut())){
             log.debug("******注入切面类["+cls.getName()+"]");

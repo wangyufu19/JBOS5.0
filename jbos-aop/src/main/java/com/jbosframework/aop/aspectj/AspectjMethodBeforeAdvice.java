@@ -15,32 +15,21 @@ import java.lang.reflect.Method;
 public class AspectjMethodBeforeAdvice implements MethodBeforeAdvice {
     private static final Log log= LogFactory.getLog(AspectjMethodBeforeAdvice.class);
 
-    private String adviceMethod;
-
     private Joinpoint joinpoint;
 
     public AspectjMethodBeforeAdvice(Joinpoint joinpoint){
         this.joinpoint=joinpoint;
     }
 
-    public String getAdviceMethod() {
-        return adviceMethod;
-    }
-
-    public void setAdviceMethod(String adviceMethod) {
-        this.adviceMethod = adviceMethod;
-    }
 
     public void before(Object target, Method method, Object[] args)  {
         if(method==null){
             return;
         }
-        if(this.adviceMethod.equals(method.getName())){
-            try {
-                joinpoint.proceed();
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
+        try {
+            joinpoint.proceed();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 }

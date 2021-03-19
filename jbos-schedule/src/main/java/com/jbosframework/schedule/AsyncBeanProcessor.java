@@ -57,8 +57,9 @@ public class AsyncBeanProcessor implements BeanPostProcessor {
         if(isAsyncBean){
             AdviceConfig adviceConfig = new AdviceConfig();
             AsyncMethodAdvice asyncMethodAdvice=new AsyncMethodAdvice(this.beanFactory);
-            adviceConfig.setMethodCaller(asyncMethodAdvice);
+            asyncMethodAdvice.setTarget(obj);
             adviceConfig.setTarget(obj);
+            adviceConfig.setMethodAdvisor(asyncMethodAdvice);
             AopProxy aopProxy = new CglibProxy(adviceConfig);
             target=aopProxy.getProxy();
         }

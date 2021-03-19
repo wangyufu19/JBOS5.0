@@ -14,7 +14,7 @@ public class ThreadPoolTaskExecutor {
     private int maxPoolSize= Order.MAX;
     private long keepAliveSeconds=10;
     private int queueCapacity=Order.MAX;
-    private ThreadPoolExecutor executor;
+    private Executor executor;
 
     public int getCorePoolSize() {
         return corePoolSize;

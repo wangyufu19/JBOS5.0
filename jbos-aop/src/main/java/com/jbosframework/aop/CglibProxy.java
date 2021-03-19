@@ -1,7 +1,5 @@
 package com.jbosframework.aop;
 import java.lang.reflect.Method;
-import java.util.concurrent.Callable;
-
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;  
 import net.sf.cglib.proxy.MethodProxy;
@@ -33,8 +31,7 @@ public class CglibProxy implements AopProxy{
 		Object obj=null;
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(this.adviceConfig.getTarget().getClass());
-		enhancer.setCallback(new CglibProxy.CglibMethodInterceptor(
-				this.adviceConfig));
+		enhancer.setCallback(this.adviceConfig.getMethodAdvisor());
 		obj=enhancer.create();
 		return obj;
 	}
@@ -47,71 +44,8 @@ public class CglibProxy implements AopProxy{
 		@Override
 		public Object intercept(Object object, Method method, Object[] args,
 								MethodProxy methodProxy) throws Throwable {
-			MethodCaller methodCaller=this.adviceConfig.getMethodCaller();
-			AdviceMethodCaller caller=new AdviceMethodCaller(methodProxy,methodCaller);
-			if(methodCaller.async()){
-				return caller;
-			}else{
-				return caller.call();
-			}
-		}
-	}
-	public class AdviceMethodCaller implements Callable<Object> {
-		private MethodProxy methodProxy;
-		private MethodCaller methodCaller;
-		private Object target;
-		private Object object;
-		private Method method;
-		private Object[] args;
-
-		public AdviceMethodCaller(MethodProxy methodProxy,MethodCaller methodCaller){
-			this.methodProxy=methodProxy;
-			this.methodCaller=methodCaller;
-		}
-
-		public Object getTarget() {
-			return target;
-		}
-
-		public void setTarget(Object target) {
-			this.target = target;
-		}
-
-		public Object getObject() {
-			return object;
-		}
-
-		public void setObject(Object object) {
-			this.object = object;
-		}
-
-		public Method getMethod() {
-			return method;
-		}
-
-		public void setMethod(Method method) {
-			this.method = method;
-		}
-
-		public Object[] getArgs() {
-			return args;
-		}
-
-		public void setArgs(Object[] args) {
-			this.args = args;
-		}
-
-		public Object call() throws Exception {
-			//调用前
-			methodCaller.before(object,method,args);
 			Object result = null;
-			try {
-				result = methodProxy.invoke(this.getTarget(),this.getArgs());
-			} catch (Throwable throwable) {
-				throwable.printStackTrace();
-			}
-			//调用后
-			methodCaller.after(object,method,args);
+			result = methodProxy.invoke(this.adviceConfig.getTarget(),args);
 			return result;
 		}
 	}

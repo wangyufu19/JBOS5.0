@@ -1,10 +1,10 @@
 package com.jbosframework.boot;
 
+import com.jbosframework.boot.autoconfig.transaction.TransactionBeanProcessor;
 import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
-import com.jbosframework.boot.autoconfig.transaction.TransactionBeanProcessor;
 import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;

@@ -19,6 +19,10 @@ public class JBOSStarter {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
 		AsyncTaskConfig asyncTaskConfig=ctx.getBean(AsyncTaskConfig.class);
+		asyncTaskConfig.saveTrace();
+		log.info("=========================");
+		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
+		aspectInvoker.invoke();
     }
 
 }

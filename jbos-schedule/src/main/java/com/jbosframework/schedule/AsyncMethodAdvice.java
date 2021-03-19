@@ -1,45 +1,46 @@
 package com.jbosframework.schedule;
-import com.jbosframework.aop.MethodCaller;
+import com.jbosframework.aop.MethodAdvisor;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.schedule.annotation.Async;
+import com.jbosframework.schedule.concurrent.SimpleAsyncTaskExecutor;
+import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 /**
  * AsyncMethodAdvice
  * @author youfu.wang
  * @version 5.0
  */
-public class AsyncMethodAdvice extends MethodCaller{
+public class AsyncMethodAdvice extends MethodAdvisor {
     private static final Log log= LogFactory.getLog(AsyncMethodAdvice.class);
     private BeanFactory beanFactory;
-    private boolean asyncAdvice=true;
-    private String adviceMethod;
+
+
     public AsyncMethodAdvice(BeanFactory beanFactory){
         this.beanFactory=beanFactory;
     }
 
-    public boolean async(){
-        return asyncAdvice;
-    }
-    public void setAdviceMethod(String adviceMethod) {
-
-    }
-    public String getAdviceMethod(){
-        return adviceMethod;
-    }
-    public void before(Object target, Method method, Object[] args)  {
+    @Override
+    public Object intercept(Object object, Method method, Object[] args,
+                            MethodProxy methodProxy){
         Async async=method.getDeclaredAnnotation(Async.class);
         if(async!=null){
-
+            return SimpleAsyncTaskExecutor.getExecutor().submit(new Callable<Object>() {
+                @Override
+                public Object call(){
+                    try {
+                        return doIntercept(object,method,args,methodProxy);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    return null;
+                }
+            });
         }
-    }
-    public void after(Object target, Method method, Object[] args) {
-        Async async=method.getDeclaredAnnotation(Async.class);
-        if(async!=null){
-
-        }
+        return null;
     }
 }
