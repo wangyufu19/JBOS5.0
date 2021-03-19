@@ -18,7 +18,6 @@
         <module>jbos-utils</module>
         <module>jbos-web</module>
         <module>jbos-cache</module>
-        <module>jbos-test</module>
         <module>jbos-application</module>
         <module>jbos-tx</module>
         <module>jbos-schedule</module>

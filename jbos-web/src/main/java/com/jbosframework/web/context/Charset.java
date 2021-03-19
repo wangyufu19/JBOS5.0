@@ -2,7 +2,7 @@ package com.jbosframework.web.context;
 /**
  * Charset
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class Charset {
 	public static final String UTF8="utf-8";
