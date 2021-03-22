@@ -29,7 +29,7 @@ public class AsyncMethodAdvice extends MethodAdvisor {
                             MethodProxy methodProxy){
         Async async=method.getDeclaredAnnotation(Async.class);
         if(async!=null){
-            return SimpleAsyncTaskExecutor.getExecutor().submit(new Callable<Object>() {
+            return SimpleAsyncTaskExecutor.getExecutorService().submit(new Callable<Object>() {
                 @Override
                 public Object call(){
                     try {

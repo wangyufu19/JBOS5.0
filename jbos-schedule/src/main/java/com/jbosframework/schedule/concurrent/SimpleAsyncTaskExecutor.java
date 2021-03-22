@@ -9,7 +9,7 @@ import java.util.concurrent.*;
  * @version 5.0
  */
 public class SimpleAsyncTaskExecutor {
-    private static int corePoolSize=1;
+    private static int corePoolSize=10;
     private static int maxPoolSize= Order.MAX;
     private static long keepAliveSeconds=10;
     private static int queueCapacity=Order.MAX;
@@ -24,7 +24,7 @@ public class SimpleAsyncTaskExecutor {
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
     }
-    public static ExecutorService getExecutor() {
+    public static ExecutorService getExecutorService() {
         return SimpleThreadPoolTaskExecutorHolder.executor;
     }
 }
