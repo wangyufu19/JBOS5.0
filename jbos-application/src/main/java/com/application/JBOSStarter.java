@@ -24,6 +24,11 @@ public class JBOSStarter {
 		while(true){
 			Future<Boolean> result1=asyncTaskService.doTask1(i);
 			i++;
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 		}
 
 		//Future<Boolean> result2=asyncTaskConfig.doTask2();

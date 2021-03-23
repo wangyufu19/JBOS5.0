@@ -14,5 +14,5 @@ jbos:
   executor:
     corePoolSize: 4
     maxPoolSize: 10
-    keepAliveSeconds: 30
+    keepAliveSeconds: 60
     queueCapacity: 200

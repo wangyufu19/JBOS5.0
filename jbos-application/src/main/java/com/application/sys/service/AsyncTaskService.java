@@ -12,11 +12,6 @@ import java.util.concurrent.Future;
 public class AsyncTaskService {
     @Async("asyncExecutor")
     public Future<Boolean> doTask1(int i)  {
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         log.info("******doTask1="+i);
         return new AsyncResult<Boolean>(true);
     }
