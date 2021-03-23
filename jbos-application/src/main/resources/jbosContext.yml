@@ -10,3 +10,9 @@ jbos:
   mybatis:
     mapperLocations: classpath:mapper/**/*.xml
     logImpl: LOG4J
+
+  executor:
+    corePoolSize: 4
+    maxPoolSize: 10
+    keepAliveSeconds: 30
+    queueCapacity: 200

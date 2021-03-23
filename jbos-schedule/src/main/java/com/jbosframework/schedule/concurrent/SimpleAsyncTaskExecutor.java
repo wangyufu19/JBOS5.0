@@ -8,14 +8,14 @@ import java.util.concurrent.*;
  * @author youfu.wang
  * @version 5.0
  */
-public class SimpleAsyncTaskExecutor {
+public class SimpleAsyncTaskExecutor implements AsyncTaskExecutor {
     private static int corePoolSize=10;
     private static int maxPoolSize= Order.MAX;
-    private static long keepAliveSeconds=10;
+    private static long keepAliveSeconds=60;
     private static int queueCapacity=Order.MAX;
 
     private static class SimpleThreadPoolTaskExecutorHolder{
-        private final static ExecutorService executor=new ThreadPoolExecutor(
+        private final static Executor executor=new ThreadPoolExecutor(
                 corePoolSize,
                 maxPoolSize,
                 keepAliveSeconds,
@@ -24,7 +24,21 @@ public class SimpleAsyncTaskExecutor {
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
     }
-    public static ExecutorService getExecutorService() {
+    public static Executor getExecutorService() {
         return SimpleThreadPoolTaskExecutorHolder.executor;
+    }
+    public void execute(Runnable task){
+        SimpleAsyncTaskExecutor.getExecutorService().execute(task);
+    }
+    public Future<?> submit(Runnable task){
+        FutureTask<Object> futureTask=new FutureTask(task,(Object) null);
+        this.execute(futureTask);
+        return futureTask;
+    }
+
+    public <T> Future<T> submit(Callable<T> task){
+        FutureTask<T> futureTask=new FutureTask(task);
+        this.execute(futureTask);
+        return futureTask;
     }
 }

@@ -1,10 +1,9 @@
 package com.application;
 
-import com.application.config.AsyncTaskConfig;
+import com.application.sys.service.AsyncTaskService;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
-import com.application.test.aspect.AspectInvoker;
 import com.jbosframework.schedule.annotation.EnableAsync;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,11 +18,11 @@ public class JBOSStarter {
 	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		AsyncTaskConfig asyncTaskConfig=ctx.getBean(AsyncTaskConfig.class);
+		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
 		log.info("Execute async task");
 		int i=1;
 		while(true){
-			Future<Boolean> result1=asyncTaskConfig.doTask1(i);
+			Future<Boolean> result1=asyncTaskService.doTask1(i);
 			i++;
 		}
 

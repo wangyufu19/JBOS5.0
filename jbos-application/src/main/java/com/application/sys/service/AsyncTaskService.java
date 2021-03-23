@@ -1,4 +1,4 @@
-package com.application.config;
+package com.application.sys.service;
 
 import com.jbosframework.beans.annotation.Component;
 import com.jbosframework.schedule.annotation.Async;
@@ -9,8 +9,8 @@ import java.util.concurrent.Future;
 
 @Component
 @Slf4j
-public class AsyncTaskConfig {
-    @Async
+public class AsyncTaskService {
+    @Async("asyncExecutor")
     public Future<Boolean> doTask1(int i)  {
         try {
             Thread.sleep(50);

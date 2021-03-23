@@ -9,10 +9,10 @@ import java.util.concurrent.*;
  * @author youfu.wang
  * @version 5.0
  */
-public class ThreadPoolTaskExecutor {
+public class ThreadPoolTaskExecutor implements AsyncTaskExecutor{
     private int corePoolSize=1;
     private int maxPoolSize= Order.MAX;
-    private long keepAliveSeconds=10;
+    private long keepAliveSeconds=60;
     private int queueCapacity=Order.MAX;
     private Executor executor;
 
@@ -57,5 +57,19 @@ public class ThreadPoolTaskExecutor {
                 queue,
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
+    }
+    public void execute(Runnable task){
+        executor.execute(task);
+    }
+    public Future<?> submit(Runnable task){
+        FutureTask<Object> futureTask=new FutureTask(task,(Object) null);
+        this.execute(futureTask);
+        return futureTask;
+    }
+
+    public <T> Future<T> submit(Callable<T> task){
+        FutureTask<T> futureTask=new FutureTask(task);
+        this.execute(futureTask);
+        return futureTask;
     }
 }
