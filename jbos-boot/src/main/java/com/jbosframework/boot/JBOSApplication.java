@@ -11,8 +11,6 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.configuration.YamlConfiguration;
 import com.jbosframework.context.support.AnnotationApplicationContext;
 import com.jbosframework.context.support.AspectProxyContext;
-import com.jbosframework.schedule.AsyncBeanProcessor;
-import com.jbosframework.schedule.annotation.EnableAsync;
 import com.jbosframework.transaction.annotation.EnableTransactionManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,13 +56,7 @@ public class JBOSApplication {
                 ctx.addBeanPostProcessor(transactionBeanProcessor);
             }
         }
-        //开启异步处理
-        EnableAsync enableAsync=jbosBootClass.getAnnotation(EnableAsync.class);
-        if(enableAsync!=null){
-            AsyncBeanProcessor asyncBeanProcessor=new AsyncBeanProcessor(ctx);
-            asyncBeanProcessor.setOrder(25);
-            ctx.addBeanPostProcessor(asyncBeanProcessor);
-        }
+
         //添加配置属性检查器
         ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
         configurationPropertiesChecker.setApplicationContext(ctx);

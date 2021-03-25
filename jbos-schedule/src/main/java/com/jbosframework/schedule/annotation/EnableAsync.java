@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * EnableAsync
  * @author youfu.wang
- * @date 2021-01-29
+ * @version 5.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

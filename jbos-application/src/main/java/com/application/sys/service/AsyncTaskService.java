@@ -11,8 +11,13 @@ import java.util.concurrent.Future;
 @Slf4j
 public class AsyncTaskService {
     @Async("asyncExecutor")
-    public Future<Boolean> doTask1(int i)  {
-        log.info("******doTask1="+i);
+    public Future<Boolean> doTask1()  {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("******doTask1");
         return new AsyncResult<Boolean>(true);
     }
     @Async
@@ -28,7 +33,7 @@ public class AsyncTaskService {
     @Async
     public Future<Boolean> doTask3()  {
         try {
-            Thread.sleep(6000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

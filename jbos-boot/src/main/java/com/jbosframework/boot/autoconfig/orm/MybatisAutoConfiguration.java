@@ -19,10 +19,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 public class MybatisAutoConfiguration extends AbstractAutoConfiguration {
 
     private static final Log log= LogFactory.getLog(MybatisAutoConfiguration.class);
-
+    /**
+     * 注册自动配置组件到容器中
+     * @return
+     */
     public void registry() {
-        Configuration configuration = this.getClass().getAnnotation(Configuration.class);
-        if (configuration == null) {
+        if (!this.conditionalOnConfiguration(this.getClass())) {
             return;
         }
 

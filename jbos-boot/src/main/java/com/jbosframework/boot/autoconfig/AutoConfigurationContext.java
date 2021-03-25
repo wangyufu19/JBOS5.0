@@ -39,8 +39,8 @@ public class AutoConfigurationContext {
             if(importClasses!=null){
                 for(Class cls:importClasses){
                     Object obj=JBOSClassloader.newInstance(cls);
-                    if(obj instanceof AutoConfigurationRegister){
-                        AutoConfigurationRegister register=(AutoConfigurationRegister)obj;
+                    if(obj instanceof AutoConfigurationRegistry){
+                        AutoConfigurationRegistry register=(AutoConfigurationRegistry)obj;
                         register.registry(this.applicationContext);
                     }
                 }

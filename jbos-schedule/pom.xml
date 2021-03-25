@@ -11,7 +11,20 @@
     <groupId>com.jbosframework.schedule</groupId>
     <artifactId>jbos-schedule</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <quartz.version>2.3.2</quartz.version>
+    </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.jbosframework.beans</groupId>
             <artifactId>jbos-beans</artifactId>

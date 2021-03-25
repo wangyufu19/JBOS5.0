@@ -3,9 +3,7 @@ package com.application.config;
 import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.core.Order;
 import com.jbosframework.schedule.concurrent.ThreadPoolTaskExecutor;
-
 import java.util.concurrent.Executor;
 
 /**

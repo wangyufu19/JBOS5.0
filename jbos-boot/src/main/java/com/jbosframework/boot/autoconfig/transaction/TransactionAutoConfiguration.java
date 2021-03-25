@@ -27,8 +27,7 @@ public class TransactionAutoConfiguration extends AbstractAutoConfiguration {
      * @return
      */
     public void registry() {
-        Configuration configuration = this.getClass().getAnnotation(Configuration.class);
-        if (configuration == null) {
+        if (!this.conditionalOnConfiguration(this.getClass())) {
             return;
         }
         if(!this.conditionalOnBean(this.getClass().getAnnotation(ConditionalOnBean.class))){

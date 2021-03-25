@@ -5,15 +5,18 @@ import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.Condition;
 import com.jbosframework.context.annotation.Conditional;
+import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.annotation.Annotation;
+
 /**
  * AutoConfiguration
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 
 public abstract class AbstractAutoConfiguration {
@@ -31,6 +34,14 @@ public abstract class AbstractAutoConfiguration {
     }
     public ApplicationContext getApplicationContext(){
         return this.ctx;
+    }
+
+    public boolean conditionalOnConfiguration(Class<?> cls ){
+        Configuration configuration = cls.getAnnotation(Configuration.class);
+        if (configuration == null) {
+            return false;
+        }
+        return true;
     }
     /**
      * 捕获注解条件类

@@ -28,8 +28,7 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
      * @return
      */
     public void registry(){
-        Configuration configuration=this.getClass().getAnnotation(Configuration.class);
-        if (configuration==null){
+        if (!this.conditionalOnConfiguration(this.getClass())) {
             return;
         }
         if(this.conditionalOnClass(this.getClass().getAnnotation(ConditionalOnClass.class))){

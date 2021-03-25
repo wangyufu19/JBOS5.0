@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * AutoConfigurationRegister
+ * AutoConfigurationRegistry
  * @author youfu.wang
  * @version 5.0
  */
-public class AutoConfigurationRegister {
+public class AutoConfigurationRegistry {
     private static final String com$jbosframework$boot$autoconfig$EnableAutoConfiguration="com.jbosframework.boot.autoconfig.EnableAutoConfiguration";
 
     private static String[] autConfigurationBeans;
@@ -23,7 +23,7 @@ public class AutoConfigurationRegister {
     /**
      * 构造方法
      */
-    public AutoConfigurationRegister(){
+    public AutoConfigurationRegistry(){
         autoConfigLocation="META-INF"+ File.separator+"jbos-autoconfigure-metadata.properties";
         this.loadAutoConfigurationBeans();
     }
@@ -42,7 +42,7 @@ public class AutoConfigurationRegister {
         if(pros==null){
             return;
         }
-        String enableAutoConfiguration=pros.getProperty(AutoConfigurationRegister.com$jbosframework$boot$autoconfig$EnableAutoConfiguration);
+        String enableAutoConfiguration=pros.getProperty(AutoConfigurationRegistry.com$jbosframework$boot$autoconfig$EnableAutoConfiguration);
         if(enableAutoConfiguration!=null){
             autConfigurationBeans=enableAutoConfiguration.split(",");
         }
