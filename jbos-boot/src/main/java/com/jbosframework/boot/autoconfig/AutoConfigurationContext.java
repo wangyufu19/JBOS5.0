@@ -5,7 +5,7 @@ import com.jbosframework.context.annotation.Import;
 import com.jbosframework.utils.JBOSClassloader;
 
 /**
- * AutoConfigurationFactory
+ * AutoConfigurationContext
  * @author youfu.wang
  * @version 1.0
  */

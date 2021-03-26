@@ -2,7 +2,9 @@ package com.jbosframework.boot.autoconfig.async;
 
 import com.jbosframework.boot.autoconfig.AbstractAutoConfiguration;
 import com.jbosframework.context.annotation.Configuration;
+import com.jbosframework.context.support.BeanProcessorRegistry;
 import com.jbosframework.schedule.AsyncBeanProcessor;
+import com.jbosframework.schedule.annotation.AsyncConfiguration;
 import com.jbosframework.schedule.annotation.EnableAsync;
 
 /**
@@ -24,9 +26,9 @@ public class AsyncAutoConfiguration extends AbstractAutoConfiguration {
         //开启异步处理
         EnableAsync enableAsync=this.getClass().getAnnotation(EnableAsync.class);
         if(enableAsync!=null){
-            AsyncBeanProcessor asyncBeanProcessor=new AsyncBeanProcessor(this.getApplicationContext());
-            asyncBeanProcessor.setOrder(25);
-            this.getApplicationContext().addBeanPostProcessor(asyncBeanProcessor);
+            BeanProcessorRegistry beanProcessorRegistry=new AsyncConfiguration();
+            beanProcessorRegistry.setBeanFactory(this.getApplicationContext());
+            beanProcessorRegistry.registryBeanProcessor();
         }
     }
 }

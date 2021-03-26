@@ -61,7 +61,7 @@ public class AnnotationBeanReaderImpl implements BeanReader {
 	private void loadAnnotationBean(Class<?> cls){
 		for (BeanRegistry beanRegistry:beanRegistries){
 			//注册Bean到上下文
-			beanRegistry.registerBean(cls);
+			beanRegistry.registry(cls);
 		}
 	}
 }

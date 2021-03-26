@@ -5,6 +5,7 @@ import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.AnnotationBeanRegistry;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextFactory;
+import com.jbosframework.context.ConfigurationAnnotationRegistry;
 import com.jbosframework.context.configuration.Configuration;
 
 /**
@@ -20,6 +21,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	 */
 	public AnnotationApplicationContext() {
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
+		beanReader.addBeanRegistry(new ConfigurationAnnotationRegistry(this));
 	}
 	/**
 	 * 构造方法
@@ -27,6 +29,7 @@ public class AnnotationApplicationContext extends BeanFactoryContext implements 
 	public AnnotationApplicationContext(Configuration configuration) {
 		super(configuration);
 		beanReader.addBeanRegistry(new AnnotationBeanRegistry(this));
+		beanReader.addBeanRegistry(new ConfigurationAnnotationRegistry(this));
 	}
 	/**
 	 * 添加BeanRegistry

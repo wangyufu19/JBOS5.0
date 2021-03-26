@@ -26,14 +26,14 @@ public class AspectProxyRegistry extends BeanRegistry {
      * 注册Bean
      * @param cls
      */
-    public void registerBean(Class<?> cls){
+    public void registry(Class<?> cls){
         Aspect aspect=cls.getAnnotation(Aspect.class);
         if(aspect==null){
             return;
         }
-        this.doRegisterBean(cls);
+        this.doRegistry(cls);
     }
-    private void doRegisterBean(Class<?> cls){
+    private void doRegistry(Class<?> cls){
         if(cls==null){
             return;
         }

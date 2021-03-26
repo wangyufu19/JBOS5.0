@@ -73,7 +73,7 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
             }
         }
     }
-    public void registerBean(Class<?> cls) {
+    public void registry(Class<?> cls) {
         //加载Controller注解
         Controller controller=cls.getAnnotation(Controller.class);
         if(controller!=null){
