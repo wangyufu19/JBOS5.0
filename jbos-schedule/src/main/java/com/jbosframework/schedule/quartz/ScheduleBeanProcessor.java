@@ -4,11 +4,11 @@ import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.core.Order;
 import com.jbosframework.schedule.annotation.Scheduled;
-import org.quartz.*;
 
 import java.lang.reflect.Method;
-import  org.quartz.TriggerBuilder;
-import org.quartz.CronScheduleBuilder;
+
+import org.quartz.*;
+
 /**
  * ScheduleBeanProcessor
  * @author youfu.wang
@@ -41,9 +41,11 @@ public class ScheduleBeanProcessor implements BeanPostProcessor {
         if (methods == null) {
             return target;
         }
+        System.out.println("******obj = "+obj);
         for (Method method : methods) {
             Scheduled scheduled = method.getDeclaredAnnotation(Scheduled.class);
             if (scheduled != null) {
+                System.out.println("******scheduled = "+scheduled);
                 String cron=scheduled.cron();
                 ScheduleJob scheduleJob = new ScheduleJob(target, method);
                 JobDetail job = JobBuilder.newJob(ScheduleJob.class)

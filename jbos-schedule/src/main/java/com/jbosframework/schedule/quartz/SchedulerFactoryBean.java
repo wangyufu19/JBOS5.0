@@ -30,6 +30,7 @@ public class SchedulerFactoryBean implements FactoryBean<Scheduler> {
         StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
         try {
             schedulerFactory.initialize();
+            this.scheduler=schedulerFactory.getScheduler();
         } catch (SchedulerException e) {
             e.printStackTrace();
         }

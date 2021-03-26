@@ -2,6 +2,7 @@ package com.application.sys.service;
 
 import com.jbosframework.beans.annotation.Component;
 import com.jbosframework.schedule.annotation.Async;
+import com.jbosframework.schedule.annotation.Scheduled;
 import com.jbosframework.schedule.concurrent.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +22,7 @@ public class AsyncTaskService {
         return new AsyncResult<Boolean>(true);
     }
     @Async
+    @Scheduled
     public Future<Boolean> doTask2()  {
         try {
             Thread.sleep(3000);

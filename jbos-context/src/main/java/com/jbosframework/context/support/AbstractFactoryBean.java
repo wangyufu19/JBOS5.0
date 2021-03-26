@@ -109,6 +109,9 @@ public abstract class AbstractFactoryBean implements InitializingBean,BeanFactor
      * @param beanPostProcessor
      */
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
+        if(beanPostProcessors.contains(beanPostProcessor)){
+            return;
+        }
         beanPostProcessors.add(beanPostProcessor);
         Collections.sort(this.getBeanPostProcessors(), new Comparator<BeanPostProcessor>() {
             @Override
