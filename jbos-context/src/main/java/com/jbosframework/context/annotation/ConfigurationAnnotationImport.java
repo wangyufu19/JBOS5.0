@@ -32,14 +32,19 @@ public class ConfigurationAnnotationImport {
         Import importAnnotation=null;
         if(annotationType==AnnotationType.EnableAsync){
             EnableAsync enableAsync=configurationCls.getAnnotation(EnableAsync.class);
-            importAnnotation=enableAsync.getClass().getAnnotation(Import.class);
+            if(enableAsync!=null){
+                importAnnotation=EnableAsync.class.getAnnotation(Import.class);
+            }
         }else if(annotationType==AnnotationType.EnableScheduling){
             EnableScheduling enableScheduling=configurationCls.getAnnotation(EnableScheduling.class);
-            importAnnotation=enableScheduling.getClass().getAnnotation(Import.class);
+            if(enableScheduling!=null){
+                importAnnotation=EnableScheduling.class.getAnnotation(Import.class);
+            }
         }
-        if(importAnnotation!=null){
-            importClasses=importAnnotation.value();
+        if(importAnnotation==null){
+           return;
         }
+        importClasses=importAnnotation.value();
         if(importClasses!=null){
             for(Class cls:importClasses){
                 Object obj= JBOSClassloader.newInstance(cls);

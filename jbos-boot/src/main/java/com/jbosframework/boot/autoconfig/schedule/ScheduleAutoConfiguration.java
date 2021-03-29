@@ -1,16 +1,12 @@
 package com.jbosframework.boot.autoconfig.schedule;
 
-import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.boot.autoconfig.AbstractAutoConfiguration;
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.context.annotation.Configuration;
+import com.jbosframework.context.support.BeanProcessorRegistry;
 import com.jbosframework.schedule.annotation.EnableScheduling;
-import com.jbosframework.schedule.quartz.ScheduleBeanProcessor;
-import com.jbosframework.schedule.quartz.SchedulerFactoryBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.jbosframework.schedule.annotation.ScheduleConfiguration;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-
 
 /**
  * ScheduleAutoConfiguration
@@ -19,9 +15,9 @@ import org.quartz.SchedulerException;
  */
 @Configuration
 @EnableScheduling
+@ConditionalOnBean(Scheduler.class)
 public class ScheduleAutoConfiguration extends AbstractAutoConfiguration {
-    private Log log= LogFactory.getLog(ScheduleAutoConfiguration.class);
-    /**
+      /**
      * 注册自动配置组件到容器中
      * @return
      */
@@ -30,24 +26,10 @@ public class ScheduleAutoConfiguration extends AbstractAutoConfiguration {
             return;
         }
         EnableScheduling enableScheduling=this.getClass().getDeclaredAnnotation(EnableScheduling.class);
-        if(enableScheduling==null){
-            return;
-        }
-        SchedulerFactoryBean schedulerFactoryBean=new SchedulerFactoryBean();
-        Scheduler scheduler=schedulerFactoryBean.getScheduler();
-        if(scheduler!=null){
-            try {
-                scheduler.start();
-                log.info("******启动Quartz Scheduler成功");
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-            }
-            AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(Scheduler.class.getName(),Scheduler.class);
-            this.getApplicationContext().putBeanDefinition(annotationBean);
-            this.getApplicationContext().putBean(Scheduler.class.getName(),scheduler);
-            ScheduleBeanProcessor scheduleBeanProcessor=new ScheduleBeanProcessor(this.getApplicationContext());
-            scheduleBeanProcessor.setOrder(60);
-            this.getApplicationContext().addBeanPostProcessor(scheduleBeanProcessor);
+        if(enableScheduling!=null&&!this.conditionalOnBean(this.getClass().getAnnotation(ConditionalOnBean.class))){
+            BeanProcessorRegistry beanProcessorRegistry=new ScheduleConfiguration();
+            beanProcessorRegistry.setBeanFactory(this.getApplicationContext());
+            beanProcessorRegistry.registryBeanProcessor();
         }
     }
 }

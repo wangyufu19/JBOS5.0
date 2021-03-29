@@ -3,6 +3,7 @@ package com.application.config;
 import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
+import com.jbosframework.schedule.annotation.EnableAsync;
 import com.jbosframework.schedule.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.Executor;
  * @version 5.0
  */
 @Configuration
+@EnableAsync
 public class ExecutorConfig {
     @Value("${jbos.executor.corePoolSize}")
     private int corePoolSize;

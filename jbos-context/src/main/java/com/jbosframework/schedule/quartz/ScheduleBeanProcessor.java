@@ -41,11 +41,9 @@ public class ScheduleBeanProcessor implements BeanPostProcessor {
         if (methods == null) {
             return target;
         }
-        System.out.println("******obj = "+obj);
         for (Method method : methods) {
             Scheduled scheduled = method.getDeclaredAnnotation(Scheduled.class);
             if (scheduled != null) {
-                System.out.println("******scheduled = "+scheduled);
                 String cron=scheduled.cron();
                 ScheduleJob scheduleJob = new ScheduleJob(target, method);
                 JobDetail job = JobBuilder.newJob(ScheduleJob.class)
