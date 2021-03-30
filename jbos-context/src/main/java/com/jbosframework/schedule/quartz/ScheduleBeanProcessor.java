@@ -6,6 +6,7 @@ import com.jbosframework.core.Order;
 import com.jbosframework.schedule.annotation.Scheduled;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.quartz.*;
 
@@ -37,21 +38,26 @@ public class ScheduleBeanProcessor implements BeanPostProcessor {
         if (cls == null) {
             return target;
         }
+
         Method[] methods = cls.getDeclaredMethods();
         if (methods == null) {
             return target;
         }
         for (Method method : methods) {
             Scheduled scheduled = method.getDeclaredAnnotation(Scheduled.class);
+
             if (scheduled != null) {
+
                 String cron=scheduled.cron();
-                ScheduleJob scheduleJob = new ScheduleJob(target, method);
                 JobDetail job = JobBuilder.newJob(ScheduleJob.class)
-                        .withIdentity(cls.getName(), "group1")
+                        .withIdentity(cls.getName(), cls.getName())
                         .build();
+                Map dataMap = job.getJobDataMap();
+                dataMap.put("target",target);
+                dataMap.put("method",method);
 
                 Trigger trigger = TriggerBuilder.newTrigger()
-                        .withIdentity(cls.getName(), "group1")
+                        .withIdentity(cls.getName(), cls.getName())
                         .withSchedule(CronScheduleBuilder.cronSchedule(cron))
                         .forJob(job.getKey())
                         .build();

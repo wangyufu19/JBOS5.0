@@ -168,6 +168,10 @@ public class BeanFactoryContext extends AbstractFactoryBean{
 			BeanDefinition beanDefinition=entry.getValue();
 			//初始化Bean
 			Object obj=this.initBean(beanDefinition);
+			if(beanDefinition.isRootBean()){
+				//执行BeanPostProcessor
+				obj=this.doBeanPostProcessor(obj);
+			}
             //执行初始化方法
 			this.invokeBeanMethod(obj,beanDefinition);
 		}

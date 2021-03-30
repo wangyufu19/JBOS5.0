@@ -23,7 +23,14 @@ public class BeanDefinition extends BeanPropertyAccessor {
 		this.className="";
 		this.scope=Scope.SCOPE_SINGLETON;
 	}
+	private boolean isRootBean=false;
+	public boolean isRootBean() {
+		return isRootBean;
+	}
 
+	public void setRootBean(boolean rootBean) {
+		isRootBean = rootBean;
+	}
 	public String getClassName() {
 		return this.className;
 	}

@@ -17,7 +17,6 @@ import org.quartz.SchedulerException;
  */
 @Configuration
 public class ScheduleConfiguration extends BeanProcessorRegistry {
-    private Log log= LogFactory.getLog(ScheduleConfiguration.class);
 
     public  void registryBeanProcessor(){
         SchedulerFactoryBean schedulerFactoryBean=new SchedulerFactoryBean();
@@ -25,7 +24,6 @@ public class ScheduleConfiguration extends BeanProcessorRegistry {
         if(scheduler!=null){
             try {
                 scheduler.start();
-                log.info("******启动Quartz Scheduler成功");
             } catch (SchedulerException e) {
                 e.printStackTrace();
             }

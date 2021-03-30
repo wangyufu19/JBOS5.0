@@ -1,11 +1,12 @@
 package com.jbosframework.schedule.quartz;
 
 import org.quartz.Job;
-import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * ScheduleJob
@@ -13,14 +14,21 @@ import java.lang.reflect.Method;
  * @version 5.0
  */
 public class ScheduleJob implements Job {
-    private Object target;
-    private Method method;
 
-    public ScheduleJob(Object target, Method method){
-        this.target=target;
-        this.method=method;
+    public ScheduleJob(){
+
     }
-    public void execute(JobExecutionContext context) throws JobExecutionException {
 
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        Map dataMap = context.getJobDetail().getJobDataMap();
+        Object target=dataMap.get("target");
+        Method method=(Method)dataMap.get("method");
+        try {
+            method.invoke(target,null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }

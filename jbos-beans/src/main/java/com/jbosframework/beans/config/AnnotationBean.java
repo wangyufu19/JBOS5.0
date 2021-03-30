@@ -10,6 +10,8 @@ import com.jbosframework.utils.StringUtils;
  */
 public class AnnotationBean extends BeanDefinition implements Cloneable{
 
+
+
 	public static AnnotationBean createAnnotationBean(String id,Class<?> cls){
 		AnnotationBean annotationBean=new AnnotationBean();
 		if(StringUtils.isNUll(id)) {

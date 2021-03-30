@@ -1,9 +1,15 @@
 package com.jbosframework.context;
+import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.ConfigurationAnnotationImport;
+import com.jbosframework.utils.StringUtils;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * ConfigurationAnnotationRegistry
@@ -29,6 +35,7 @@ public class ConfigurationAnnotationRegistry extends BeanRegistry {
            return;
         }
         AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(configuration.value(),cls);
+        annotationBean.setRootBean(true);
         annotationBean.setAnnotations(cls.getDeclaredAnnotations());
         this.getBeanFactory().putBeanDefinition(annotationBean);
         //注册方法Bean
@@ -39,5 +46,48 @@ public class ConfigurationAnnotationRegistry extends BeanRegistry {
         //启用任务注解
         configurationAnnotationImport.doImport(cls,ConfigurationAnnotationImport.AnnotationType.EnableScheduling);
     }
-
+    /**
+     * 注册方法Bean
+     * @param cls
+     * @param parent
+     */
+    public void doRegistryMethodBean(Class<?> cls,AnnotationBean parent){
+        Method[] methods=cls.getMethods();
+        if(methods==null) {
+            return;
+        }
+        for(int i=0;i<methods.length;i++) {
+            Annotation[] annotations = methods[i].getDeclaredAnnotations();
+            if (annotations == null||annotations.length<=0) {
+                continue;
+            }
+            for(Annotation annotation:annotations){
+                AnnotationBean annotationBean=new AnnotationBean();
+                String id="";
+                annotationBean.setAnnotations(annotations);
+                annotationBean.setParentName(parent.getName());
+                annotationBean.setIsMethodBean(true);
+                if(annotation instanceof Bean){
+                    //加载Bean注解
+                    id=((Bean)annotation).value();
+                    if(StringUtils.isNUll(id)) {
+                        id=methods[i].getReturnType().getName();
+                    }
+                    annotationBean.setInitMethod(((Bean)annotation).initMethod());
+                    if(methods[i].getReturnType().isInterface()){
+                        this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
+                    }
+                }
+                annotationBean.setId(id);
+                annotationBean.setName(id);
+                annotationBean.setClassName(methods[i].getReturnType().getName());
+                Scope scope=methods[i].getDeclaredAnnotation(Scope.class);
+                if(scope!=null){
+                    annotationBean.setScope(scope.value());
+                }
+                annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
+                this.getBeanFactory().putBeanDefinition(annotationBean);
+            }
+        }
+    }
 }
