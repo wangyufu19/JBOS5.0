@@ -82,7 +82,7 @@ public abstract class AbstractAutoConfiguration {
         if(conditionalOnProperty!=null){
             String name=StringUtils.replaceNull(conditionalOnProperty.name());
             String value=StringUtils.replaceNull(conditionalOnProperty.value());
-            if(StringUtils.replaceNull(ctx.getContextConfiguration().getContextProperty(name)).equals(value)){
+            if(StringUtils.replaceNull(ctx.getPropertyValue(name)).equals(value)){
                 return true;
             }
         }

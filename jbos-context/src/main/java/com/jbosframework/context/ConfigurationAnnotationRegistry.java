@@ -3,10 +3,9 @@ import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.AnnotationBean;
 import com.jbosframework.beans.config.MethodMetadata;
-import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.beans.support.BeanRegistry;
+import com.jbosframework.beans.support.AbstractBeanRegistry;
+import com.jbosframework.beans.support.ConfigurableBeanFactory;
 import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.context.annotation.ConfigurationAnnotationImport;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -16,13 +15,14 @@ import java.lang.reflect.Method;
  * @author youfu.wang
  * @version 5.0
  */
-public class ConfigurationAnnotationRegistry extends BeanRegistry {
+public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
+    private ConfigurableBeanFactory registry;
     /**
      * 构造方法
-     * @param beanFactory
+     * @param registry
      */
-    public ConfigurationAnnotationRegistry(BeanFactory beanFactory){
-        super(beanFactory);
+    public ConfigurationAnnotationRegistry(ConfigurableBeanFactory registry){
+        this.registry=registry;
     }
 
     /**
@@ -35,16 +35,10 @@ public class ConfigurationAnnotationRegistry extends BeanRegistry {
            return;
         }
         AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(configuration.value(),cls);
-        annotationBean.setRootBean(true);
         annotationBean.setAnnotations(cls.getDeclaredAnnotations());
-        this.getBeanFactory().putBeanDefinition(annotationBean);
+        this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
         //注册方法Bean
         this.doRegistryMethodBean(cls,annotationBean);
-        ConfigurationAnnotationImport configurationAnnotationImport=new ConfigurationAnnotationImport(this.getBeanFactory());
-        //启用异步注解
-        configurationAnnotationImport.doImport(cls,ConfigurationAnnotationImport.AnnotationType.EnableAsync);
-        //启用任务注解
-        configurationAnnotationImport.doImport(cls,ConfigurationAnnotationImport.AnnotationType.EnableScheduling);
     }
     /**
      * 注册方法Bean
@@ -75,7 +69,7 @@ public class ConfigurationAnnotationRegistry extends BeanRegistry {
                     }
                     annotationBean.setInitMethod(((Bean)annotation).initMethod());
                     if(methods[i].getReturnType().isInterface()){
-                        this.getBeanFactory().putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
+                        this.registry.putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
                     }
                 }
                 annotationBean.setId(id);
@@ -86,7 +80,7 @@ public class ConfigurationAnnotationRegistry extends BeanRegistry {
                     annotationBean.setScope(scope.value());
                 }
                 annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
-                this.getBeanFactory().putBeanDefinition(annotationBean);
+                this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
             }
         }
     }

@@ -1,124 +1,38 @@
-package com.jbosframework.beans.config;
-import java.lang.annotation.Annotation;
-import com.jbosframework.beans.annotation.Scope;
+package com.jbosframework.beans.config;;
+import com.jbosframework.core.Nullable;
 /**
  * BeanDefinition
  * @author youfu.wang
  * @version 1.0
  */
-public class BeanDefinition extends BeanPropertyAccessor {
+public interface BeanDefinition  {
 
-	private String id;
-	private String name;
-	private String parentName;
-	private String className;
-	private boolean isMethodBean=false;
-	private MethodMetadata methodMetadata;
-	private String scope;
-	private String initMethod;
+	String SCOPE_SINGLETON = "singleton";
+	String SCOPE_PROTOTYPE = "prototype";
 
-	private Annotation[] annotations;
+	void setParentName(@Nullable String var1);
 
-	public BeanDefinition(){	
-		this.className="";
-		this.scope=Scope.SCOPE_SINGLETON;
-	}
-	private boolean isRootBean=false;
-	public boolean isRootBean() {
-		return isRootBean;
-	}
+	@Nullable
+	String getParentName();
 
-	public void setRootBean(boolean rootBean) {
-		isRootBean = rootBean;
-	}
-	public String getClassName() {
-		return this.className;
-	}
+	void setClassName(@Nullable String var1);
 
-	public String getScope() {	
-		return this.scope;
-	}
+	@Nullable
+	String getClassName();
 
-	public boolean isPrototype() {
-		if(this.scope.equals(Scope.SCOPE_PROTOTYPE))
-			return true;
-		return false;
-	}
+	void setScope(@Nullable String var1);
 
-	public boolean isSingleton() {
-		if(this.scope.equals(Scope.SCOPE_SINGLETON))
-			return true;
-		return false;
-	}
+	@Nullable
+	String getScope();
 
-	public void setClassName(String className) {
-		this.className=className;
-	}
+	public boolean isPrototype() ;
 
-	public void setIsMethodBean(boolean isMethodBean){
-		this.isMethodBean=isMethodBean;
-	}
-	public boolean isMethodBean(){
-		return this.isMethodBean;
-	}
+	public boolean isSingleton() ;
 
-	public MethodMetadata getMethodMetadata() {
-		return methodMetadata;
-	}
+	public void setInitMethod(String initMethod);
+	public String getInitMethod();
 
-	public void setMethodMetadata(MethodMetadata methodMetadata) {
-		this.methodMetadata = methodMetadata;
-	}
-	public void setScope(String scope) {
-		this.scope=scope;
-	}
 
-	public String getId() {
-		return this.id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setId(String id) {
-		this.id=id;
-	}
-	
-	public void setName(String name) {
-		this.name=name;
-	}
-
-	public void setParentName(String parentName){
-		this.parentName=parentName;
-	}
-	public String getParentName(){
-		return this.parentName;
-	}
-
-	public void setInitMethod(String initMethod){
-		this.initMethod=initMethod;
-	}
-	public String getInitMethod(){
-		return this.initMethod;
-	}
-	public Annotation[] getAnnotations() {
-		return annotations;
-	}
-
-	public void setAnnotations(Annotation[] annotations) {
-		this.annotations = annotations;
-	}
-	public Annotation getAnnotation(Class<?> cls){
-		Annotation result=null;
-		if(annotations!=null){
-			for(Annotation annotation:annotations){
-				if(annotation.annotationType().getName().equals(cls.getName())){
-					result=annotation;
-					break;
-				}
-			}
-		}
-		return result;
-	}
+	public void setIsMethodBean(boolean isMethodBean);
+	public boolean isMethodBean();
 }

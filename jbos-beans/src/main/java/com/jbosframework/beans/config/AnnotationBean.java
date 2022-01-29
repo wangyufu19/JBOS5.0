@@ -8,7 +8,7 @@ import com.jbosframework.utils.StringUtils;
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationBean extends BeanDefinition implements Cloneable{
+public class AnnotationBean extends DefaultBeanDefinition implements Cloneable{
 
 
 

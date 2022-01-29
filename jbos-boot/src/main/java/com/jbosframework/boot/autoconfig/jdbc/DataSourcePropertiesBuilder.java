@@ -29,8 +29,8 @@ public class DataSourcePropertiesBuilder {
             return null;
         }
         String prefix=configurationProperties.prefix();
-        String type= StringUtils.replaceNull(ctx.getContextConfiguration().getContextProperty(DataSourceProperties.DATASOURCE_TYPE));
-        String driverClass=StringUtils.replaceNull(ctx.getContextConfiguration().getContextProperty(DataSourceProperties.DATASOURCE_DRIVERCLASS));
+        String type= StringUtils.replaceNull(ctx.getPropertyValue(DataSourceProperties.DATASOURCE_TYPE));
+        String driverClass=StringUtils.replaceNull(ctx.getPropertyValue(DataSourceProperties.DATASOURCE_DRIVERCLASS));
 
         if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
             dataSourceProperties=new TomcatDataSourceProperties();
@@ -52,7 +52,7 @@ public class DataSourcePropertiesBuilder {
      */
     private void loadProperties(ApplicationContext ctx,DataSourceProperties dataSourceProperties,String prefix){
         if(prefix.indexOf(".")!=-1){
-            Object properties=ctx.getContextConfiguration().getContextProperty(prefix);
+            Object properties=ctx.getPropertyValue(prefix);
             if(properties!=null){
                 dataSourceProperties.load(properties);
             }

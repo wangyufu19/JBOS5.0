@@ -61,7 +61,7 @@ public class AnnotationMapperProcessor implements BeanPostProcessor {
         if(fields==null) {
             return target;
         }
-        InjectionMetadata injectionMetadata=new InjectionMetadata(this.beanFactory);
+        InjectionMetadata injectionMetadata=new InjectionMetadata();
         for(int i=0;i<fields.length;i++) {
             Mapper mapperAnnotation=fields[i].getDeclaredAnnotation(Mapper.class);
             if(mapperAnnotation==null) {

@@ -1,10 +1,16 @@
 package com.jbosframework.beans.support;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * AnnotationClassSupport
@@ -19,7 +25,7 @@ public class AnnotationClassSupport {
      * @param packageName
      * @return
      */
-    public static List<String> getBasePackageClasses(URL classPath,String packageName){
+    public static List<String> getBasePackageClasses(URL classPath,String packageName) {
         if(classPath==null) {
             return null;
         }
@@ -28,8 +34,28 @@ public class AnnotationClassSupport {
         String type = classPath.getProtocol();
         if(type.equals("file")){
             putClassNameByFile(classPath.getPath()+packageName,allClasses);
+        }else if("jar".equals(type)){
+            putClassNameByJar(classPath,allClasses);
         }
         return allClasses;
+    }
+    private static void putClassNameByJar(URL url,List<String> allClasses)  {
+        String jarPath=url.toString().substring(0,url.toString().indexOf("!/")+2);
+        try {
+            URL jarUrL = new URL(jarPath);
+            JarURLConnection jarURLConnection = (JarURLConnection) jarUrL.openConnection();
+            JarFile jarFile = jarURLConnection.getJarFile();
+            Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
+            while (jarEntryEnumeration.hasMoreElements()) {
+                JarEntry jarEntry = jarEntryEnumeration.nextElement();
+                if (!jarEntry.isDirectory() && jarEntry.getName().endsWith(".class")) {
+                    allClasses.add(jarEntry.getName());
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
     private static void putClassNameByFile(String filePath, List<String> allClasses) {
         try {

@@ -1,8 +1,8 @@
 package com.jbosframework.context;
 import com.jbosframework.beans.annotation.*;
 import com.jbosframework.beans.config.AnnotationBean;
-import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.beans.support.BeanRegistry;
+import com.jbosframework.beans.support.AbstractBeanRegistry;
+import com.jbosframework.beans.support.ConfigurableBeanFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.lang.annotation.Annotation;
@@ -11,15 +11,16 @@ import java.lang.annotation.Annotation;
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationBeanRegistry extends BeanRegistry {
+public class AnnotationBeanRegistry extends AbstractBeanRegistry {
 
     private static final Log log= LogFactory.getLog(AnnotationBeanRegistry.class);
+    private ConfigurableBeanFactory registry;
     /**
      * 构造方法
-     * @param beanFactory
+     * @param registry
      */
-    public AnnotationBeanRegistry(BeanFactory beanFactory){
-        super(beanFactory);
+    public AnnotationBeanRegistry(ConfigurableBeanFactory registry){
+        this.registry=registry;
     }
 
     public enum AnnotationType{
@@ -35,42 +36,23 @@ public class AnnotationBeanRegistry extends BeanRegistry {
     /**
      * 注册Bean
      * @param cls
+     * @param beanId
      */
-    private void registerBean(Class<?> cls,AnnotationType annotationType){
-        boolean isRegistry=false;
-        String beanId="";
-        switch(annotationType){
-            case COMPONENT:
-                Component component=cls.getAnnotation(Component.class);
-                if(component!=null){
-                    isRegistry=true;
-                    beanId=component.value();
-                }
-            case BEAN:
-                Bean bean=cls.getAnnotation(Bean.class);
-                if(bean!=null){
-                    isRegistry=true;
-                    beanId=bean.value();
-                }
-            case SERVICE:
-                Service service=cls.getAnnotation(Service.class);
-                if(service!=null){
-                    isRegistry=true;
-                    beanId=service.value();
-                }
-            case REPOSITORY:
-                Repository repository=cls.getAnnotation(Repository.class);
-                if(repository!=null){
-                    isRegistry=true;
-                    beanId=repository.value();
-                }
+    private void registry(Class<?> cls,String beanId){
+        AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(beanId,cls);
+        annotationBean.setAnnotations(cls.getDeclaredAnnotations());
+        this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
+        //注册Bean的接口
+        this.registryBeanInterfaces(cls,annotationBean);
+    }
+    //注册Bean的接口
+    private void registryBeanInterfaces(Class<?> cls, AnnotationBean annotationBean){
+        Class<?>[] interfaces=cls.getInterfaces();
+        if(interfaces==null){
+            return;
         }
-        if(isRegistry){
-            AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(beanId,cls);
-            annotationBean.setAnnotations(cls.getDeclaredAnnotations());
-            this.getBeanFactory().putBeanDefinition(annotationBean);
-            //注册Bean的接口
-            this.registryBeanInterfaces(cls,annotationBean);
+        for(Class interfaceCls:interfaces){
+            this.registry.putBeanNameOfType(interfaceCls.getName(),annotationBean);
         }
     }
     /**
@@ -86,12 +68,24 @@ public class AnnotationBeanRegistry extends BeanRegistry {
             return;
         }
         //注册Component注解
-        this.registerBean(cls,AnnotationType.COMPONENT);
+        Component component=cls.getAnnotation(Component.class);
+        if(component!=null){
+            this.registry(cls,component.value());
+        }
         //注册Bean注解
-        this.registerBean(cls,AnnotationType.BEAN);
+        Bean bean=cls.getAnnotation(Bean.class);
+        if(bean!=null){
+            this.registry(cls,bean.value());
+        }
         //注册Service注解
-        this.registerBean(cls,AnnotationType.SERVICE);
+        Service service=cls.getAnnotation(Service.class);
+        if(service!=null){
+            this.registry(cls,service.value());
+        }
         //注册Repository注解
-        this.registerBean(cls,AnnotationType.REPOSITORY);
+        Repository repository=cls.getAnnotation(Repository.class);
+        if(repository!=null){
+            this.registry(cls,repository.value());
+        }
     }
 }

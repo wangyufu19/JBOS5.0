@@ -10,16 +10,8 @@ import java.lang.reflect.Modifier;
  * @date 2016-12-12
  */
 public class InjectionMetadata {
-    private BeanFactory beanFactory;
-    private boolean isField=true;
-    /**
-     * 构造方法
-     * @param beanFactory
-     */
-    public InjectionMetadata(BeanFactory beanFactory){
-        this.beanFactory=beanFactory;
-    }
 
+    private boolean isField=true;
     /**
      * 是否字段注入
      * @param isField

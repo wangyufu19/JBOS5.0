@@ -1,15 +1,14 @@
 package com.jbosframework.context;
-
-import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.support.BeanRegistry;
-import com.jbosframework.context.configuration.Configuration;
+import com.jbosframework.beans.support.ConfigurableBeanFactory;
+import com.jbosframework.context.configuration.PropertyResource;
 
 /**
  * ApplicationContext
  * @author youfu.wang
  * @version 1.0
  */
-public interface ApplicationContext extends BeanFactory{
+public interface ApplicationContext extends ConfigurableBeanFactory, PropertyResource {
 	/**
 	 * 添加BeanRegistry
 	 * @param beanRegistry
@@ -22,16 +21,12 @@ public interface ApplicationContext extends BeanFactory{
 	public void registry(Class<?> cls);
 	/**
 	 * 注册Bean
-	 * @param clses
+	 * @param classes
 	 */
-	public void registry(Class<?>[] clses);
-	/**
-	 * 得到上下文配置
-	 * @return
-	 */
-	public Configuration getContextConfiguration();
-	/**
-	 * 刷新容器上下文
-	 */
-	public void refreshContext();
+	public void registry(Class<?>[] classes);
+
+	public void refresh();
+
+	public void destroy();
+
 }

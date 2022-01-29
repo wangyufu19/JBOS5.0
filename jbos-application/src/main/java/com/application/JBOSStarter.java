@@ -1,6 +1,8 @@
 package com.application;
 
 import com.application.sys.service.AsyncTaskService;
+import com.application.sys.service.UserMgrService;
+import com.application.sys.service.impl.UserMgrServiceImpl;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
@@ -14,8 +16,8 @@ public class JBOSStarter {
 	public static void main(String[] args) {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
-		Future<Boolean> result1=asyncTaskService.doTask1();
+		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
+		log.info("userMgrService={}",userMgrService);
 
     }
 

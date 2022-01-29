@@ -86,6 +86,17 @@ public class StringUtils {
 		}
 		return str;		
 	}
+	public static String stringArrayToTokenize(String[] array, String delimiters) {
+		if(isNUll(array)){
+			return null;
+		}
+		String tokenizeString="";
+		for(String str:array){
+			tokenizeString+=tokenizeString+delimiters;
+		}
+		return tokenizeString;
+	}
+
 	public static String[] tokenizeToStringArray(String str, String delimiters) {
 		return tokenizeToStringArray(str, delimiters, true, true);
 	}

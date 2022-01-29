@@ -13,13 +13,14 @@ public class AnnotationBeanReaderImpl implements BeanReader {
 	private BeanFactory beanFactory;
 	private List<BeanRegistry> beanRegistries=new ArrayList<BeanRegistry>();
 	private AnnotationFilter annotationFilter;
-	
+
+	private ConfigurableBeanFactory registry;
 	/**
 	 * 构造方法
-	 * @param beanFactory
+	 * @param registry
 	 */
-	public AnnotationBeanReaderImpl(BeanFactory beanFactory) {
-		this.beanFactory=beanFactory;
+	public AnnotationBeanReaderImpl(ConfigurableBeanFactory registry){
+		this.registry=registry;
 	}
 	/**
 	 * 添加BeanRegistry

@@ -53,6 +53,9 @@ public class AutoConfigurationRegistry {
      */
     public void registry(ApplicationContext ctx)  {
         try{
+            if(autConfigurationBeans==null){
+                return;
+            }
             for (String s:autConfigurationBeans){
                 Class<?> autCls= JBOSClassloader.loadClass(s);
                 AbstractAutoConfiguration autoConfiguration=(AbstractAutoConfiguration)JBOSClassloader.loadClass(s).newInstance();

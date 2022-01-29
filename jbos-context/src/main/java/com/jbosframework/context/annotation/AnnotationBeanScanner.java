@@ -1,24 +1,36 @@
-package com.jbosframework.context.support;
-import com.jbosframework.beans.support.BeanReader;
-import com.jbosframework.context.annotation.ComponentScan;
+package com.jbosframework.context.annotation;
+import com.jbosframework.beans.support.*;
+import com.jbosframework.context.AnnotationBeanRegistry;
+import com.jbosframework.context.ConfigurationAnnotationRegistry;
 import com.jbosframework.utils.JBOSClassloader;
 import java.util.List;
 import com.jbosframework.beans.annotation.AnnotationFilter;
-import com.jbosframework.beans.support.AnnotationClassSupport;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
- * AnnotationScanFactory
+ * AnnotationBeanScanner
  * @author youfu.wang
  * @version 1.0
  */
-public class AnnotationScanFactory {
+public class AnnotationBeanScanner {
+	private static final Log log= LogFactory.getLog(AnnotationBeanScanner.class);
 	private BeanReader beanReader;
 	private AnnotationFilter annotationFilter=new AnnotationFilter();
-
 	/**
 	 * 构造方法
 	 */
-	public AnnotationScanFactory(BeanReader beanReader) {
-		this.beanReader=beanReader;
+	public AnnotationBeanScanner(ConfigurableBeanFactory registry) {
+		this.beanReader=new AnnotationBeanReaderImpl(registry);
+		this.beanReader.addBeanRegistry(new AnnotationBeanRegistry(registry));
+		this.beanReader.addBeanRegistry(new ConfigurationAnnotationRegistry(registry));
+	}
+	/**
+	 * 添加BeanRegistry
+	 * @param beanRegistry
+	 */
+	public void addBeanRegistry(BeanRegistry beanRegistry){
+		this.beanReader.addBeanRegistry(beanRegistry);
 	}
 	/**
 	 * 扫描注解Bean

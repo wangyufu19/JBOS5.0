@@ -35,7 +35,7 @@ public class MybatisAutoConfiguration extends AbstractAutoConfiguration {
         if(this.conditionalOnClass(this.getClass().getAnnotation(ConditionalOnClass.class))){
             AnnotationMapperProcessor annotationMapperProcessor=new AnnotationMapperProcessor(this.getApplicationContext());
             annotationMapperProcessor.setOrder(10);
-            this.getApplicationContext().addBeanPostProcessor(annotationMapperProcessor);
+            //this.getApplicationContext().addBeanPostProcessor(annotationMapperProcessor);
         }
     }
 }

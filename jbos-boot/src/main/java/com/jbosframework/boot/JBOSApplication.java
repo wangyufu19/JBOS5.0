@@ -1,17 +1,13 @@
 package com.jbosframework.boot;
 
-import com.jbosframework.boot.autoconfig.transaction.TransactionBeanProcessor;
-import com.jbosframework.context.configuration.Configuration;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
-import com.jbosframework.boot.autoconfig.EnableAspectJAutoProxy;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
-import com.jbosframework.boot.context.ConfigurationPropertiesChecker;
+import com.jbosframework.boot.context.ConfigFileApplicationContext;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.configuration.YamlConfiguration;
+import com.jbosframework.context.ApplicationContextInitializer;
 import com.jbosframework.context.support.AnnotationApplicationContext;
-import com.jbosframework.context.support.AspectProxyContext;
-import com.jbosframework.transaction.annotation.EnableTransactionManager;
+//import com.jbosframework.context.support.AspectProxyContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,29 +34,30 @@ public class JBOSApplication {
      */
     private void prepareContext(String... args){
         //初始化上下文配置
-        Configuration configuration=new YamlConfiguration();
-        ctx=new AnnotationApplicationContext(configuration);
+        ApplicationContextInitializer applicationContextInitializer=new ConfigFileApplicationContext();
+        ctx=new AnnotationApplicationContext();
+        applicationContextInitializer.initialize(ctx);
         JBOSBootApplication jbosBootApplication=jbosBootClass.getAnnotation(JBOSBootApplication.class);
-        if(jbosBootApplication!=null){
-            //开启切面自动代理
-            EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
-            if(enableAspectJAutoProxy!=null){
-                AspectProxyContext aspectProxyContext=new AspectProxyContext(ctx);
-                aspectProxyContext.enableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
-            }
-            //开启事务管理
-            EnableTransactionManager enableTransactionManage=JBOSBootApplication.class.getAnnotation(EnableTransactionManager.class);
-            if(enableTransactionManage!=null){
-                TransactionBeanProcessor transactionBeanProcessor=new TransactionBeanProcessor(ctx);
-                transactionBeanProcessor.setOrder(15);
-                ctx.addBeanPostProcessor(transactionBeanProcessor);
-            }
-        }
-
-        //添加配置属性检查器
-        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
-        configurationPropertiesChecker.setApplicationContext(ctx);
-        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+//        if(jbosBootApplication!=null){
+//            //开启切面自动代理
+//            EnableAspectJAutoProxy enableAspectJAutoProxy= JBOSBootApplication.class.getAnnotation(EnableAspectJAutoProxy.class);
+//            if(enableAspectJAutoProxy!=null){
+//                AspectProxyContext aspectProxyContext=new AspectProxyContext(ctx);
+//                aspectProxyContext.enableAspectJAutoProxy(enableAspectJAutoProxy.proxyTargetClass());
+//            }
+//            //开启事务管理
+//            EnableTransactionManager enableTransactionManage=JBOSBootApplication.class.getAnnotation(EnableTransactionManager.class);
+//            if(enableTransactionManage!=null){
+//                TransactionBeanProcessor transactionBeanProcessor=new TransactionBeanProcessor(ctx);
+//                transactionBeanProcessor.setOrder(15);
+//                ctx.addBeanPostProcessor(transactionBeanProcessor);
+//            }
+//        }
+//
+//        //添加配置属性检查器
+//        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
+//        configurationPropertiesChecker.setApplicationContext(ctx);
+//        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
     }
 
     /**
@@ -74,7 +71,6 @@ public class JBOSApplication {
         AutoConfigurationContext autoConfigurationContext=new AutoConfigurationContext(ctx);
         autoConfigurationContext.load(jbosBootClass);
         //刷新容器上下文
-        ctx.refreshContext();
     }
     /**
      * 启动应用

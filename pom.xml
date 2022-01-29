@@ -20,7 +20,6 @@
         <module>jbos-cache</module>
         <module>jbos-application</module>
         <module>jbos-tx</module>
-        <module>jbos-schedule</module>
     </modules>
     <name>jbos Maven Webapp</name>
     <url>http://maven.apache.org</url>
@@ -43,6 +42,7 @@
         <fastjson.version>1.2.45</fastjson.version>
         <log4j.version>1.2.17</log4j.version>
         <jdom.version>1.0</jdom.version>
+        <jsr305.version>3.0.2</jsr305.version>
     </properties>
     <dependencies>
         <dependency>
@@ -141,6 +141,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${jsr305.version}</version>
         </dependency>
     </dependencies>
 

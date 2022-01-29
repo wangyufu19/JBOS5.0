@@ -1,9 +1,9 @@
 package com.jbosframework.web.mvc.annotation;
 import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.MethodMetadata;
-import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanUriUtils;
-import com.jbosframework.beans.support.BeanRegistry;
+import com.jbosframework.beans.support.AbstractBeanRegistry;
+import com.jbosframework.beans.support.ConfigurableBeanFactory;
 import com.jbosframework.utils.StringUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -13,16 +13,18 @@ import java.lang.reflect.Method;
  * @author youfu.wang
  * @version 5.0
  */
-public class WebAnnotationBeanRegistry extends BeanRegistry {
+public class WebAnnotationBeanRegistry extends AbstractBeanRegistry {
     public static final String DEFAULT_REQUEST_MAPPING="handleRequest";
 
+    private ConfigurableBeanFactory registry;
     /**
      * 构造方法
-     * @param beanFactory
+     * @param registry
      */
-    public WebAnnotationBeanRegistry(BeanFactory beanFactory){
-        super(beanFactory);
+    public WebAnnotationBeanRegistry(ConfigurableBeanFactory registry){
+        this.registry=registry;
     }
+
     /**
      * 加载Controller注解
      * @param cls
@@ -35,7 +37,7 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
             webAnnotationBean.setId(StringUtils.replaceNull(requestMapping.value()));
             webAnnotationBean.setName(StringUtils.replaceNull(requestMapping.value()));
             webAnnotationBean.setRequestMethod(requestMapping.method());
-            this.getBeanFactory().putBeanDefinition(webAnnotationBean);
+            this.registry.putBeanDefinition(webAnnotationBean.getName(),webAnnotationBean);
         }
         //注入类方法注解
         this.loadClassMethodAnnotation(cls,webAnnotationBean);
@@ -68,7 +70,7 @@ public class WebAnnotationBeanRegistry extends BeanRegistry {
                     annotationBean.setRequestMethod(((RequestMapping)annotation).method());
                     annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
                     annotationBean.setParentName(parent.getName());
-                    this.getBeanFactory().putBeanDefinition(annotationBean);
+                    this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
                 }
             }
         }
