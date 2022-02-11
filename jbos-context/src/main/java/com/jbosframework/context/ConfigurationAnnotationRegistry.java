@@ -52,7 +52,7 @@ public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
         }
         for(int i=0;i<methods.length;i++) {
             Annotation[] annotations = methods[i].getDeclaredAnnotations();
-            if (annotations == null||annotations.length<=0) {
+            if (annotations == null) {
                 continue;
             }
             for(Annotation annotation:annotations){
@@ -68,19 +68,16 @@ public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
                         id=methods[i].getReturnType().getName();
                     }
                     annotationBean.setInitMethod(((Bean)annotation).initMethod());
-                    if(methods[i].getReturnType().isInterface()){
-                        this.registry.putBeanNameOfType(methods[i].getReturnType().getName(),annotationBean);
+                    annotationBean.setId(id);
+                    annotationBean.setName(id);
+                    annotationBean.setClassName(methods[i].getReturnType().getName());
+                    Scope scope=methods[i].getDeclaredAnnotation(Scope.class);
+                    if(scope!=null){
+                        annotationBean.setScope(scope.value());
                     }
+                    annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
+                    this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
                 }
-                annotationBean.setId(id);
-                annotationBean.setName(id);
-                annotationBean.setClassName(methods[i].getReturnType().getName());
-                Scope scope=methods[i].getDeclaredAnnotation(Scope.class);
-                if(scope!=null){
-                    annotationBean.setScope(scope.value());
-                }
-                annotationBean.setMethodMetadata(MethodMetadata.createMethodMetadata(methods[i]));
-                this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
             }
         }
     }

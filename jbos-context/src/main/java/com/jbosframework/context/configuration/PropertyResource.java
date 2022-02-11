@@ -10,7 +10,7 @@ public interface PropertyResource {
 
 
 
-    String getPropertyValue(String name);
+    Object getPropertyValue(String name);
 
 
     void addPropertyPostProcessor(PropertyPostProcessor propertyPostProcessor);

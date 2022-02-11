@@ -7,7 +7,7 @@ package com.jbosframework.utils;
  */
 public class Assert {
     public static void notEmpty(String str,String message){
-        if(str==null||"null".equals(str)&&str.isEmpty()){
+        if(str==null||"null".equals(str)||str.isEmpty()){
             throw new IllegalArgumentException(message);
         }
     }

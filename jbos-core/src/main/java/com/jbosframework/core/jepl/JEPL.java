@@ -19,12 +19,10 @@ public class JEPL {
 	 * @return
 	 */
 	public static boolean matches(String s) {
-		boolean b = false;
 		if(s==null)
-			return b;
+			return false;
 		Pattern p = Pattern.compile(JEPL_PATTERN);
-		Matcher m = p.matcher(s);	
-		b = m.matches();
-		return b;
+		Matcher m = p.matcher(s);
+		return m.matches();
 	}
 }

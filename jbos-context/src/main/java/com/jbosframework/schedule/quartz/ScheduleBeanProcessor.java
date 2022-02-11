@@ -1,5 +1,6 @@
 package com.jbosframework.schedule.quartz;
 
+import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.core.Order;
@@ -32,7 +33,7 @@ public class ScheduleBeanProcessor implements BeanPostProcessor {
     public int compareTo(BeanPostProcessor beanPostProcessor) {
         return this.order - beanPostProcessor.getOrder();
     }
-    public Object process(Object obj) {
+    public Object process(Object obj, BeanDefinition beanDefinition){
         Object target = obj;
         Class<?> cls = obj.getClass();
         if (cls == null) {

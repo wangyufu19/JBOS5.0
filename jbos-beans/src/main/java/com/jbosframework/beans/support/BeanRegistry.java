@@ -4,7 +4,7 @@ package com.jbosframework.beans.support;
  * @author youfu.wang
  * @version 1.0
  */
-public interface BeanRegistry {
+public interface BeanRegistry{
     /**
      * 注册Bean
      * @param cls

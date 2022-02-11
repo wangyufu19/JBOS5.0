@@ -9,5 +9,11 @@ import com.jbosframework.core.Order;
  */
 public interface BeanPostProcessor extends Comparable<BeanPostProcessor>,Order{
 
-    public Object process(Object obj);
+    default Object postProcessBeforeInitialization(Object bean,BeanDefinition beanDefinition){
+        return bean;
+    }
+
+    default Object postProcessAfterInitialization(Object bean,BeanDefinition beanDefinition){
+        return bean;
+    }
 }

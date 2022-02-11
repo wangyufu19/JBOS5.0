@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * DataSourcePropertiesBuilder
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class DataSourcePropertiesBuilder {
     private static final Log log= LogFactory.getLog(DataSourcePropertiesBuilder.class);
@@ -34,13 +34,10 @@ public class DataSourcePropertiesBuilder {
 
         if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
             dataSourceProperties=new TomcatDataSourceProperties();
-        }
-        if(dataSourceProperties!=null){
             dataSourceProperties.setType(type);
             dataSourceProperties.setDriverClass(driverClass);
             loadProperties(ctx,dataSourceProperties,prefix);
         }
-        ctx.putBean(DataSourceProperties.class.getName(),dataSourceProperties);
         return dataSourceProperties;
     }
 

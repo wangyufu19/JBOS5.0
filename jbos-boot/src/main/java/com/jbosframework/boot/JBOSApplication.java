@@ -3,6 +3,8 @@ package com.jbosframework.boot;
 import com.jbosframework.boot.autoconfig.AutoConfigurationContext;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.boot.context.ConfigFileApplicationContext;
+import com.jbosframework.boot.context.ConfigurationPropertiesRegistry;
+import com.jbosframework.boot.context.PropertyDependencyFactory;
 import com.jbosframework.boot.web.JBOSWebApplicationContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextInitializer;
@@ -18,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JBOSApplication {
     public static final Log logger= LogFactory.getLog(JBOSApplication.class);
-    private ApplicationContext ctx;
+    private AnnotationApplicationContext ctx;
     public Class<?> jbosBootClass;
 
     /**
@@ -54,10 +56,12 @@ public class JBOSApplication {
 //            }
 //        }
 //
-//        //添加配置属性检查器
-//        ConfigurationPropertiesChecker configurationPropertiesChecker=new ConfigurationPropertiesChecker();
-//        configurationPropertiesChecker.setApplicationContext(ctx);
-//        ctx.addBeanBeforeProcessor(configurationPropertiesChecker);
+        //添加配置属性依赖工厂
+        ctx.addBeanDependencyFactory(new PropertyDependencyFactory(ctx));
+        //添加配置属性注册器
+        ConfigurationPropertiesRegistry configurationPropertiesRegistry=new ConfigurationPropertiesRegistry(ctx);
+        configurationPropertiesRegistry.setApplicationContext(ctx);
+        ctx.addBeanRegistry(configurationPropertiesRegistry);
     }
 
     /**

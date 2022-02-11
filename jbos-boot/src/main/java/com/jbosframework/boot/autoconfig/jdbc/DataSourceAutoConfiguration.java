@@ -8,7 +8,6 @@ import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
 import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.context.annotation.Import;
 import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,7 +66,7 @@ public class DataSourceAutoConfiguration extends AbstractAutoConfiguration {
                 log.debug("Create default DataSource["+dataSource.getClass().getName()+"]");
                 AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(DataSource.class.getName(),DataSource.class);
                 ctx.putBeanDefinition(annotationBean.getName(),annotationBean);
-                ctx.putBean(DataSource.class.getName(),dataSource);
+                ctx.registerSingletonInstance(DataSource.class.getName(),dataSource);
             }
         }
     }

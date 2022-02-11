@@ -3,6 +3,7 @@ package com.jbosframework.schedule;
 import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.CglibProxy;
+import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.core.Order;
@@ -36,7 +37,7 @@ public class AsyncBeanProcessor implements BeanPostProcessor {
     public int compareTo(BeanPostProcessor beanPostProcessor) {
         return this.order - beanPostProcessor.getOrder();
     }
-    public Object process(Object obj) {
+    public Object process(Object obj, BeanDefinition beanDefinition){
         boolean isAsyncBean=false;
         Object target = obj;
         Class<?> cls=obj.getClass();

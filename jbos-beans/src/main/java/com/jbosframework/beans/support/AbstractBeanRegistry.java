@@ -1,5 +1,4 @@
 package com.jbosframework.beans.support;
-
 /**
  * AbstractBeanRegistry
  * @author youfu.wang

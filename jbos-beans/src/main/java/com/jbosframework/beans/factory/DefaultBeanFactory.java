@@ -88,18 +88,15 @@ public class DefaultBeanFactory extends AbstractAutowireBeanFactory {
         Map<String, T> beansTypesMap=new HashMap<String, T>();
         return beansTypesMap;
     }
-
-    @Override
-    public void putBean(String name, Object obj) {
-
-    }
-
     /**
      * 注入Bean定义对象
      * @param beanDefinition
      */
     public void putBeanDefinition(String name,BeanDefinition beanDefinition) {
-        Assert.notEmpty(name, " bean must not be empty");
+        if(log.isDebugEnabled()){
+            log.info("register bean ["+beanDefinition.getClassName()+"]");
+        }
+        Assert.notEmpty(name, beanDefinition.getClassName()+ " bean must not be empty");
         Assert.notNull(beanDefinition, " BeanDefinition must not be null");
         BeanDefinition existingDefinition = (BeanDefinition)this.beanDefinitions.get(name);
         if(existingDefinition!=null){
@@ -113,7 +110,7 @@ public class DefaultBeanFactory extends AbstractAutowireBeanFactory {
                 this.beanDefinitionNames = updatedDefinitions;
             }
         }
-        this.putBeanNameOfType(name,beanDefinition);
+        this.putBeanNameOfType(beanDefinition.getClassName(),beanDefinition);
     }
 
     /**
@@ -122,7 +119,9 @@ public class DefaultBeanFactory extends AbstractAutowireBeanFactory {
      * @return
      */
     public BeanDefinition getBeanDefinition(String name) throws BeanException{
-        return this.beanDefinitions.get(name);
+        BeanDefinition beanDefinition=this.beanDefinitions.get(name);
+        Assert.notNull(beanDefinition, name + " BeanDefinition is not exists");
+        return beanDefinition;
     }
 
     /**

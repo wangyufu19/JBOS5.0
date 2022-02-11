@@ -3,7 +3,7 @@ package com.jbosframework.boot.autoconfig.orm;
 import com.jbosframework.boot.autoconfig.AbstractAutoConfiguration;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.context.annotation.Configuration;
-import com.jbosframework.orm.mybatis.support.AnnotationMapperProcessor;
+import com.jbosframework.orm.mybatis.support.MapperDependencyFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -33,9 +33,8 @@ public class MybatisAutoConfiguration extends AbstractAutoConfiguration {
             return;
         }
         if(this.conditionalOnClass(this.getClass().getAnnotation(ConditionalOnClass.class))){
-            AnnotationMapperProcessor annotationMapperProcessor=new AnnotationMapperProcessor(this.getApplicationContext());
-            annotationMapperProcessor.setOrder(10);
-            //this.getApplicationContext().addBeanPostProcessor(annotationMapperProcessor);
+            MapperDependencyFactory mapperDependencyFactory=new MapperDependencyFactory(this.getApplicationContext());
+            this.getApplicationContext().addBeanDependencyFactory(mapperDependencyFactory);
         }
     }
 }

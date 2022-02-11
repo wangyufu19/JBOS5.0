@@ -92,7 +92,7 @@ public class StringUtils {
 		}
 		String tokenizeString="";
 		for(String str:array){
-			tokenizeString+=tokenizeString+delimiters;
+			tokenizeString+=tokenizeString+str+delimiters;
 		}
 		return tokenizeString;
 	}

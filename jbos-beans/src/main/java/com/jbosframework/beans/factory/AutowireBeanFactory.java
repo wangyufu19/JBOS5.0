@@ -20,8 +20,4 @@ public interface AutowireBeanFactory extends BeanFactory{
 
     Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeanException;
 
-    Object autowire(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeanException;
-
-    void autowireBeanProperties(Object existingBean, int autowireMode, boolean dependencyCheck) throws BeanException;
-
 }

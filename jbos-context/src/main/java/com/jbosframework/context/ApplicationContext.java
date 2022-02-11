@@ -9,11 +9,8 @@ import com.jbosframework.context.configuration.PropertyResource;
  * @version 1.0
  */
 public interface ApplicationContext extends ConfigurableBeanFactory, PropertyResource {
-	/**
-	 * 添加BeanRegistry
-	 * @param beanRegistry
-	 */
-	public void addBeanRegistry(BeanRegistry beanRegistry);
+
+	void addBeanRegistry(BeanRegistry beanRegistry);
 	/**
 	 * 注册Bean
 	 * @param cls
@@ -24,6 +21,7 @@ public interface ApplicationContext extends ConfigurableBeanFactory, PropertyRes
 	 * @param classes
 	 */
 	public void registry(Class<?>[] classes);
+
 
 	public void refresh();
 

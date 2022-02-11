@@ -2,17 +2,20 @@ package com.jbosframework.beans.support;
 import com.jbosframework.beans.BeanException;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.DefaultBeanDefinition;
 import com.jbosframework.beans.config.InjectionMetadata;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.core.Nullable;
 import com.jbosframework.utils.Assert;
+import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,6 +25,7 @@ import java.lang.reflect.Modifier;
  */
 public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory implements AutowireBeanFactory, ConfigurableBeanFactory {
     private static final Log log= LogFactory.getLog(AbstractAutowireBeanFactory.class);
+    private volatile List<DependencyFactory> dependencyFactories=new ArrayList(256);
 
 
     public Object initializeBean(Object existingBean, String beanName) throws BeanException{
@@ -34,37 +38,17 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
         if(fields==null) {
             return;
         }
-        InjectionMetadata injectionMetadata=new InjectionMetadata();
         for(int i=0;i<fields.length;i++) {
-            Autowired autowiredAnnotation=fields[i].getDeclaredAnnotation(Autowired.class);
-            if(autowiredAnnotation==null) {
-                continue;
-            }
             //校验字段注解是否用在了static方法上
             if (Modifier.isStatic(fields[i].getModifiers())) {
                 if (log.isWarnEnabled()) {
                     log.warn("Field com.jbosframework.beans.annotation is not supported on static fields: " + fields[i].getName());
                 }
-                return;
+                continue;
             }
-            Object fieldValue=null;
-            if(fields[i].getType().isInterface()){
-                String[] beanNames=this.getBeanNamesOfType(fields[i].getType());
-                if(beanNames.length<=0){
-                    fieldValue=this.getBean(fields[i].getType().getName());
-                }else{
-                    if(beanNames.length>1){
-                        BeanTypeException ex = new BeanTypeException("指定的类型Bean'" + fields[i].getType() + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
-                        ex.printStackTrace();
-                        return;
-                    }else{
-                        fieldValue=this.getBean(beanNames[0]);
-                    }
-                }
-            }else{
-                fieldValue=this.getBean(fields[i].getType().getName());
+            for(DependencyFactory dependencyFactory:dependencyFactories){
+                dependencyFactory.autowireDependency(existingBean,fields[i]);
             }
-            injectionMetadata.inject(existingBean,fields[i],fieldValue);
         }
     }
 
@@ -84,21 +68,86 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
         //Bean实例化
         if(this.containsSingletonBean(name)){
             obj=this.getSingletonInstance(name);
+            return obj;
         }else{
             if(beanDefinition.isMethodBean()){
-
+                obj=this.createMethodBean(beanDefinition);
             }else{
                 obj=BeanInstanceUtils.newBeanInstance(beanDefinition.getClassName());
             }
         }
+        //Bean初始化、依赖注入前的处理器
+        this.doPostProcessBeforeInitialization(obj,beanDefinition);
+        //调用Bean初始化方法
+        this.invokeInitMethod(obj,beanDefinition);
+        //依赖注入
         this.autowireBean(obj);
+        //Bean初始化、依赖注入后的处理器
+        this.doPostProcessAfterInitialization(obj,beanDefinition);
         return obj;
     }
-    public Object autowire(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeanException{
-        return null;
+
+    /**
+     * 创建方法Bean对象
+     * @param beanDefinition
+     * @return
+     */
+    private Object createMethodBean(BeanDefinition beanDefinition){
+        Object obj=null;
+        Object parentObj=this.getBean(beanDefinition.getParentName());
+        DefaultBeanDefinition defaultBeanDefinition=(DefaultBeanDefinition)beanDefinition;
+        MethodMetadata methodMetadata=defaultBeanDefinition.getMethodMetadata();
+        if(methodMetadata.getMethodParameters().length>0){
+            Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
+            for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
+                Object refObj=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
+                parameterValues[i]=refObj;
+            }
+            obj= JBOSClassCaller.call(parentObj,methodMetadata.getMethodName(),parameterValues,methodMetadata.getParameterTypes());
+        }else{
+            obj=JBOSClassCaller.call(parentObj,methodMetadata.getMethodName());
+        }
+        return obj;
+    }
+    /**
+     * 调用Bean初始化方法
+     * @param beanDefinition
+     */
+    private void invokeInitMethod(Object obj,BeanDefinition beanDefinition){
+        String initMethod=beanDefinition.getInitMethod();
+        if(initMethod!=null&&!"".equals(initMethod)){
+            JBOSClassCaller.call(obj,initMethod);
+        }
+    }
+    public void addBeanDependencyFactory(DependencyFactory dependencyFactory){
+        this.dependencyFactories.add(dependencyFactory);
     }
 
-    public void autowireBeanProperties(Object existingBean, int autowireMode, boolean dependencyCheck) throws BeanException{
+    public class AutowireDependencyFactory implements DependencyFactory {
 
+         public void autowireDependency(Object existingBean,Field field) {
+            Autowired autowiredAnnotation=field.getDeclaredAnnotation(Autowired.class);
+            if(autowiredAnnotation==null) {
+                return;
+            }
+            Object fieldValue=null;
+            if(field.getType().isInterface()){
+                String[] beanNames=getBeanNamesOfType(field.getType());
+                if(beanNames.length<=0){
+                    fieldValue=getBean(field.getType().getName());
+                }else{
+                    if(beanNames.length>1){
+                        BeanTypeException ex = new BeanTypeException("指定的类型Bean'" +field.getType() + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
+                        ex.printStackTrace();
+                        return;
+                    }else{
+                        fieldValue=getBean(beanNames[0]);
+                    }
+                }
+            }else{
+                fieldValue=getBean(field.getType().getName());
+            }
+            this.inject(existingBean,field,fieldValue);
+        }
     }
 }

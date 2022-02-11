@@ -1,8 +1,12 @@
 package com.jbosframework.context.support;
 import com.jbosframework.beans.factory.DefaultBeanFactory;
+import com.jbosframework.beans.support.AbstractAutowireBeanFactory;
+import com.jbosframework.beans.support.BeanRegistry;
 import com.jbosframework.context.ApplicationContextFactory;
 import com.jbosframework.context.ApplicationEventListener;
 import com.jbosframework.context.ConfigurableApplicationContext;
+import com.jbosframework.beans.factory.ImportFactory;
+import com.jbosframework.context.annotation.ImportRegistry;
 import com.jbosframework.context.configuration.Environment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,7 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractApplicationContext extends DefaultBeanFactory implements ConfigurableApplicationContext {
     private static final Log log= LogFactory.getLog(AbstractApplicationContext.class);
+    private volatile List<ImportRegistry> importRegistries= new ArrayList(256);
     private volatile List<PropertyPostProcessor> propertyPostProcessors= new ArrayList(256);
+
     private Set<EventListener> listeners;
     private Environment environment=new Environment();
     private static Map<String, Object> properties= new ConcurrentHashMap(256);
@@ -25,8 +31,14 @@ public abstract class AbstractApplicationContext extends DefaultBeanFactory impl
         this.listeners=new LinkedHashSet<EventListener>();
     }
 
+    public void addImportRegistry(ImportRegistry importRegistry){
+        this.importRegistries.add(importRegistry);
+    }
+    public List<ImportRegistry> getImportRegistries(){
+        return this.importRegistries;
+    }
     public void refresh(){
-
+        this.addBeanDependencyFactory(new AbstractAutowireBeanFactory.AutowireDependencyFactory());
         this.finishRefresh();
     }
 
@@ -48,14 +60,14 @@ public abstract class AbstractApplicationContext extends DefaultBeanFactory impl
             }
         });
     }
-    public String getPropertyValue(String name){
-        Object value="";
+    public Object getPropertyValue(String name){
+        Object value=null;
         for(PropertyPostProcessor propertyPostProcessor:this.propertyPostProcessors){
             value=propertyPostProcessor.getPropertyValue(properties,name);
             if(value!=null){
                 break;
             }
         }
-        return value.toString();
+        return value;
     }
 }

@@ -1,10 +1,9 @@
 package com.jbosframework.beans.support;
 import com.jbosframework.beans.BeanException;
-import com.jbosframework.beans.config.BeanBeforeProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
-import com.jbosframework.beans.factory.BeanFactory;
 import com.jbosframework.beans.factory.BeanTypeException;
+import com.jbosframework.beans.factory.ImportFactory;
 import com.jbosframework.core.Nullable;
 import com.jbosframework.utils.Assert;
 
@@ -17,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  */
 public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
-    protected final Map<String,Object> singletonInstances= new ConcurrentHashMap(256);
-    private volatile List<BeanBeforeProcessor> beanBeforeProcessors= new ArrayList(256);
+    protected final static Map<String,Object> singletonInstances= new ConcurrentHashMap(256);
+    private volatile List<ImportFactory> importFactories= new ArrayList(256);
     private volatile List<BeanPostProcessor> beanPostProcessors=new ArrayList(256);
 
     /**
@@ -57,11 +56,17 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     private <T> T doGetBean(String name,Class<T> requiredType){
         BeanDefinition beanDefinition=this.getBeanDefinition(name);
         Object obj=this.createBean(name,beanDefinition,null);
-        return this.convertBean(obj,requiredType);
+        T bean=this.convertBean(obj,requiredType);
+        if(beanDefinition.isSingleton()){
+            this.registerSingletonInstance(name,bean);
+        }
+        return bean;
     }
     private <T> T convertBean(Object obj,Class<T> requiredType){
         if(obj!=null&&requiredType!=null){
-            if(obj.getClass().getName().equals(requiredType.getName())||obj.getClass().getName().contains("com.sun.proxy.$Proxy")||obj.getClass().getName().contains("$$EnhancerByCGLIB$$")){
+            if((obj.getClass().getName().equals(requiredType.getName())||requiredType.isAssignableFrom(obj.getClass()))
+                    ||obj.getClass().getName().contains("com.sun.proxy.$Proxy")
+                    ||obj.getClass().getName().contains("$$EnhancerByCGLIB$$")){
                 return (T)obj;
             }else{
                 BeanTypeException ex =new BeanTypeException("给定的Bean名称"+requiredType.getName()+"与"+obj.getClass().getName()+"不相同");
@@ -107,6 +112,11 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
         return this.singletonInstances.get(name);
     }
 
+    public void registerSingletonInstance(String name,Object object){
+        synchronized (this.singletonInstances){
+            this.singletonInstances.put(name,object);
+        }
+    }
     /**
      * 是否包含该Bean对象
      * @param name
@@ -115,36 +125,39 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     public boolean containsSingletonBean(String name){
         return this.singletonInstances.containsKey(name);
     }
-    /**
-     * 处理Bean对象的Processor
-     * @param bean
-     * @param beanDefinition
-     * @return
-     */
-    public void doBeanBeforeProcessor(Object bean, BeanDefinition beanDefinition){
-        for(BeanBeforeProcessor beanBeforeProcessor:this.getBeanBeforeProcessors()){
-            beanBeforeProcessor.process(bean,beanDefinition);
+    public void addImportFactory(ImportFactory importFactory){
+        importFactories.add(importFactory);
+    }
+    public void doImportFactory(Object bean,BeanDefinition beanDefinition){
+        for(ImportFactory importFactory:importFactories){
+            importFactory.importBean(bean,beanDefinition);
         }
     }
     /**
-     * 处理Bean对象的Processor
+     * 处理Bean对象的ProcessorP
      */
-    public Object doBeanPostProcessor(Object bean){
+    public Object doPostProcessBeforeInitialization(Object bean,BeanDefinition beanDefinition){
         Object obj=bean;
         if(obj==null){
             return null;
         }
         for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
-            obj=beanPostProcessor.process(obj);
+            obj=beanPostProcessor.postProcessBeforeInitialization(obj,beanDefinition);
         }
         return obj;
     }
     /**
-     * 添加BeanBeforeProcessor
-     * @param beanBeforeProcessor
+     * 处理Bean对象的Processor
      */
-    public void addBeanBeforeProcessor(BeanBeforeProcessor beanBeforeProcessor){
-        beanBeforeProcessors.add(beanBeforeProcessor);
+    public Object doPostProcessAfterInitialization(Object bean,BeanDefinition beanDefinition){
+        Object obj=bean;
+        if(obj==null){
+            return null;
+        }
+        for(BeanPostProcessor beanPostProcessor:this.getBeanPostProcessors()){
+            obj=beanPostProcessor.postProcessAfterInitialization(obj,beanDefinition);
+        }
+        return obj;
     }
     /**
      * 添加BeanPostProcessor
@@ -161,9 +174,6 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
                 return o1.getOrder()-o2.getOrder();
             }
         });
-    }
-    public List<BeanBeforeProcessor> getBeanBeforeProcessors(){
-        return beanBeforeProcessors;
     }
     public List<BeanPostProcessor> getBeanPostProcessors(){
         return beanPostProcessors;
@@ -189,4 +199,5 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
      * @throws BeanException
      */
     protected abstract Object createBean(String name,BeanDefinition beanDefinition, @Nullable Object[] args) throws BeanException;
+
 }

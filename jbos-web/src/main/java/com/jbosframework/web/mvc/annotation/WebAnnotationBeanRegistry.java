@@ -1,5 +1,4 @@
 package com.jbosframework.web.mvc.annotation;
-import com.jbosframework.beans.annotation.Scope;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.BeanUriUtils;
 import com.jbosframework.beans.support.AbstractBeanRegistry;
@@ -64,7 +63,6 @@ public class WebAnnotationBeanRegistry extends AbstractBeanRegistry {
                     annotationBean.setAnnotations(annotations);
                     annotationBean.setClassName(cls.getName());
                     annotationBean.setParentName(parent.getName());
-                    annotationBean.setScope(Scope.SCOPE_PROTOTYPE);
                     annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
                     annotationBean.setName(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));
                     annotationBean.setRequestMethod(((RequestMapping)annotation).method());
