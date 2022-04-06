@@ -1,7 +1,4 @@
 package com.jbosframework.aop;
-
-import net.sf.cglib.proxy.MethodInterceptor;
-
 /**
  * AdviceConfig
  * @author youfu.wang

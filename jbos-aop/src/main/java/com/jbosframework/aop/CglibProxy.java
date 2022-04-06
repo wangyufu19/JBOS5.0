@@ -1,8 +1,5 @@
 package com.jbosframework.aop;
-import java.lang.reflect.Method;
 import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;  
-import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,19 +31,5 @@ public class CglibProxy implements AopProxy{
 		enhancer.setCallback(this.adviceConfig.getMethodAdvisor());
 		obj=enhancer.create();
 		return obj;
-	}
-	public class CglibMethodInterceptor implements MethodInterceptor{
-		private AdviceConfig adviceConfig;
-
-		public CglibMethodInterceptor(AdviceConfig adviceConfig){
-			this.adviceConfig=adviceConfig;
-		}
-		@Override
-		public Object intercept(Object object, Method method, Object[] args,
-								MethodProxy methodProxy) throws Throwable {
-			Object result = null;
-			result = methodProxy.invoke(this.adviceConfig.getTarget(),args);
-			return result;
-		}
 	}
 }

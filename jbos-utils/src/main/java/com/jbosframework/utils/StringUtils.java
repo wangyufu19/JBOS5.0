@@ -155,4 +155,8 @@ public class StringUtils {
 			return inString;
 		}
 	}
+	public static void main(String[] ags){
+		String s=new String("123");
+		System.out.println(new StringUtils().toString());
+	}
 }

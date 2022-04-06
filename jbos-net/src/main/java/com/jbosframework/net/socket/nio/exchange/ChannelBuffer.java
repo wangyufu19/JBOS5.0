@@ -57,11 +57,11 @@ public class ChannelBuffer {
 		}else{
 			bufferLength=remainingLength;
 		}
-		byteBuffer=ByteBuffer.allocate(bufferLength);
-    	byteBuffer.clear();   
 		while(remainingLength>0){
-			int readBytes=0;			
-	    	readBytes=socketChannel.read(byteBuffer);
+			int readBytes=0;
+			byteBuffer=ByteBuffer.allocate(bufferLength);
+			byteBuffer.clear();
+			readBytes=socketChannel.read(byteBuffer);
 	    	if(readBytes>0){
 	    		System.arraycopy(byteBuffer.array(), 0, totoalBytes, destPos, readBytes);
 				destPos=destPos+readBytes;

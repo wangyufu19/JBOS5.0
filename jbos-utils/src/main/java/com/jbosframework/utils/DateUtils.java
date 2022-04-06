@@ -1,6 +1,8 @@
 package com.jbosframework.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -88,6 +90,17 @@ public class DateUtils {
 	/**
 	 * 将日期对象格式化为指定的模式字符串
 	 * @param date
+	 * @return
+	 */
+	public static String format(LocalDate date){
+		if (date == null)
+			return null;
+		DateTimeFormatter dtFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		return date.format(dtFmt);
+	}
+	/**
+	 * 将日期对象格式化为指定的模式字符串
+	 * @param date
 	 * @param pattern
 	 * @return
 	 */
@@ -97,7 +110,25 @@ public class DateUtils {
 	    DateFormat dtFmt = new SimpleDateFormat(pattern,Locale.CHINA);
 	    return dtFmt.format(date);
 	}
-	
+	/**
+	 * 将日期对象格式化为指定的模式字符串
+	 * @param date
+	 * @return
+	 */
+	public static String format(LocalDate date,String pattern){
+		if (date == null)
+			return null;
+		DateTimeFormatter dtFmt = DateTimeFormatter.ofPattern(pattern);
+		return date.format(dtFmt);
+	}
+	/**
+	 * 将字符串转换日期对象
+	 * @param s
+	 * @return
+	 */
+	public static LocalDate parse(String s){
+		return LocalDate.parse(s);
+	}
 	/**
 	 * 将long时间转换成Timestamp对象 
 	 * @param millis
@@ -143,5 +174,9 @@ public class DateUtils {
 		calendar2.setTimeInMillis(arg2);
 		ret=calendar1.compareTo(calendar2);
 		return ret;	
-	}	
+	}
+	public static void main(String[] args){
+		System.out.println(DateUtils.format(LocalDate.of(2022,3,29)));
+		System.out.println(DateUtils.parse("2022-03-29").plusDays(3));
+	}
 }
