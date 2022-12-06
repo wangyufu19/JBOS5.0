@@ -29,7 +29,7 @@ public class WebAnnotationBeanRegistry extends AbstractBeanRegistry {
      * @param cls
      */
     private void loadControllerAnnotation(Class<?> cls){
-        WebAnnotationBean webAnnotationBean=new WebAnnotationBean();
+        WebAnnotationBean webAnnotationBean=new WebAnnotationBean(cls);
         webAnnotationBean.setClassName(cls.getName());
         RequestMapping requestMapping=cls.getAnnotation(RequestMapping.class);
         if(requestMapping!=null){
@@ -59,8 +59,7 @@ public class WebAnnotationBeanRegistry extends AbstractBeanRegistry {
             for(Annotation annotation:annotations){
                 if(annotation instanceof RequestMapping){
                     //加载RequestMapping注解
-                    WebAnnotationBean annotationBean=new WebAnnotationBean();
-                    annotationBean.setAnnotations(annotations);
+                    WebAnnotationBean annotationBean=new WebAnnotationBean(cls);
                     annotationBean.setClassName(cls.getName());
                     annotationBean.setParentName(parent.getName());
                     annotationBean.setId(BeanUriUtils.getBeanUri(parent.getName(), StringUtils.replaceNull(((RequestMapping)annotation).value())));

@@ -1,5 +1,5 @@
 package com.jbosframework.context;
-import com.jbosframework.context.support.AnnotationApplicationContext;
+import com.jbosframework.context.annotation.AnnotationConfigApplicationContext;
 /**
  * ApplicationContextFactory
  * @author youfu.wang
@@ -31,7 +31,7 @@ public class ApplicationContextFactory {
 		if(applicationContext==null){
 			synchronized(ApplicationContext.class){
 				if(applicationContext==null){
-					applicationContext=new AnnotationApplicationContext();
+					applicationContext=new AnnotationConfigApplicationContext();
 				}
 			}
 		}

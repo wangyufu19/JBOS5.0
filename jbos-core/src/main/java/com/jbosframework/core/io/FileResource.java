@@ -18,6 +18,10 @@ public class FileResource extends AbstractResource{
 	public FileResource(String path){
 		this.file=new File(path);
 	}
+	public boolean isFile() {
+		return this.file.isFile();
+	}
+
 	@Override
 	public File getFile() throws IOException{
 		return file;
@@ -41,6 +45,11 @@ public class FileResource extends AbstractResource{
 	@Override
 	public URL getURL() throws IOException {
 		return this.file.toURI().toURL();
+	}
+
+	@Override
+	public String getDescription() {
+		return null;
 	}
 
 }

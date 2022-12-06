@@ -14,7 +14,7 @@ public class WebAnnotationApplicationContext {
 	 */
 	public WebAnnotationApplicationContext(ApplicationContext applicationContext){
 		this.applicationContext=applicationContext;
-		applicationContext.addBeanRegistry(new WebAnnotationBeanRegistry(applicationContext));
+		//applicationContext.addBeanRegistry(new WebAnnotationBeanRegistry(applicationContext));
 	}
 	/**
 	 * 初始化上下文
@@ -22,7 +22,7 @@ public class WebAnnotationApplicationContext {
 	 * @return
 	 */
 	public void initWebApplicationContext(Class<?> cls){
-		applicationContext.registry(cls);
+		//applicationContext.registry(cls);
 	}
 	/**
 	 * 初始化上下文
@@ -30,7 +30,7 @@ public class WebAnnotationApplicationContext {
 	 * @return
 	 */
 	public void initWebApplicationContext(Class<?>[] clses){
-		applicationContext.registry(clses);
+		//applicationContext.registry(clses);
 	}
 
 }

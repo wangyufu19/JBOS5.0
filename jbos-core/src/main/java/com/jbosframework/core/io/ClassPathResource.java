@@ -1,70 +1,139 @@
 package com.jbosframework.core.io;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import com.jbosframework.utils.JBOSClassloader;
 
-/**
- * ClassPathResource
- * @author youfu.wang
- * @version 1.0
- */
-public class ClassPathResource extends AbstractResource{
+import com.jbosframework.core.Nullable;
+import com.jbosframework.utils.*;
+
+
+public class ClassPathResource extends AbstractFileResolvingResource {
+	private final String path;
+	@Nullable
 	private ClassLoader classLoader;
-	private String path;
-	
-	public ClassPathResource(String path){		
-		classLoader=JBOSClassloader.getClassLoader();	
-		this.path=path;
+	@Nullable
+	private Class<?> clazz;
+
+	public ClassPathResource(String path) {
+		this(path, (ClassLoader)null);
 	}
 
-	@Override
-	public File getFile() throws IOException {
-		File file=null;
-		file=new File(this.getURL().getFile());
-		return file;
+	public ClassPathResource(String path, @Nullable ClassLoader classLoader) {
+		Assert.notNull(path, "Path must not be null");
+		String pathToUse = StringUtils.cleanPath(path);
+		if (pathToUse.startsWith("/")) {
+			pathToUse = pathToUse.substring(1);
+		}
+
+		this.path = pathToUse;
+		this.classLoader = classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader();
 	}
 
-	@Override
-	public String getFileName() throws IOException {
-		File file=this.getFile();
-		if(file==null) return null;
-		return file.getName();
+	public ClassPathResource(String path, @Nullable Class<?> clazz) {
+		Assert.notNull(path, "Path must not be null");
+		this.path = StringUtils.cleanPath(path);
+		this.clazz = clazz;
 	}
-	
-	@Override
+
+	/** @deprecated */
+	@Deprecated
+	protected ClassPathResource(String path, @Nullable ClassLoader classLoader, @Nullable Class<?> clazz) {
+		this.path = StringUtils.cleanPath(path);
+		this.classLoader = classLoader;
+		this.clazz = clazz;
+	}
+
+	public final String getPath() {
+		return this.path;
+	}
+
+	@Nullable
+	public final ClassLoader getClassLoader() {
+		return this.clazz != null ? this.clazz.getClassLoader() : this.classLoader;
+	}
+
+	public boolean exists() {
+		return this.resolveURL() != null;
+	}
+
+	@Nullable
+	protected URL resolveURL() {
+		if (this.clazz != null) {
+			return this.clazz.getResource(this.path);
+		} else {
+			return this.classLoader != null ? this.classLoader.getResource(this.path) : ClassLoader.getSystemResource(this.path);
+		}
+	}
+
 	public InputStream getInputStream() throws IOException {
-		InputStream is = null;
-		is=classLoader.getResourceAsStream(this.path);
-		if(is==null)
-			throw new IOException("资源类库 [" + classLoader.getResource("")+path + "] 文件没有找到");
-		return is;
+		InputStream is;
+		if (this.clazz != null) {
+			is = this.clazz.getResourceAsStream(this.path);
+		} else if (this.classLoader != null) {
+			is = this.classLoader.getResourceAsStream(this.path);
+		} else {
+			is = ClassLoader.getSystemResourceAsStream(this.path);
+		}
+
+		if (is == null) {
+			throw new FileNotFoundException(this.getDescription() + " cannot be opened because it does not exist");
+		} else {
+			return is;
+		}
 	}
 
-	@Override
-	public URI getURI() throws IOException {
-		URL url=null;
-		url=classLoader.getResource(this.path);	
-		if(url==null)
-			throw new IOException("资源类库 [" + classLoader.getResource("")+path + "] 文件没有找到");
-		try {
-			return url.toURI();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}		
-		return null;
-	}
-
-	@Override
 	public URL getURL() throws IOException {
-		URL url=null;
-		url=classLoader.getResource(this.path);
-		if(url==null)
-			throw new IOException("资源类库[" + path + "]文件没有找到");	
-		return url;
+		URL url = this.resolveURL();
+		if (url == null) {
+			throw new FileNotFoundException(this.getDescription() + " cannot be resolved to URL because it does not exist");
+		} else {
+			return url;
+		}
 	}
 
+	public Resource createRelative(String relativePath) {
+		String pathToUse = StringUtils.applyRelativePath(this.path, relativePath);
+		return this.clazz != null ? new ClassPathResource(pathToUse, this.clazz) : new ClassPathResource(pathToUse, this.classLoader);
+	}
+
+	@Nullable
+	public String getFileName() {
+		return StringUtils.getFilename(this.path);
+	}
+
+	public String getDescription() {
+		StringBuilder builder = new StringBuilder("class path resource [");
+		String pathToUse = this.path;
+		if (this.clazz != null && !pathToUse.startsWith("/")) {
+			builder.append(ClassUtils.classPackageAsResourcePath(this.clazz));
+			builder.append('/');
+		}
+
+		if (pathToUse.startsWith("/")) {
+			pathToUse = pathToUse.substring(1);
+		}
+
+		builder.append(pathToUse);
+		builder.append(']');
+		return builder.toString();
+	}
+
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		} else if (!(other instanceof ClassPathResource)) {
+			return false;
+		} else {
+			ClassPathResource otherRes = (ClassPathResource)other;
+			return this.path.equals(otherRes.path) && ObjectUtils.nullSafeEquals(this.classLoader, otherRes.classLoader) && ObjectUtils.nullSafeEquals(this.clazz, otherRes.clazz);
+		}
+	}
+
+	public int hashCode() {
+		return this.path.hashCode();
+	}
 }

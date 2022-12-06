@@ -1,0 +1,17 @@
+server:
+  application: jbos
+  port: 9080
+  contextPath: /jbos
+jbos:
+  profiles:
+    active: dev
+  #MyBatis配置
+  mybatis:
+    mapperLocations: classpath:mapper/**/*.xml
+    logImpl: LOG4J
+
+  executor:
+    corePoolSize: 4
+    maxPoolSize: 10
+    keepAliveSeconds: 60
+    queueCapacity: 200

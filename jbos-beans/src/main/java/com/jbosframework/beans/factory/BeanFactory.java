@@ -25,4 +25,6 @@ public interface BeanFactory {
 
 	public boolean containsBean(String name);
 
+	void destroy();
+
 }

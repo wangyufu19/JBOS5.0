@@ -1,30 +1,24 @@
 package com.jbosframework.context;
-import com.jbosframework.beans.support.BeanRegistry;
-import com.jbosframework.beans.support.ConfigurableBeanFactory;
-import com.jbosframework.context.configuration.PropertyResource;
+import com.jbosframework.beans.factory.BeanFactory;
+import com.jbosframework.core.Nullable;
 
 /**
  * ApplicationContext
  * @author youfu.wang
  * @version 1.0
  */
-public interface ApplicationContext extends ConfigurableBeanFactory, PropertyResource {
+public interface ApplicationContext extends BeanFactory,ApplicationEventPublisher {
 
-	void addBeanRegistry(BeanRegistry beanRegistry);
-	/**
-	 * 注册Bean
-	 * @param cls
-	 */
-	public void registry(Class<?> cls);
-	/**
-	 * 注册Bean
-	 * @param classes
-	 */
-	public void registry(Class<?>[] classes);
+	@Nullable
+	String getId();
 
+	String getApplicationName();
 
-	public void refresh();
+	String getDisplayName();
 
-	public void destroy();
+	long getStartupDate();
+
+	@Nullable
+	ApplicationContext getParent();
 
 }

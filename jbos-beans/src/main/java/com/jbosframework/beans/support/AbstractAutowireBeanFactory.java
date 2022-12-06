@@ -1,9 +1,8 @@
 package com.jbosframework.beans.support;
-import com.jbosframework.beans.BeanException;
+import com.jbosframework.beans.BeansException;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.config.DefaultBeanDefinition;
-import com.jbosframework.beans.config.InjectionMetadata;
+import com.jbosframework.beans.config.AbstractBeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.factory.*;
 import com.jbosframework.core.Nullable;
@@ -28,11 +27,11 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
     private volatile List<DependencyFactory> dependencyFactories=new ArrayList(256);
 
 
-    public Object initializeBean(Object existingBean, String beanName) throws BeanException{
+    public Object initializeBean(Object existingBean, String beanName) throws BeansException {
         return null;
     }
 
-    public void autowireBean(Object existingBean) throws BeanException{
+    public void autowireBean(Object existingBean) throws BeansException {
         Assert.notNull(existingBean, "Object must not be null");
         Field[] fields=existingBean.getClass().getDeclaredFields();
         if(fields==null) {
@@ -52,7 +51,7 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
         }
     }
 
-    public Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeanException{
+    public Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeansException {
         return null;
     }
     /**
@@ -61,9 +60,9 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
      * @param beanDefinition
      * @param args
      * @return
-     * @throws BeanException
+     * @throws BeansException
      */
-    public Object createBean(String name, BeanDefinition beanDefinition, @Nullable Object[] args) throws BeanException{
+    public Object createBean(String name, BeanDefinition beanDefinition, @Nullable Object[] args) throws BeansException {
         Object obj=null;
         //Bean实例化
         if(this.containsSingletonBean(name)){
@@ -95,8 +94,9 @@ public abstract class AbstractAutowireBeanFactory extends AbstractBeanFactory im
     private Object createMethodBean(BeanDefinition beanDefinition){
         Object obj=null;
         Object parentObj=this.getBean(beanDefinition.getParentName());
-        DefaultBeanDefinition defaultBeanDefinition=(DefaultBeanDefinition)beanDefinition;
-        MethodMetadata methodMetadata=defaultBeanDefinition.getMethodMetadata();
+        AbstractBeanDefinition defaultBeanDefinition=(AbstractBeanDefinition)beanDefinition;
+        MethodMetadata methodMetadata=null;
+        //defaultBeanDefinition.getMethodMetadata();
         if(methodMetadata.getMethodParameters().length>0){
             Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
             for(int i=0;i<methodMetadata.getMethodParameters().length;i++){

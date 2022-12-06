@@ -1,7 +1,7 @@
 package com.jbosframework.context.support;
 
-import com.jbosframework.context.configuration.Environment;
-import com.jbosframework.core.Order;
+import com.jbosframework.core.env.Environment;
+import com.jbosframework.core.Ordered;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import java.util.Map;
  * @author youfu.wang
  * @version 1.0
  */
-public interface PropertyPostProcessor extends Comparable<PropertyPostProcessor>, Order {
+public interface PropertyPostProcessor extends Comparable<PropertyPostProcessor>, Ordered {
 
     public void loadProperty(Environment environment, Map<String, Object> properties);
 

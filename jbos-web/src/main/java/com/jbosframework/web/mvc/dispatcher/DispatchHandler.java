@@ -1,15 +1,14 @@
 package com.jbosframework.web.mvc.dispatcher;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
-import com.jbosframework.beans.config.AnnotationBean;
+
+import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassCaller;
-import com.jbosframework.utils.JsonUtils;
 import com.jbosframework.web.mvc.annotation.ResponseBody;
 import com.jbosframework.web.utils.WebUtils;
 import com.jbosframework.web.mvc.annotation.RequestMethod;
@@ -67,7 +66,7 @@ public class DispatchHandler {
 			dispatcher.doDispatcher404(requestUri);
 			return;
 		}				
-		if(controller instanceof AnnotationBean){				
+		if(controller instanceof GenericBeanDefinition){
 			//使用注解加载配置的IoC对象	
 			WebAnnotationBean webAnnotationBean=(WebAnnotationBean)controller;
 			String requestMethod=request.getMethod().toUpperCase();
@@ -148,7 +147,7 @@ public class DispatchHandler {
 	protected Object getRequestController(ApplicationContext applicationContext,String s){	
 		Object obj=null;
 		if(s==null) return null;
-		obj=applicationContext.getBeanDefinition(s);			
+		//obj=applicationContext.getBeanDefinition(s);
 		if(obj==null){
 			if(s.indexOf(".form")!=-1){		
 				if(s.startsWith("/")){
@@ -157,8 +156,8 @@ public class DispatchHandler {
 					s=s.substring(0, s.indexOf(".form"));
 				}				
 			}
-			obj=applicationContext.getBeanDefinition(s);				
-			obj=obj!=null?obj:applicationContext.getBeanDefinition("/"+s);
+			//obj=applicationContext.getBeanDefinition(s);
+			//obj=obj!=null?obj:applicationContext.getBeanDefinition("/"+s);
 		}				
 		return obj;
 	}

@@ -6,7 +6,7 @@ import com.jbosframework.aop.CglibProxy;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.core.Order;
+import com.jbosframework.core.Ordered;
 import com.jbosframework.transaction.annotation.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +22,7 @@ public class TransactionBeanProcessor implements BeanPostProcessor {
 
     private static final Log log= LogFactory.getLog(TransactionBeanProcessor.class);
     private BeanFactory beanFactory;
-    private int order= Order.MIN;
+    private int order= Ordered.HIGHEST_PRECEDENCE;
 
     public TransactionBeanProcessor(BeanFactory beanFactory){
         this.beanFactory=beanFactory;

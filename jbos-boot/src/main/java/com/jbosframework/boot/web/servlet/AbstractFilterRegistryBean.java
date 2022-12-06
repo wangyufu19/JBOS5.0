@@ -1,6 +1,6 @@
 package com.jbosframework.boot.web.servlet;
 
-import com.jbosframework.core.Order;
+import com.jbosframework.core.Ordered;
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +11,12 @@ import java.util.Map;
  * @version 5.0
  * @date 2020-11-26
  */
-public class AbstractFilterRegistryBean <T extends Filter> implements Order {
+public class AbstractFilterRegistryBean <T extends Filter> implements Ordered {
 
     private Map<String,String> initParameters=new HashMap<String,String>();
     private String name;
     private String urlPattern="/*";
-    private int order=Order.MIN;
+    private int order= Ordered.LOWEST_PRECEDENCE;
 
     public void addInitParameter(String name,String value){
         if(!initParameters.containsKey(name)){

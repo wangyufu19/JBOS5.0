@@ -1,4 +1,9 @@
 package com.jbosframework.aop.support;
+
+import com.jbosframework.aop.Advised;
+import com.jbosframework.aop.SingletonTargetSource;
+import com.jbosframework.aop.TargetSource;
+
 /**
  * AopProxyUtils
  * @author youfu.wang
@@ -6,6 +11,17 @@ package com.jbosframework.aop.support;
  * @date 2016-11-11
  */
 public class AopProxyUtils {
+
+	public static Object getSingletonTarget(Object candidate) {
+		if (candidate instanceof Advised) {
+			TargetSource targetSource = ((Advised)candidate).getTargetSource();
+			if (targetSource instanceof SingletonTargetSource) {
+				return ((SingletonTargetSource)targetSource).getTarget();
+			}
+		}
+
+		return null;
+	}
 	/**
 	 * 判断是否AOP代理
 	 * @param obj

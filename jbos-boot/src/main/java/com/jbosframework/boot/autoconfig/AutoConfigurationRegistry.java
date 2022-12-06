@@ -1,6 +1,7 @@
 package com.jbosframework.boot.autoconfig;
 
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.io.ClassPathResource;
 import com.jbosframework.core.io.Resource;
 import com.jbosframework.utils.JBOSClassloader;
@@ -51,7 +52,7 @@ public class AutoConfigurationRegistry {
      * 注册自动配置组件到容器中
      * @param ctx
      */
-    public void registry(ApplicationContext ctx)  {
+    public void registry(ConfigurableApplicationContext ctx)  {
         try{
             if(autConfigurationBeans==null){
                 return;

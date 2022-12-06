@@ -1,5 +1,5 @@
 package com.jbosframework.beans.support;
-import com.jbosframework.beans.BeanException;
+import com.jbosframework.beans.BeansException;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanTypeException;
@@ -189,15 +189,15 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
      * @param name
      * @return
      */
-    public abstract BeanDefinition getBeanDefinition(String name) throws BeanException;
+    public abstract BeanDefinition getBeanDefinition(String name) throws BeansException;
     /**
      * 创建Bean对象
      * @param name
      * @param beanDefinition
      * @param args
      * @return
-     * @throws BeanException
+     * @throws BeansException
      */
-    protected abstract Object createBean(String name,BeanDefinition beanDefinition, @Nullable Object[] args) throws BeanException;
+    protected abstract Object createBean(String name,BeanDefinition beanDefinition, @Nullable Object[] args) throws BeansException;
 
 }

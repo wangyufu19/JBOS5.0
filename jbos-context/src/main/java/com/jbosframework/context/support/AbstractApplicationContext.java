@@ -1,73 +1,226 @@
 package com.jbosframework.context.support;
-import com.jbosframework.beans.factory.DefaultBeanFactory;
-import com.jbosframework.beans.support.AbstractAutowireBeanFactory;
-import com.jbosframework.beans.support.BeanRegistry;
-import com.jbosframework.context.ApplicationContextFactory;
-import com.jbosframework.context.ApplicationEventListener;
-import com.jbosframework.context.ConfigurableApplicationContext;
-import com.jbosframework.beans.factory.ImportFactory;
-import com.jbosframework.context.annotation.ImportRegistry;
-import com.jbosframework.context.configuration.Environment;
+import com.jbosframework.beans.BeansException;
+import com.jbosframework.beans.factory.BeanFactoryPostProcessor;
+import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
+import com.jbosframework.beans.support.BeanDefinitionRegistry;
+import com.jbosframework.context.*;
+import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * AbstractApplicationContext
  * @author youfu.wang
  * @version 1.0
  */
-public abstract class AbstractApplicationContext extends DefaultBeanFactory implements ConfigurableApplicationContext {
-    private static final Log log= LogFactory.getLog(AbstractApplicationContext.class);
-    private volatile List<ImportRegistry> importRegistries= new ArrayList(256);
-    private volatile List<PropertyPostProcessor> propertyPostProcessors= new ArrayList(256);
-
+public abstract class AbstractApplicationContext implements ConfigurableApplicationContext, BeanDefinitionRegistry {
+    private static final Log logger= LogFactory.getLog(AbstractApplicationContext.class);
+    private final ConfigurableListableBeanFactory beanFactory;
+    private final Object startupShutdownMonitor;
+    private long startupDate;
+    private final AtomicBoolean active;
+    private final AtomicBoolean closed;
+    private Thread shutdownHook;
+    private final Set<ApplicationListener<?>> applicationListeners;
     private Set<EventListener> listeners;
-    private Environment environment=new Environment();
-    private static Map<String, Object> properties= new ConcurrentHashMap(256);
+    private ConfigurableEnvironment environment;
 
     public AbstractApplicationContext(){
+        this.beanFactory = new ConfigurableListableBeanFactory();
+        this.startupShutdownMonitor = new Object();
+        this.active = new AtomicBoolean();
+        this.closed = new AtomicBoolean();
         this.listeners=new LinkedHashSet<EventListener>();
+        this.applicationListeners = new LinkedHashSet();
     }
-
-    public void addImportRegistry(ImportRegistry importRegistry){
-        this.importRegistries.add(importRegistry);
-    }
-    public List<ImportRegistry> getImportRegistries(){
-        return this.importRegistries;
+    public AbstractApplicationContext(ConfigurableListableBeanFactory beanFactory){
+        this.beanFactory=beanFactory;
+        this.startupShutdownMonitor = new Object();
+        this.active = new AtomicBoolean();
+        this.closed = new AtomicBoolean();
+        this.listeners=new LinkedHashSet<EventListener>();
+        this.applicationListeners = new LinkedHashSet();
     }
     public void refresh(){
-        this.addBeanDependencyFactory(new AbstractAutowireBeanFactory.AutowireDependencyFactory());
-        this.finishRefresh();
+        synchronized(this.startupShutdownMonitor) {
+            this.prepareRefresh();
+            ConfigurableListableBeanFactory beanFactory = this.obtainFreshBeanFactory();
+            this.onRefresh();
+        }
+    }
+    public void registerShutdownHook() {
+        if (this.shutdownHook == null) {
+            this.shutdownHook = new Thread() {
+                public void run() {
+                    synchronized(AbstractApplicationContext.this.startupShutdownMonitor) {
+                        AbstractApplicationContext.this.doClose();
+                    }
+                }
+            };
+            Runtime.getRuntime().addShutdownHook(this.shutdownHook);
+        }
+    }
+    protected void prepareRefresh() {
+        this.startupDate = System.currentTimeMillis();
+        this.closed.set(false);
+        this.active.set(true);
+    }
+    protected void onRefresh() throws BeansException {
     }
 
-    private void addApplicationEventListener(ApplicationEventListener listener){
-
+    protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+        return this.getBeanFactory();
     }
-
-    private void finishRefresh(){
-        ApplicationContextFactory.setApplicationContext(this);
-    }
-
-    public void addPropertyPostProcessor(PropertyPostProcessor propertyPostProcessor){
-        propertyPostProcessor.loadProperty(environment,properties);
-        propertyPostProcessors.add(propertyPostProcessor);
-        Collections.sort(propertyPostProcessors, new Comparator<PropertyPostProcessor>() {
-            @Override
-            public int compare(PropertyPostProcessor o1, PropertyPostProcessor o2) {
-                return o1.getOrder()-o2.getOrder();
-            }
-        });
-    }
-    public Object getPropertyValue(String name){
-        Object value=null;
-        for(PropertyPostProcessor propertyPostProcessor:this.propertyPostProcessors){
-            value=propertyPostProcessor.getPropertyValue(properties,name);
-            if(value!=null){
-                break;
+    public void close() {
+        synchronized(this.startupShutdownMonitor) {
+            this.doClose();
+            if (this.shutdownHook != null) {
+                try {
+                    Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+                } catch (IllegalStateException var4) {
+                }
             }
         }
-        return value;
+    }
+    protected void doClose() {
+        if (this.active.get() && this.closed.compareAndSet(false, true)) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Closing " + this);
+            }
+            this.active.set(false);
+        }
+    }
+    public Collection<ApplicationListener<?>> getApplicationListeners() {
+        return this.applicationListeners;
+    }
+    @Override
+    public void setId(String var1) {
+
+    }
+
+    @Override
+    public void setParent(ApplicationContext applicationContext) {
+
+    }
+
+    @Override
+    public void setEnvironment(ConfigurableEnvironment configurableEnvironment) {
+        this.environment=configurableEnvironment;
+    }
+
+    @Override
+    public ConfigurableEnvironment getEnvironment() {
+        return this.environment;
+    }
+
+    @Override
+    public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
+
+    }
+
+    @Override
+    public void addApplicationListener(ApplicationListener<?> applicationListener) {
+
+    }
+
+
+    @Override
+    public boolean isActive() {
+        return this.active.get();
+    }
+
+    @Override
+    public ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException {
+        return this.beanFactory;
+    }
+
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public String getApplicationName() {
+        return null;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return null;
+    }
+
+    @Override
+    public long getStartupDate() {
+        return this.startupDate;
+    }
+
+    @Override
+    public ApplicationContext getParent() {
+        return null;
+    }
+
+    @Override
+    public void publishEvent(ApplicationEvent event) {
+
+    }
+    public void publishEvent(Object event) {
+        this.publishEvent((ApplicationEvent)event);
+    }
+
+    @Override
+    public Object getBean(String name) {
+        return this.beanFactory.getBean(name);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredType) {
+        return this.beanFactory.getBean(name,requiredType);
+    }
+
+    @Override
+    public <T> T getBean(Class<T> requiredType) {
+        return this.beanFactory.getBean(requiredType);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> requiredType) {
+        return this.beanFactory.getBeansOfType(requiredType);
+    }
+
+    @Override
+    public <T> String[] getBeanNamesOfType(Class<T> requiredType) {
+        return new String[0];
+    }
+
+    @Override
+    public boolean isSingleton(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean isPrototype(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return false;
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+    public String toString() {
+        StringBuilder sb = new StringBuilder(this.getDisplayName());
+        sb.append(", started on ").append(new Date(this.getStartupDate()));
+        ApplicationContext parent = this.getParent();
+        if (parent != null) {
+            sb.append(", parent: ").append(parent.getDisplayName());
+        }
+
+        return sb.toString();
     }
 }

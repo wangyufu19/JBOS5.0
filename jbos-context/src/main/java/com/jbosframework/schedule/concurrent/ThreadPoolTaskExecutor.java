@@ -1,6 +1,6 @@
 package com.jbosframework.schedule.concurrent;
 
-import com.jbosframework.core.Order;
+import com.jbosframework.core.Ordered;
 
 import java.util.concurrent.*;
 
@@ -11,9 +11,9 @@ import java.util.concurrent.*;
  */
 public class ThreadPoolTaskExecutor implements AsyncTaskExecutor{
     private int corePoolSize=1;
-    private int maxPoolSize= Order.MAX;
+    private int maxPoolSize= Ordered.HIGHEST_PRECEDENCE;
     private long keepAliveSeconds=60;
-    private int queueCapacity=Order.MAX;
+    private int queueCapacity= Ordered.HIGHEST_PRECEDENCE;
     private Executor executor;
 
 

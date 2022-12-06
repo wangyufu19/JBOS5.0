@@ -9,10 +9,6 @@ import com.jbosframework.beans.config.BeanDefinition;
  */
 public interface BeanDefinitionRegistry{
 
-    /**
-     * 注册Bean定义对象
-     * @param beanDefinition
-     */
-    public void putBeanDefinition(String name, BeanDefinition beanDefinition);
+
 
 }

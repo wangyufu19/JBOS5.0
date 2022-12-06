@@ -12,6 +12,9 @@ public class AbstractServletWebServer {
     private String baseDir="";
     private String contextPath="";
     private ApplicationContext applicationContext;
+    public AbstractServletWebServer(){
+
+    }
     public AbstractServletWebServer(int port){
         this.port=port;
     }
@@ -24,11 +27,17 @@ public class AbstractServletWebServer {
         this.baseDir=baseDir;
         this.contextPath=contextPath;
     }
+    public void setPort(int port){
+        this.port=port;
+    }
     public int getPort(){
         return port;
     }
     public String getBaseDir(){
         return baseDir;
+    }
+    public void setContextPath(String contextPath){
+        this.contextPath=contextPath;
     }
     public String getContextPath(){
         return contextPath;

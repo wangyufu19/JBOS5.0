@@ -3,6 +3,7 @@ import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnProperty;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.Condition;
 import com.jbosframework.context.annotation.Conditional;
 import com.jbosframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import java.lang.annotation.Annotation;
 
 public abstract class AbstractAutoConfiguration {
     private static final Log log= LogFactory.getLog(AbstractAutoConfiguration.class);
-    private ApplicationContext ctx;
+    private ConfigurableApplicationContext ctx;
 
     /**
      * 注册自动配置组件到容器中
@@ -29,7 +30,7 @@ public abstract class AbstractAutoConfiguration {
      */
     public abstract void registry();
 
-    public void setApplicationContext(ApplicationContext ctx){
+    public void setApplicationContext(ConfigurableApplicationContext ctx){
         this.ctx=ctx;
     }
     public ApplicationContext getApplicationContext(){
@@ -82,7 +83,7 @@ public abstract class AbstractAutoConfiguration {
         if(conditionalOnProperty!=null){
             String name=StringUtils.replaceNull(conditionalOnProperty.name());
             String value=StringUtils.replaceNull(conditionalOnProperty.value());
-            if(StringUtils.replaceNull(ctx.getPropertyValue(name)).equals(value)){
+            if(StringUtils.replaceNull(ctx.getEnvironment().getProperty(name)).equals(value)){
                 return true;
             }
         }

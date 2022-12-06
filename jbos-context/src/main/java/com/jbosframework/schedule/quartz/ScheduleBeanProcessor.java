@@ -3,7 +3,7 @@ package com.jbosframework.schedule.quartz;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.core.Order;
+import com.jbosframework.core.Ordered;
 import com.jbosframework.schedule.annotation.Scheduled;
 
 import java.lang.reflect.Method;
@@ -18,7 +18,7 @@ import org.quartz.*;
  */
 public class ScheduleBeanProcessor implements BeanPostProcessor {
     private BeanFactory beanFactory;
-    private int order= Order.MIN;
+    private int order= Ordered.HIGHEST_PRECEDENCE;
 
     public ScheduleBeanProcessor(BeanFactory beanFactory){
         this.beanFactory=beanFactory;

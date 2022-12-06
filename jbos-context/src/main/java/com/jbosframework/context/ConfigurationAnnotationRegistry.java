@@ -1,7 +1,7 @@
 package com.jbosframework.context;
 import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.annotation.Scope;
-import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.support.AbstractBeanRegistry;
 import com.jbosframework.beans.support.ConfigurableBeanFactory;
@@ -34,8 +34,7 @@ public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
         if(configuration==null){
            return;
         }
-        AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(configuration.value(),cls);
-        annotationBean.setAnnotations(cls.getDeclaredAnnotations());
+        GenericBeanDefinition annotationBean=new GenericBeanDefinition(cls);
         this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
         //注册方法Bean
         this.doRegistryMethodBean(cls,annotationBean);
@@ -45,7 +44,7 @@ public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
      * @param cls
      * @param parent
      */
-    public void doRegistryMethodBean(Class<?> cls,AnnotationBean parent){
+    public void doRegistryMethodBean(Class<?> cls,GenericBeanDefinition parent){
         Method[] methods=cls.getMethods();
         if(methods==null) {
             return;
@@ -56,9 +55,8 @@ public class ConfigurationAnnotationRegistry extends AbstractBeanRegistry {
                 continue;
             }
             for(Annotation annotation:annotations){
-                AnnotationBean annotationBean=new AnnotationBean();
+                GenericBeanDefinition annotationBean=new GenericBeanDefinition(cls);
                 String id="";
-                annotationBean.setAnnotations(annotations);
                 annotationBean.setParentName(parent.getName());
                 annotationBean.setIsMethodBean(true);
                 if(annotation instanceof Bean){

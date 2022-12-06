@@ -1,6 +1,6 @@
 package com.jbosframework.context;
 import com.jbosframework.beans.annotation.*;
-import com.jbosframework.beans.config.AnnotationBean;
+import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.AbstractBeanRegistry;
 import com.jbosframework.beans.support.ConfigurableBeanFactory;
 import org.apache.commons.logging.Log;
@@ -39,14 +39,13 @@ public class AnnotationBeanRegistry extends AbstractBeanRegistry {
      * @param beanId
      */
     private void registry(Class<?> cls,String beanId){
-        AnnotationBean annotationBean=AnnotationBean.createAnnotationBean(beanId,cls);
-        annotationBean.setAnnotations(cls.getDeclaredAnnotations());
+        GenericBeanDefinition annotationBean=new GenericBeanDefinition(cls);
         this.registry.putBeanDefinition(annotationBean.getName(),annotationBean);
         //注册Bean的接口
         this.registryBeanInterfaces(cls,annotationBean);
     }
     //注册Bean的接口
-    private void registryBeanInterfaces(Class<?> cls, AnnotationBean annotationBean){
+    private void registryBeanInterfaces(Class<?> cls, GenericBeanDefinition annotationBean){
         Class<?>[] interfaces=cls.getInterfaces();
         if(interfaces==null){
             return;

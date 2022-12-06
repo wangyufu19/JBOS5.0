@@ -2,6 +2,7 @@ package com.jbosframework.boot.autoconfig.jdbc;
 
 import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,14 +24,14 @@ public class DataSourcePropertiesBuilder {
      * @param configurationProperties
      * @return
      */
-    public DataSourceProperties create(ApplicationContext ctx, ConfigurationProperties configurationProperties){
+    public DataSourceProperties create(ConfigurableApplicationContext ctx, ConfigurationProperties configurationProperties){
         DataSourceProperties dataSourceProperties=null;
         if(configurationProperties==null){
             return null;
         }
         String prefix=configurationProperties.prefix();
-        String type= StringUtils.replaceNull(ctx.getPropertyValue(DataSourceProperties.DATASOURCE_TYPE));
-        String driverClass=StringUtils.replaceNull(ctx.getPropertyValue(DataSourceProperties.DATASOURCE_DRIVERCLASS));
+        String type= StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_TYPE));
+        String driverClass=StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_DRIVERCLASS));
 
         if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
             dataSourceProperties=new TomcatDataSourceProperties();
@@ -47,9 +48,9 @@ public class DataSourcePropertiesBuilder {
      * @param dataSourceProperties
      * @param prefix
      */
-    private void loadProperties(ApplicationContext ctx,DataSourceProperties dataSourceProperties,String prefix){
+    private void loadProperties(ConfigurableApplicationContext ctx,DataSourceProperties dataSourceProperties,String prefix){
         if(prefix.indexOf(".")!=-1){
-            Object properties=ctx.getPropertyValue(prefix);
+            Object properties=ctx.getEnvironment().getProperty(prefix);
             if(properties!=null){
                 dataSourceProperties.load(properties);
             }

@@ -4,7 +4,7 @@ package com.jbosframework.beans.support;
  * @author youfu.wang
  * @version 1.0
  */
-public abstract class AbstractBeanRegistry implements BeanRegistry{
+public abstract class AbstractBeanRegistry{
     /**
      * 注册Bean
      * @param cls

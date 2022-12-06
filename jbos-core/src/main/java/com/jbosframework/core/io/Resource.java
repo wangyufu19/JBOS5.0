@@ -4,22 +4,33 @@ import java.io.InputStream;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+
 /**
  * Resource
  * @author youfu.wang
  * @version 1.0
  */
 public interface Resource {
-	public boolean exists() throws IOException ;
+	default ReadableByteChannel readableChannel() throws IOException {
+		return Channels.newChannel(this.getInputStream());
+	}
+	default boolean isFile() {
+		return false;
+	}
 
-	public InputStream getInputStream() throws IOException;
+	boolean exists() throws IOException ;
 
-	public File getFile() throws IOException;
+	InputStream getInputStream() throws IOException;
+
+	File getFile() throws IOException;
 	
-	public String getFileName() throws IOException;
+	String getFileName() throws IOException;
 
-	public URI getURI() throws IOException;
+	URI getURI() throws IOException;
 
-	public URL getURL() throws IOException;
+	URL getURL() throws IOException;
 
+	String getDescription();
 }

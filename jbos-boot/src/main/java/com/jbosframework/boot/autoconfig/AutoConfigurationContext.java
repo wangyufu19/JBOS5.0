@@ -1,6 +1,7 @@
 package com.jbosframework.boot.autoconfig;
 
 import com.jbosframework.context.ApplicationContext;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.Import;
 import com.jbosframework.utils.JBOSClassloader;
 
@@ -10,13 +11,13 @@ import com.jbosframework.utils.JBOSClassloader;
  * @version 1.0
  */
 public class AutoConfigurationContext {
-    private ApplicationContext applicationContext;
+    private ConfigurableApplicationContext applicationContext;
 
     /**
      * 构造方法
      * @param applicationContext
      */
-    public AutoConfigurationContext(ApplicationContext applicationContext){
+    public AutoConfigurationContext(ConfigurableApplicationContext applicationContext){
         this.applicationContext=applicationContext;
     }
     /**
