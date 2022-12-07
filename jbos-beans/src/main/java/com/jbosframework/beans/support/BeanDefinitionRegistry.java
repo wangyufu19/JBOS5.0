@@ -9,6 +9,6 @@ import com.jbosframework.beans.config.BeanDefinition;
  */
 public interface BeanDefinitionRegistry{
 
-
+    void putBeanDefinition(String beanName,BeanDefinition beanDefinition);
 
 }

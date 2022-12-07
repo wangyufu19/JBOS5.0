@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 public final class JBOSFactoriesLoader {
-    public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/jbos.factories";
+    public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/jbos.properties";
     private static final Log logger = LogFactory.getLog(JBOSFactoriesLoader.class);
     private static final Map<ClassLoader, MultiValueMap<String, String>> cache = new ConcurrentReferenceHashMap();
 

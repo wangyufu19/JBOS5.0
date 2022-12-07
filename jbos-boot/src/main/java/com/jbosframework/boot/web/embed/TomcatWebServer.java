@@ -25,7 +25,7 @@ public class TomcatWebServer implements WebServer {
     public void start() throws LifecycleException {
         tomcat.start();
         this.startDaemonAwaitThread();
-        logger.info("Tomcat started on port:"+this.tomcat.getServer().getPort()+" with com.jbosframework.boot.context path '"+this.tomcat.getConnector()+"'");
+        logger.info("Tomcat started on port:"+this.tomcat.getConnector().getPort()+" with com.jbosframework.boot.context path '"+this.tomcat.getConnector()+"'");
     }
     private void startDaemonAwaitThread(){
         Thread t=new Thread("container-"+containerCounter.get()){

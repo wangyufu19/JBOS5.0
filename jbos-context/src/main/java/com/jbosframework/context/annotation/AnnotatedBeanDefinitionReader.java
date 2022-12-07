@@ -13,10 +13,7 @@ public class AnnotatedBeanDefinitionReader{
 	private ConfigurableEnvironment environment;
 	private AnnotationFilter annotationFilter;
 	private BeanDefinitionRegistry registry;
-	/**
-	 * 构造方法
-	 * @param registry
-	 */
+
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry){
 		this.registry=registry;
 	}
@@ -44,6 +41,6 @@ public class AnnotatedBeanDefinitionReader{
 
 	private void doRegistryBean(Class<?> cls){
 		GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(cls);
-//		registry.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
+		registry.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
 	}
 }

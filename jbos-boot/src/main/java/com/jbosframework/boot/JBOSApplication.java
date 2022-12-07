@@ -1,5 +1,7 @@
 package com.jbosframework.boot;
 
+import com.jbosframework.beans.support.BeanDefinitionRegistry;
+import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.boot.context.properties.source.ConfigurationPropertySources;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextInitializer;
@@ -16,7 +18,6 @@ import com.jbosframework.utils.StringUtils;
 import com.jbosframework.web.context.support.StandardServletEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.security.AccessControlException;
 import java.util.*;
 
@@ -112,8 +113,8 @@ public class JBOSApplication {
     }
 
     public ApplicationContext start(String... args)  {
-        long stime=System.currentTimeMillis();
-        long etime=System.currentTimeMillis();
+        long startDate=System.currentTimeMillis();
+        long endDate=startDate;
         ConfigurableApplicationContext context = null;
         JBOSApplicationRunListeners listeners = getRunListeners(args);
         listeners.starting();
@@ -125,8 +126,9 @@ public class JBOSApplication {
         prepareContext(context, environment, listeners, applicationArguments);
         //刷新上下文
         refreshContext(context);
-        etime=System.currentTimeMillis();
-        logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(etime-stime)/1000+" seconds");
+        listeners.started(context);
+        endDate=System.currentTimeMillis();
+        logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(endDate-startDate)/1000+" seconds");
         return context;
     }
     private ConfigurableEnvironment prepareEnvironment(JBOSApplicationRunListeners listeners){
@@ -144,6 +146,20 @@ public class JBOSApplication {
         context.setEnvironment(environment);
         applyInitializers(context);
         listeners.contextPrepared(context);
+        // Load the sources
+        Assert.notEmpty(this.primarySources, "Sources must not be empty");
+        BeanDefinitionLoader loader=new BeanDefinitionLoader(this.getBeanDefinitionRegistry(context), (Object[]) this.primarySources.toArray(new Object[0]));
+        loader.load(JBOSBootApplication.class);
+        listeners.contextLoaded(context);
+    }
+    private BeanDefinitionRegistry getBeanDefinitionRegistry(ApplicationContext context) {
+        if (context instanceof BeanDefinitionRegistry) {
+            return (BeanDefinitionRegistry) context;
+        }
+        if (context instanceof AbstractApplicationContext) {
+            return (BeanDefinitionRegistry) ((AbstractApplicationContext) context).getBeanFactory();
+        }
+        throw new IllegalStateException("Could not locate BeanDefinitionRegistry");
     }
     private void refreshContext(ConfigurableApplicationContext context) {
         ((AbstractApplicationContext) context).refresh();
@@ -177,7 +193,6 @@ public class JBOSApplication {
         }
     }
     protected void configureProfiles(ConfigurableEnvironment environment) {
-        // But these ones should go first (last wins in a property key clash)
         Set<String> profiles = new LinkedHashSet<>(this.additionalProfiles);
         profiles.addAll(Arrays.asList(environment.getActiveProfiles()));
         environment.setActiveProfiles(StringUtils.toStringArray(profiles));

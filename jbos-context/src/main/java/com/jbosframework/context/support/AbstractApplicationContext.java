@@ -1,9 +1,12 @@
 package com.jbosframework.context.support;
 import com.jbosframework.beans.BeansException;
+import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.factory.BeanFactoryPostProcessor;
 import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.context.*;
+import com.jbosframework.context.annotation.AnnotationConfigClassParser;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,9 +49,17 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     public void refresh(){
         synchronized(this.startupShutdownMonitor) {
             this.prepareRefresh();
-            ConfigurableListableBeanFactory beanFactory = this.obtainFreshBeanFactory();
-            this.onRefresh();
+            try {
+                this.invokeBeanParser(beanFactory);
+                this.onRefresh();
+            }catch (BeansException e){
+                e.printStackTrace();
+                this.destroy();
+            }
         }
+    }
+    private void invokeBeanParser(ConfigurableListableBeanFactory beanFactory){
+        AnnotationConfigClassDelegate.parse(beanFactory);
     }
     public void registerShutdownHook() {
         if (this.shutdownHook == null) {
@@ -66,13 +77,12 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         this.startupDate = System.currentTimeMillis();
         this.closed.set(false);
         this.active.set(true);
+        GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(AnnotationConfigClassParser.class);
+        this.beanFactory.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
     }
     protected void onRefresh() throws BeansException {
     }
 
-    protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-        return this.getBeanFactory();
-    }
     public void close() {
         synchronized(this.startupShutdownMonitor) {
             this.doClose();
@@ -168,7 +178,9 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     public void publishEvent(Object event) {
         this.publishEvent((ApplicationEvent)event);
     }
-
+    public void putBeanDefinition(String name, BeanDefinition beanDefinition){
+        this.beanFactory.putBeanDefinition(name,beanDefinition);
+    }
     @Override
     public Object getBean(String name) {
         return this.beanFactory.getBean(name);
@@ -211,7 +223,8 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
 
     @Override
     public void destroy() {
-
+        this.active.set(false);
+        this.beanFactory.destroy();
     }
     public String toString() {
         StringBuilder sb = new StringBuilder(this.getDisplayName());

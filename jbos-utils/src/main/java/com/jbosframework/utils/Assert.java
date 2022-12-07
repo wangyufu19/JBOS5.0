@@ -1,7 +1,10 @@
 package com.jbosframework.utils;
 
 
+import org.apache.commons.collections.CollectionUtils;
+
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -93,6 +96,11 @@ public class Assert {
     }
     public static void notEmpty(@Nullable Object[] array, String message) {
         if (ObjectUtils.isEmpty(array)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+    public static void notEmpty(@Nullable Collection<?> collection, String message) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
     }
