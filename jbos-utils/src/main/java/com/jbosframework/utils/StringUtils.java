@@ -11,6 +11,30 @@ import java.util.*;
  * @version 1.0
  */
 public class StringUtils {
+	public static String capitalize(String str) {
+		return changeFirstCharacterCase(str, true);
+	}
+	private static String changeFirstCharacterCase(String str, boolean capitalize) {
+		if (!hasLength(str)) {
+			return str;
+		} else {
+			char baseChar = str.charAt(0);
+			char updatedChar;
+			if (capitalize) {
+				updatedChar = Character.toUpperCase(baseChar);
+			} else {
+				updatedChar = Character.toLowerCase(baseChar);
+			}
+
+			if (baseChar == updatedChar) {
+				return str;
+			} else {
+				char[] chars = str.toCharArray();
+				chars[0] = updatedChar;
+				return new String(chars, 0, chars.length);
+			}
+		}
+	}
 	public static String[] trimArrayElements(String[] array) {
 		if (ObjectUtils.isEmpty(array)) {
 			return array;

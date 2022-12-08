@@ -25,6 +25,8 @@ public interface Resource {
 	InputStream getInputStream() throws IOException;
 
 	File getFile() throws IOException;
+
+	Resource createRelative(String var1) throws IOException;
 	
 	String getFileName() throws IOException;
 

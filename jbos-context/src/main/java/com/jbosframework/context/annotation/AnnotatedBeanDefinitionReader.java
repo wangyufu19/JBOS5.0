@@ -1,5 +1,4 @@
 package com.jbosframework.context.annotation;
-import com.jbosframework.beans.annotation.AnnotationFilter;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.core.env.ConfigurableEnvironment;
@@ -11,7 +10,6 @@ import com.jbosframework.core.env.ConfigurableEnvironment;
  */
 public class AnnotatedBeanDefinitionReader{
 	private ConfigurableEnvironment environment;
-	private AnnotationFilter annotationFilter;
 	private BeanDefinitionRegistry registry;
 
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry){
@@ -19,9 +17,6 @@ public class AnnotatedBeanDefinitionReader{
 	}
 	public void setEnvironment(ConfigurableEnvironment configurableEnvironment) {
 		this.environment=environment;
-	}
-	public void setAnnotationFilter(AnnotationFilter annotationFilter){
-		this.annotationFilter=annotationFilter;
 	}
 
 	public void registryBean(Class<?> cls) {

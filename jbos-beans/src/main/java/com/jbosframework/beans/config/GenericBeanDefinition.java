@@ -12,7 +12,9 @@ public class GenericBeanDefinition extends AbstractBeanDefinition{
         this.setBeanClass(beanClass);
         this.metadata=new AnnotationMetadata(beanClass);
     }
-
+    public AnnotationMetadata getMetadata(){
+        return metadata;
+    }
     public MethodMetadata getMethodMetadata() {
         return methodMetadata;
     }

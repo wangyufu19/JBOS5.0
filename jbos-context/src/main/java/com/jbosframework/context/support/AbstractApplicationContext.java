@@ -6,7 +6,7 @@ import com.jbosframework.beans.factory.BeanFactoryPostProcessor;
 import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.context.*;
-import com.jbosframework.context.annotation.AnnotationConfigClassParser;
+import com.jbosframework.context.annotation.AnnotationBeanClassParser;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +50,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         synchronized(this.startupShutdownMonitor) {
             this.prepareRefresh();
             try {
-                this.invokeBeanParser(beanFactory);
+                this.parseBeanConfigClass(beanFactory);
                 this.onRefresh();
             }catch (BeansException e){
                 e.printStackTrace();
@@ -58,8 +58,8 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
             }
         }
     }
-    private void invokeBeanParser(ConfigurableListableBeanFactory beanFactory){
-        AnnotationConfigClassDelegate.parse(beanFactory);
+    private void parseBeanConfigClass(ConfigurableListableBeanFactory beanFactory){
+        AnnotationBeanClassDelegate.parse(this.getEnvironment(),beanFactory);
     }
     public void registerShutdownHook() {
         if (this.shutdownHook == null) {
@@ -77,7 +77,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         this.startupDate = System.currentTimeMillis();
         this.closed.set(false);
         this.active.set(true);
-        GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(AnnotationConfigClassParser.class);
+        GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(AnnotationBeanClassParser.class);
         this.beanFactory.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
     }
     protected void onRefresh() throws BeansException {
@@ -181,6 +181,9 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     public void putBeanDefinition(String name, BeanDefinition beanDefinition){
         this.beanFactory.putBeanDefinition(name,beanDefinition);
     }
+    public BeanDefinition getBeanDefinition(String beanName){
+        return this.beanFactory.getBeanDefinition(beanName);
+    }
     @Override
     public Object getBean(String name) {
         return this.beanFactory.getBean(name);
@@ -220,7 +223,9 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     public boolean containsBean(String name) {
         return false;
     }
-
+    public List<String> getBeanDefinitionNames(){
+        return this.beanFactory.getBeanDefinitionNames();
+    }
     @Override
     public void destroy() {
         this.active.set(false);

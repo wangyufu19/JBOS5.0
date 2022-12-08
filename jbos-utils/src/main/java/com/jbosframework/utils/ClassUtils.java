@@ -10,6 +10,15 @@ public class ClassUtils {
     private static final Map<String, Class<?>> primitiveTypeNameMap = new HashMap(32);
     private static final Map<String, Class<?>> commonClassCache = new HashMap(64);
 
+
+    public static String convertResourcePathToClassName(String resourcePath) {
+        Assert.notNull(resourcePath, "Resource path must not be null");
+        return resourcePath.replace('/', '.');
+    }
+    public static String convertClassNameToResourcePath(String className) {
+        Assert.notNull(className, "Class name must not be null");
+        return className.replace('.', '/');
+    }
     public static String getShortName(Class<?> clazz) {
         return getShortName(getQualifiedName(clazz));
     }

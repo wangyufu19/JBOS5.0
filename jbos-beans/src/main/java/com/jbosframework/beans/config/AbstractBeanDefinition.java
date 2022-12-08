@@ -34,6 +34,11 @@ public class AbstractBeanDefinition extends BeanPropertyAccessor implements Bean
         this.setName(this.beanClass.getName());
         this.setClassName(this.beanClass.getName());
     }
+
+    public Class<?> getBeanClass() {
+        return beanClass;
+    }
+
     public void setClassName(String className) {
         this.className=className;
     }
