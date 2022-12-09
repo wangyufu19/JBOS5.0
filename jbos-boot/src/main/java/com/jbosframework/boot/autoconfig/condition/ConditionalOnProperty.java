@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
-@Conditional(OnClassCondition.class)
+@Conditional(OnPropertyCondition.class)
 public @interface ConditionalOnProperty {
     public String name() default "";
     public String value() default "";

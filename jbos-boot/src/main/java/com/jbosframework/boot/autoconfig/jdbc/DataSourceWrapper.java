@@ -1,6 +1,7 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
 import com.jbosframework.beans.annotation.Autowired;
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.context.ConfigurationProperties;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
  * @author youfu.wang
  * @version 1.0
  */
+@ConditionalOnBean(DataSourceProperties.class)
 @ConfigurationProperties(prefix = "jbos.datasource.tomcat")
 public class DataSourceWrapper implements DataSource{
 

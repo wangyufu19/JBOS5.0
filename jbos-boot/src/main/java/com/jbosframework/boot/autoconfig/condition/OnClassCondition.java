@@ -1,7 +1,7 @@
 package com.jbosframework.boot.autoconfig.condition;
 
-import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.annotation.Condition;
+import com.jbosframework.context.ConfigurableApplicationContext;
+import com.jbosframework.context.annotation.AbstractCondition;
 import com.jbosframework.utils.JBOSClassloader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,14 +11,19 @@ import org.apache.commons.logging.LogFactory;
  * @author youfu.wang
  * @version 1.0
  */
-public class OnClassCondition implements Condition {
-    private static final Log log= LogFactory.getLog(OnClassCondition.class);
+public class OnClassCondition extends AbstractCondition {
+    private static final Log logger= LogFactory.getLog(OnClassCondition.class);
+    private Class<?>[] classes;
 
-    public boolean matches(ApplicationContext ctx, Class<?>[] autoConfigurationClasses) {
+    public OnClassCondition(ConfigurableApplicationContext ctx, Class<?>[] classes){
+        super(ctx);
+        this.classes=classes;
+    }
+    public boolean matches() {
         boolean bool=false;
-        if (autoConfigurationClasses!=null){
-            for(Class<?> autoConfigurationClass:autoConfigurationClasses){
-                bool=JBOSClassloader.isPresent(autoConfigurationClasses.getClass().getName());
+        if (classes!=null){
+            for(Class<?> cls:classes){
+                bool=JBOSClassloader.isPresent(cls.getName());
             }
         }
         return bool;
