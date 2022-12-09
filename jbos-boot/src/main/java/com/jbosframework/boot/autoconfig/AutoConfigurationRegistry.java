@@ -1,74 +1,26 @@
 package com.jbosframework.boot.autoconfig;
-
-import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.context.ConfigurableApplicationContext;
-import com.jbosframework.core.io.ClassPathResource;
-import com.jbosframework.core.io.Resource;
+import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
+import com.jbosframework.context.annotation.ImportSelector;
+import com.jbosframework.core.io.support.JBOSFactoriesLoader;
 import com.jbosframework.utils.JBOSClassloader;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import java.util.List;
 
 /**
  * AutoConfigurationRegistry
  * @author youfu.wang
  * @version 5.0
  */
-public class AutoConfigurationRegistry {
-    private static final String com$jbosframework$boot$autoconfig$EnableAutoConfiguration="com.jbosframework.boot.autoconfig.EnableAutoConfiguration";
+public class AutoConfigurationRegistry implements ImportSelector {
+    public static final Log logger= LogFactory.getLog(AutoConfigurationRegistry.class);
 
-    private static String[] autConfigurationBeans;
+    private ConfigurableListableBeanFactory beanFactory;
 
-    private String autoConfigLocation;
-    /**
-     * 构造方法
-     */
-    public AutoConfigurationRegistry(){
-        autoConfigLocation="META-INF"+ File.separator+"jbos-autoconfigure-metadata.properties";
-        this.loadAutoConfigurationBeans();
+    public AutoConfigurationRegistry(ConfigurableListableBeanFactory beanFactory){
+        this.beanFactory=beanFactory;
     }
-
-    /**
-     * 加载自动配置类
-     */
-    private void loadAutoConfigurationBeans(){
-        Resource resource=new ClassPathResource(autoConfigLocation);
-        Properties pros=new Properties();
-        try {
-            pros.load(resource.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(pros==null){
-            return;
-        }
-        String enableAutoConfiguration=pros.getProperty(AutoConfigurationRegistry.com$jbosframework$boot$autoconfig$EnableAutoConfiguration);
-        if(enableAutoConfiguration!=null){
-            autConfigurationBeans=enableAutoConfiguration.split(",");
-        }
-    }
-    /**
-     * 注册自动配置组件到容器中
-     * @param ctx
-     */
-    public void registry(ConfigurableApplicationContext ctx)  {
-        try{
-            if(autConfigurationBeans==null){
-                return;
-            }
-            for (String s:autConfigurationBeans){
-                Class<?> autCls= JBOSClassloader.loadClass(s);
-                AbstractAutoConfiguration autoConfiguration=(AbstractAutoConfiguration)JBOSClassloader.loadClass(s).newInstance();
-                autoConfiguration.setApplicationContext(ctx);
-                autoConfiguration.registry();
-            }
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
+    public List<String> processImports() {
+      return JBOSFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class, JBOSClassloader.getDefaultClassLoader());
     }
 }

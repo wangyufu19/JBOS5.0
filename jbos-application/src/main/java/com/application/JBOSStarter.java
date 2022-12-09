@@ -6,9 +6,14 @@ import com.application.sys.service.impl.UserMgrServiceImpl;
 import com.jbosframework.aop.AdviceConfig;
 import com.jbosframework.aop.AopProxy;
 import com.jbosframework.aop.JdkDynamicProxy;
+import com.jbosframework.boot.autoconfig.AutoConfigurationRegistry;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
+import com.jbosframework.context.ConfigurableApplicationContext;
+import com.jbosframework.context.annotation.AnnotationConfigApplicationContext;
+import com.jbosframework.context.annotation.ImportSelector;
+import com.jbosframework.context.support.AbstractApplicationContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +24,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class JBOSStarter {
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws IllegalAccessException, InstantiationException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
 //		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
@@ -29,6 +34,7 @@ public class JBOSStarter {
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);
 //        UserMgrService userMgrService=(UserMgrService)aopProxy.getProxy();
 //        userMgrService.getUserInfoByLoginName("");
+
     }
 
 

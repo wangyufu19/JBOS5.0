@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Import {
-    Class<?>[] value();
+    Class<?>[] value() default {};
 }

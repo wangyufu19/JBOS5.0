@@ -3,6 +3,8 @@ package com.jbosframework.utils;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class ObjectUtils {
     public static String getIdentityHexString(Object obj) {
@@ -159,4 +161,8 @@ public class ObjectUtils {
     public static boolean isEmpty(@Nullable Object[] array) {
         return array == null || array.length == 0;
     }
+    public static boolean isEmpty(@Nullable Collection array) {
+        return array == null || array.size() == 0;
+    }
+
 }

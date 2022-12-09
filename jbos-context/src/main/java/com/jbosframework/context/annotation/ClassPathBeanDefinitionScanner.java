@@ -50,6 +50,7 @@ public class ClassPathBeanDefinitionScanner extends AnnotationComponentScanProvi
 		BeanDefinition[] arr=candidates.toArray(new BeanDefinition[0]);
 		for(BeanDefinition beanDefinition:arr){
 			beanDefinitions.add(beanDefinition);
+			this.registry.putBeanDefinition(beanDefinition.getClassName(),beanDefinition);
 		}
 	}
 }
