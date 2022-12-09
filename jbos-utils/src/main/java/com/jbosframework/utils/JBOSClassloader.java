@@ -2,6 +2,8 @@ package com.jbosframework.utils;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,6 +157,22 @@ public class JBOSClassloader {
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	public static Object newInstance(Class cls,Class<?>[] parameterTypes,Object[] args){
+		Object obj=null;
+		try {
+			Constructor<?> constructor = cls.getDeclaredConstructor(parameterTypes);
+			obj = constructor.newInstance(args);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e){
+			e.printStackTrace();;
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return obj;

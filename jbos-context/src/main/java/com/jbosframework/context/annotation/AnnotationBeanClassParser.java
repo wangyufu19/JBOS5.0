@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +45,6 @@ public class AnnotationBeanClassParser {
         this.doProcessConfigurationClass(configurationClass);
         this.processImports(configurationClass);
         this.processMemberClass(configurationClass);
-        logger.info(configurationClass.getSource().getName());
     }
     private void doProcessConfigurationClass(ConfigurationClass configurationClass){
         Set<BeanDefinition> beanCandidates=this.componentScanParser.parse(configurationClass.source,ComponentScan.class);
@@ -96,6 +96,7 @@ public class AnnotationBeanClassParser {
                 this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata()));
             }
         }
+        Method[] methods=configurationClass.getSource().getMethods();
     }
     public class ConfigurationClass{
         private Class source;

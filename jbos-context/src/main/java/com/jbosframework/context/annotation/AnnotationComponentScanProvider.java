@@ -29,7 +29,7 @@ public class AnnotationComponentScanProvider {
     public void addIncludeFilters(Class<?> filter){
         this.includeFilters.addFilter(filter);
     }
-    public Set<BeanDefinition> findCandidateComponents(String basePackage) {
+    public Set<GenericBeanDefinition> findCandidateComponents(String basePackage) {
         LinkedHashSet candidates = new LinkedHashSet();
         try {
             String packageSearchPath = "classpath*:" + ClassUtils.convertClassNameToResourcePath(basePackage) + '/' + this.resourcePattern;
