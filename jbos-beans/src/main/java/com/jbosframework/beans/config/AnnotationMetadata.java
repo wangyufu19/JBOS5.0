@@ -1,7 +1,5 @@
 package com.jbosframework.beans.config;
 
-import com.jbosframework.core.annotaion.AnnotationUtils;
-
 import java.lang.annotation.Annotation;
 
 public class AnnotationMetadata {

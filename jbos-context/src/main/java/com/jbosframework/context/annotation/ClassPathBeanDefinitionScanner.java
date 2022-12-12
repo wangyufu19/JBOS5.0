@@ -4,14 +4,9 @@ import com.jbosframework.beans.config.AnnotationMetadata;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.*;
-import com.jbosframework.core.annotaion.AnnotationUtils;
 import com.jbosframework.core.env.ConfigurableEnvironment;
-
-import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,27 +50,7 @@ public class ClassPathBeanDefinitionScanner extends AnnotationComponentScanProvi
 		}
 		GenericBeanDefinition[] arr=candidates.toArray(new GenericBeanDefinition[0]);
 		for(GenericBeanDefinition beanDefinition:arr){
-			if(this.checkCandidateBean(beanDefinition)){
-				beanDefinitions.add(beanDefinition);
-				this.registry.putBeanDefinition(beanDefinition.getClassName(),beanDefinition);
-			}
+			beanDefinitions.add(beanDefinition);
 		}
-	}
-	private boolean checkCandidateBean(GenericBeanDefinition beanDefinition){
-		boolean check=true;
-		Annotation[] annotations=beanDefinition.getBeanClass().getAnnotations();
-		for(Annotation annotation:annotations){
-			Conditional conditional=AnnotationUtils.findAnnotation(annotation.annotationType(),Conditional.class);
-			if(conditional!=null){ ;
-				Class<?>[] parameterTypes={ConfigurableEnvironment.class,BeanDefinitionRegistry.class, Annotation.class};
-				Object[] args={this.environment,this.registry,annotation};
-				Condition condition=(Condition) JBOSClassloader.newInstance(conditional.value(),parameterTypes,args);
-				if(!condition.matches()){
-					check=false;
-					break;
-				}
-			}
-		}
-		return check;
 	}
 }

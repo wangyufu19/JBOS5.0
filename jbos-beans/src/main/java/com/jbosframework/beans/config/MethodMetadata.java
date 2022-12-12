@@ -1,9 +1,8 @@
 package com.jbosframework.beans.config;
 
-import com.jbosframework.utils.StringUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
 /**
@@ -12,17 +11,17 @@ import java.lang.reflect.Parameter;
  * @version 5.0
  */
 public class MethodMetadata {
-    private String methodName;
-    private Parameter[] methodParameters;
+    private Method method;
     private Annotation[] methodAnnotations;
+    private Parameter[] methodParameters;
     private Class<?>[] parameterTypes;
 
-    public String getMethodName() {
-        return methodName;
+    public Method getMethod() {
+        return this.method;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public void setMethod(Method method) {
+        this.method = method;
     }
     public void setMethodParameters(Parameter[] methodParameters){
         this.methodParameters=methodParameters;
@@ -48,10 +47,13 @@ public class MethodMetadata {
     }
     public static MethodMetadata createMethodMetadata(Method method){
         MethodMetadata methodMetadata=new MethodMetadata();
-        methodMetadata.setMethodName(StringUtils.replaceNull(method.getName()));
+        methodMetadata.setMethod(method);
         methodMetadata.setMethodAnnotations(method.getDeclaredAnnotations());
         methodMetadata.setMethodParameters(method.getParameters());
         methodMetadata.setParameterTypes(method.getParameterTypes());
         return methodMetadata;
+    }
+    public boolean isPublic(){
+        return (method.getModifiers()& (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC;
     }
 }

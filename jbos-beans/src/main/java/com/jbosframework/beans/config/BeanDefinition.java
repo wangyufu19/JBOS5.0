@@ -10,10 +10,11 @@ public interface BeanDefinition  {
 	String SCOPE_SINGLETON = "singleton";
 	String SCOPE_PROTOTYPE = "prototype";
 
-	void setParentName(@Nullable String var1);
 
 	@Nullable
-	String getParentName();
+	void setParent(BeanDefinition parent);
+
+	public BeanDefinition getParent();
 
 	void setClassName(@Nullable String var1);
 

@@ -20,16 +20,28 @@ public class OnBeanCondition extends AbstractCondition {
         this.annotation=annotation;
     }
     public boolean matches() {
-        boolean bool=false;
+        Class<?>[] classes=null;
+        boolean match=true;
         if(this.annotation==null){
             return false;
         }
-        Class<?>[] classes=((ConditionalOnBean)this.annotation).value();
+
+        if(this.annotation instanceof ConditionalOnBean){
+            ConditionalOnBean conditionalOnBean=((ConditionalOnBean)this.annotation);
+            classes=conditionalOnBean.value();
+            match=conditionalOnBean.match();
+        }else if(this.annotation instanceof ConditionalOnMissingBean){
+            ConditionalOnMissingBean conditionalOnMissingBean=((ConditionalOnMissingBean)this.annotation);
+            classes=conditionalOnMissingBean.value();
+            match=conditionalOnMissingBean.match();
+        }
         if(classes!=null){
             for(Class<?> cls:classes){
-                bool= this.getRegistry().containsBean(cls.getName());
+                if(this.getRegistry().containsBean(cls.getName())==match){
+                    return true;
+                }
             }
         }
-        return bool;
+        return false;
     }
 }

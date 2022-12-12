@@ -1,6 +1,5 @@
 package com.jbosframework.context.annotation;
 
-import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.core.io.Resource;
 import com.jbosframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -28,6 +27,10 @@ public class AnnotationComponentScanProvider {
     }
     public void addIncludeFilters(Class<?> filter){
         this.includeFilters.addFilter(filter);
+    }
+
+    public IncludeFilter getIncludeFilters() {
+        return includeFilters;
     }
     public Set<GenericBeanDefinition> findCandidateComponents(String basePackage) {
         LinkedHashSet candidates = new LinkedHashSet();

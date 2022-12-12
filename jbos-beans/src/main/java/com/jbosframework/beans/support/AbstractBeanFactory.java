@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     protected final static Map<String,Object> singletonInstances= new ConcurrentHashMap(256);
-    private volatile List<ImportFactory> importFactories= new ArrayList(256);
     private volatile List<BeanPostProcessor> beanPostProcessors=new ArrayList(256);
 
     /**
@@ -55,7 +54,8 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
      */
     private <T> T doGetBean(String name,Class<T> requiredType){
         BeanDefinition beanDefinition=this.getBeanDefinition(name);
-        Object obj=this.createBean(name,beanDefinition,null);
+        Object obj=null;
+        //this.createBean(name,beanDefinition,null);
         T bean=this.convertBean(obj,requiredType);
         if(beanDefinition.isSingleton()){
             this.registerSingletonInstance(name,bean);
@@ -125,14 +125,7 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     public boolean containsSingletonBean(String name){
         return this.singletonInstances.containsKey(name);
     }
-    public void addImportFactory(ImportFactory importFactory){
-        importFactories.add(importFactory);
-    }
-    public void doImportFactory(Object bean,BeanDefinition beanDefinition){
-        for(ImportFactory importFactory:importFactories){
-            importFactory.importBean(bean,beanDefinition);
-        }
-    }
+
     /**
      * 处理Bean对象的ProcessorP
      */
@@ -190,14 +183,5 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
      * @return
      */
     public abstract BeanDefinition getBeanDefinition(String name) throws BeansException;
-    /**
-     * 创建Bean对象
-     * @param name
-     * @param beanDefinition
-     * @param args
-     * @return
-     * @throws BeansException
-     */
-    protected abstract Object createBean(String name,BeanDefinition beanDefinition, @Nullable Object[] args) throws BeansException;
 
 }

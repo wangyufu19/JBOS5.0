@@ -3,9 +3,6 @@ package com.jbosframework.beans.support;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.beans.factory.DependencyFactory;
-import com.jbosframework.beans.factory.ImportFactory;
-
 /**
  * ConfigurableBeanFactory
  * @author youfu.wang
@@ -32,10 +29,6 @@ public interface ConfigurableBeanFactory extends BeanFactory{
     public void putBeanNameOfType(String name, BeanDefinition beanDefinition);
 
     public void registerSingletonInstance(String name,Object object);
-
-    public void addImportFactory(ImportFactory importFactory);
-
-    public void addBeanDependencyFactory(DependencyFactory dependencyFactory);
 
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 }

@@ -2,7 +2,7 @@ package com.jbosframework.beans.factory;
 
 import com.jbosframework.beans.BeansException;
 import com.jbosframework.beans.config.BeanDefinition;
-import com.jbosframework.beans.support.AbstractAutowireBeanFactory;
+import com.jbosframework.beans.support.AbstractBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.utils.Assert;
 import org.apache.commons.logging.Log;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author youfu.wang
  * @version 1.0
  */
-public class ConfigurableListableBeanFactory extends AbstractAutowireBeanFactory implements BeanDefinitionRegistry {
+public class ConfigurableListableBeanFactory extends AbstractBeanFactory implements BeanDefinitionRegistry {
     private static final Log log= LogFactory.getLog(ConfigurableListableBeanFactory.class);
 
     //XML and Annotation IoC Bean

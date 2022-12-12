@@ -106,7 +106,7 @@ public class DispatchHandler {
 		Annotation[] methodAnnotations=null;
 		if(methodMetadata!=null){
 			methodAnnotations=methodMetadata.getMethodAnnotations();
-			methodName=methodMetadata.getMethodName();
+			methodName=methodMetadata.getMethod().getName();
 		}
 		// 默认调用handleRequest方法
 		if ("".equals(methodName)||methodName==null)

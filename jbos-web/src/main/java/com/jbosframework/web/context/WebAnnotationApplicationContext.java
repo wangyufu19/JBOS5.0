@@ -1,6 +1,5 @@
 package com.jbosframework.web.context;
 import com.jbosframework.context.ApplicationContext;
-import com.jbosframework.web.mvc.annotation.WebAnnotationBeanRegistry;
 
 /**
  * WebAnnotationApplicationContext

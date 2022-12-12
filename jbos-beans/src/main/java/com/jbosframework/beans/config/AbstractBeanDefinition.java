@@ -17,7 +17,7 @@ public class AbstractBeanDefinition extends BeanPropertyAccessor implements Bean
     private Class<?> beanClass;
     private String id;
     private String name;
-    private String parentName;
+    private BeanDefinition parent;
     private String className;
     private boolean isMethodBean=false;
     private String scope;
@@ -91,11 +91,12 @@ public class AbstractBeanDefinition extends BeanPropertyAccessor implements Bean
         this.name=name;
     }
 
-    public void setParentName(String parentName){
-        this.parentName=parentName;
+    public void setParent(BeanDefinition parent){
+        this.parent=parent;
     }
-    public String getParentName(){
-        return this.parentName;
+
+    public BeanDefinition getParent() {
+        return parent;
     }
 
     public void setInitMethod(String initMethod){

@@ -14,4 +14,6 @@ import java.lang.annotation.*;
 @Conditional(OnBeanCondition.class)
 public @interface ConditionalOnBean {
     public Class<?>[] value();
+
+    public boolean match() default true;
 }

@@ -1,6 +1,7 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnMissingBean;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.Import;
 import org.apache.commons.logging.Log;
@@ -19,6 +20,7 @@ public class DataSourceAutoConfiguration{
     private static final Log logger= LogFactory.getLog(DataSourceAutoConfiguration.class);
 
     @Configuration
+    @ConditionalOnMissingBean(DataSource.class)
     @Import({Tomcat.class})
     protected static class DataSourceConnectionPool{
         DataSourceConnectionPool(){

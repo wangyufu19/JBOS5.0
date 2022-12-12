@@ -1,6 +1,7 @@
 package com.jbosframework.context.annotation;
 
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.core.annotaion.AnnotationUtils;
 import com.jbosframework.core.env.ConfigurableEnvironment;
@@ -37,4 +38,7 @@ public class AnnotationComponentScanParser {
         return beanDefinitions;
     }
 
+    public ClassPathBeanDefinitionScanner getScanner() {
+        return scanner;
+    }
 }
