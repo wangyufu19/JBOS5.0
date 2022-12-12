@@ -1,11 +1,13 @@
 package com.jbosframework.context.annotation;
 
+import com.jbosframework.beans.config.AnnotationMetadata;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.*;
-import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.annotaion.AnnotationUtils;
 import com.jbosframework.core.env.ConfigurableEnvironment;
+
+import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -54,20 +56,26 @@ public class ClassPathBeanDefinitionScanner extends AnnotationComponentScanProvi
 		GenericBeanDefinition[] arr=candidates.toArray(new GenericBeanDefinition[0]);
 		for(GenericBeanDefinition beanDefinition:arr){
 			if(this.checkCandidateBean(beanDefinition)){
-				logger.info(beanDefinition.getClassName());
 				beanDefinitions.add(beanDefinition);
 				this.registry.putBeanDefinition(beanDefinition.getClassName(),beanDefinition);
 			}
 		}
 	}
 	private boolean checkCandidateBean(GenericBeanDefinition beanDefinition){
-		Conditional conditional=AnnotationUtils.findAnnotation(beanDefinition.getBeanClass(),Conditional.class);
-		if(conditional!=null){
-			Class<?>[] parameterTypes={this.registry.getClass()};
-			Object[] args={this.registry};
-			Condition condition=(Condition) JBOSClassloader.newInstance(conditional.value(),parameterTypes,args);
-			return condition.matches();
+		boolean check=true;
+		Annotation[] annotations=beanDefinition.getBeanClass().getAnnotations();
+		for(Annotation annotation:annotations){
+			Conditional conditional=AnnotationUtils.findAnnotation(annotation.annotationType(),Conditional.class);
+			if(conditional!=null){ ;
+				Class<?>[] parameterTypes={ConfigurableEnvironment.class,BeanDefinitionRegistry.class, Annotation.class};
+				Object[] args={this.environment,this.registry,annotation};
+				Condition condition=(Condition) JBOSClassloader.newInstance(conditional.value(),parameterTypes,args);
+				if(!condition.matches()){
+					check=false;
+					break;
+				}
+			}
 		}
-		return true;
+		return check;
 	}
 }
