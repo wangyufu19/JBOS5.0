@@ -1,5 +1,6 @@
 package com.jbosframework.context.annotation;
 
+import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.beans.config.AnnotationMetadata;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
@@ -40,14 +41,14 @@ public class AnnotationBeanClassParser {
         }
         for(BeanDefinition beanCandidate:beanCandidates){
             GenericBeanDefinition beanDef=(GenericBeanDefinition)beanCandidate;
-            ConfigurationClass configurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata());
+            ConfigurationClass configurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
             this.parse(configurationClass);
         }
     }
     private void parse(ConfigurationClass configurationClass){
         this.doProcessConfigurationClass(configurationClass);
-        this.processImports(configurationClass);
         this.processMemberClass(configurationClass);
+        this.processImports(configurationClass);
     }
     private void doProcessConfigurationClass(ConfigurationClass configurationClass){
         if (AnnotationUtils.isComponent(configurationClass.source,ComponentScan.class)){
@@ -55,7 +56,7 @@ public class AnnotationBeanClassParser {
             Iterator<BeanDefinition> beanDefinitions=beanCandidates.iterator();
             while(beanDefinitions.hasNext()){
                 GenericBeanDefinition beanDef=(GenericBeanDefinition)beanDefinitions.next();
-                configurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata());
+                configurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
                 if(this.checkCandidateBean(configurationClass)){
                     this.registry.putBeanDefinition(beanDef.getName(),beanDef);
                     this.parse(configurationClass);
@@ -82,26 +83,29 @@ public class AnnotationBeanClassParser {
                         for(String beanCandidate:beanCandidates){
                             Class CandidateClass=JBOSClassloader.loadClass(beanCandidate);
                             beanDef=new GenericBeanDefinition(CandidateClass);
-                            this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata()));
+                            this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
                         }
                     }
                 }  catch (Throwable ex) {
                     throw new IllegalArgumentException("Cannot instantiate " + importClass.getName(), ex);
                 }
             }else{
-                this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata()));
+                this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
             }
         }
     }
     private void processMemberClass(ConfigurationClass configurationClass){
-        GenericBeanDefinition configurationBeanDef=new GenericBeanDefinition(configurationClass.getSource());
-        if(AnnotationUtils.isComponent(configurationClass.getSource(),Configuration.class)&&this.checkCandidateBean(configurationClass)){
-            this.registry.putBeanDefinition(configurationBeanDef.getName(),configurationBeanDef);
+        if(configurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(configurationClass)){
+            this.registry.putBeanDefinition(configurationClass.getBeanDefinition().getName(),configurationClass.getBeanDefinition());
             Class<?>[] classes=configurationClass.getSource().getDeclaredClasses();
             if(!ObjectUtils.isEmpty(classes)){
                 for(Class<?> cls:classes){
                     GenericBeanDefinition beanDef=new GenericBeanDefinition(cls);
-                    this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef.getMetadata()));
+                    beanDef.setParent(configurationClass.getBeanDefinition());
+                    ConfigurationClass subConfigurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
+                    if(subConfigurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(subConfigurationClass)){
+                        this.parse(subConfigurationClass);
+                    }
                 }
             }
             Method[] methods=configurationClass.getSource().getDeclaredMethods();
@@ -110,21 +114,25 @@ public class AnnotationBeanClassParser {
                     MethodMetadata methodMetadata=MethodMetadata.createMethodMetadata(method);
                     if(methodMetadata.isPublic()) {
                         GenericBeanDefinition methodBeanDef = new GenericBeanDefinition(method.getReturnType());
-                        methodBeanDef.setParent(configurationBeanDef);
+                        methodBeanDef.setParent(configurationClass.getBeanDefinition());
                         methodBeanDef.setMethodMetadata(methodMetadata);
-                        this.registry.putBeanDefinition(methodBeanDef.getName(), methodBeanDef);
-                        logger.info(method.getReturnType().getName() + ":modifier=" + method.getModifiers());
+                        if(methodMetadata.findAnnotation(Bean.class)&&this.checkCandidateBean(methodMetadata.getMethodAnnotations())){
+                            this.registry.putBeanDefinition(methodBeanDef.getName(), methodBeanDef);
+                            logger.info("class="+configurationClass.getBeanDefinition().getClassName()+"; "+method.getReturnType().getName() + ":modifier=" + method.getModifiers());
+                        }
                     }
                 }
             }
         }
     }
     private boolean checkCandidateBean(ConfigurationClass configurationClass){
+        return checkCandidateBean(configurationClass.getMetadata().getAnnotations());
+    }
+    private boolean checkCandidateBean(Annotation[] annotations){
         boolean check=true;
-        Annotation[] annotations=configurationClass.getMetadata().getAnnotations();
         for(Annotation annotation:annotations){
             Conditional conditional=AnnotationUtils.findAnnotation(annotation.annotationType(),Conditional.class);
-            if(conditional!=null){ ;
+            if(conditional!=null){
                 Class<?>[] parameterTypes={ConfigurableEnvironment.class,BeanDefinitionRegistry.class, Annotation.class};
                 Object[] args={this.environment,this.registry,annotation};
                 Condition condition=(Condition) JBOSClassloader.newInstance(conditional.value(),parameterTypes,args);
@@ -138,19 +146,27 @@ public class AnnotationBeanClassParser {
     }
     public class ConfigurationClass{
         private Class source;
-        private AnnotationMetadata metadata;
+        private GenericBeanDefinition beanDefinition;
 
-        public ConfigurationClass(Class source,AnnotationMetadata metadata){
+        public ConfigurationClass(Class source,GenericBeanDefinition beanDefinition){
             this.source=source;
-            this.metadata=metadata;
+            this.beanDefinition=beanDefinition;
         }
 
         public Class getSource() {
             return source;
         }
 
+        public GenericBeanDefinition getBeanDefinition() {
+            return beanDefinition;
+        }
+
         public AnnotationMetadata getMetadata() {
-            return metadata;
+            if(this.beanDefinition!=null){
+                return beanDefinition.getMetadata();
+            }else{
+                return new AnnotationMetadata();
+            }
         }
     }
 

@@ -3,8 +3,6 @@ import com.jbosframework.beans.annotation.Component;
 import com.jbosframework.beans.annotation.Repository;
 import com.jbosframework.beans.annotation.Service;
 import com.jbosframework.beans.config.AnnotationMetadata;
-
-import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,8 +28,7 @@ public class IncludeFilter {
 		}
 		Class[] filters=include.toArray(new Class[0]);
 		for(int i=0;i<filters.length;i++) {
-			Annotation annotation=metadata.getAnnotation(filters[i]);
-			if(annotation!=null) {
+			if(metadata.findAnnotation(filters[i])) {
 				match=true;
 				break;
 			}

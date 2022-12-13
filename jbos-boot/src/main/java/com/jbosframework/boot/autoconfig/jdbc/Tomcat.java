@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ConditionalOnClass(DataSource.class)
-//@ConditionalOnBean(DataSourceProperties.class)
+@ConditionalOnBean(DataSourceProperties.class)
 public class Tomcat {
     public Tomcat(){
 

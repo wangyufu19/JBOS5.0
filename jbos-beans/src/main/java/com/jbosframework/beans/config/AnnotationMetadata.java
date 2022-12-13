@@ -6,6 +6,9 @@ public class AnnotationMetadata {
 
     private Annotation[] annotations;
 
+    public AnnotationMetadata(){
+
+    }
     public AnnotationMetadata(Class<?> beanClass){
         this.annotations=beanClass.getAnnotations();
     }
@@ -16,16 +19,15 @@ public class AnnotationMetadata {
     public void setAnnotations(Annotation[] annotations) {
         this.annotations = annotations;
     }
-    public Annotation getAnnotation(Class<?> cls){
-        Annotation result=null;
-        if(annotations!=null){
-            for(Annotation annotation:annotations){
-                if(annotation.annotationType().getName().equals(cls.getName())){
-                    result=annotation;
-                    break;
-                }
+    public boolean findAnnotation(Class<?> cls){
+        if(annotations==null){
+            return false;
+        }
+        for(Annotation annotation:annotations){
+            if(annotation.annotationType().getName().equals(cls.getName())){
+                return true;
             }
         }
-        return result;
+        return false;
     }
 }
