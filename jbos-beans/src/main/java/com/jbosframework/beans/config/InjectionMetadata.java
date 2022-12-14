@@ -9,7 +9,7 @@ import java.lang.reflect.Modifier;
  */
 public class InjectionMetadata {
 
-    public void inject(Object obj, Field field, Object value){
+    public static void inject(Object obj, Field field, Object value){
         int mod = field.getModifiers();
         if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
             return;

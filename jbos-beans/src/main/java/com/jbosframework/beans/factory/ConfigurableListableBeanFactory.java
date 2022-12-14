@@ -103,15 +103,22 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         }
     }
     public Object createBean(GenericBeanDefinition genericBeanDefinition) throws BeansException{
+        Object bean;
         if(this.containsSingletonBean(genericBeanDefinition.getName())){
-            return this.getSingletonInstance(genericBeanDefinition.getName());
+            bean=this.getSingletonInstance(genericBeanDefinition.getName());
         }else{
             if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
-                return this.invokeMethodBean(genericBeanDefinition);
+                bean=this.invokeMethodBean(genericBeanDefinition);
             }else{
-                return BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
+                bean=BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
             }
         }
+        this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
+
+        if(genericBeanDefinition.isSingleton()){
+            this.registerSingletonInstance(genericBeanDefinition.getName(),bean);
+        }
+        return bean;
     }
     private Object invokeMethodBean(GenericBeanDefinition genericBeanDefinition){
         Object parentBean=this.createBean((GenericBeanDefinition)genericBeanDefinition.getParent());

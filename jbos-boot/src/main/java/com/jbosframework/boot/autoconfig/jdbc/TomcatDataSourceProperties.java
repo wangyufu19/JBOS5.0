@@ -159,10 +159,7 @@ public class TomcatDataSourceProperties extends DataSourceProperties{
     public void setRemoveAbandoned(boolean removeAbandoned) {
         this.removeAbandoned = removeAbandoned;
     }
-    /**
-     * 加载数据源属性
-     * @param properties
-     */
+
     public void load(Object properties){
         if(properties instanceof Map){
             Map<String,Object> pro=(Map<String,Object>)properties;

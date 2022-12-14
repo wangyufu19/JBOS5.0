@@ -1,5 +1,4 @@
 package com.jbosframework.beans.factory;
-import com.jbosframework.beans.config.BeanDefinition;
 import java.util.Map;
 
 /**

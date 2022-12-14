@@ -1,5 +1,6 @@
 package com.jbosframework.context.support;
 import com.jbosframework.beans.BeansException;
+import com.jbosframework.beans.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.factory.BeanFactoryPostProcessor;
@@ -65,6 +66,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     }
     private void registerBeanFactoryBeanPostProcessor(ConfigurableListableBeanFactory beanFactory){
         beanFactory.registerBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+        beanFactory.registerBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor(this));
         AnnotationBeanClassDelegate.registerBeanPostProcessor(beanFactory);
     }
     private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory){

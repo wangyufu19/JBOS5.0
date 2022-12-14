@@ -17,6 +17,7 @@ import com.jbosframework.context.support.AbstractApplicationContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.sql.DataSource;
 import java.util.concurrent.*;
 
 
@@ -27,8 +28,9 @@ public class JBOSStarter {
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
+		DataSource dataSource=ctx.getBean(DataSource.class);
 //		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
-//		log.info("userMgrService={}",userMgrService);
+		log.info("dataSource={}",dataSource);
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);

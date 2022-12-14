@@ -13,7 +13,7 @@ import com.jbosframework.core.Ordered;
  * @author youfu.wang
  */
 public class DataSourcePropertiesBeanPostProcessor implements ApplicationContextAware, BeanPostProcessor, Ordered {
-    private int order=Ordered.HIGHEST_PRECEDENCE+1000;
+    private int order=Ordered.HIGHEST_PRECEDENCE+10;
     private ConfigurableApplicationContext applicationContext;
 
     public void setApplicationContext(ApplicationContext applicationContext){
@@ -35,7 +35,10 @@ public class DataSourcePropertiesBeanPostProcessor implements ApplicationContext
         return bean;
     }
     private void doCreateDatasourceProperties(ConfigurationProperties configurationProperties){
-        DataSourcePropertiesBuilder.getInstance().create(this.applicationContext,configurationProperties);
+        DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.getInstance().create(this.applicationContext,configurationProperties);
+        GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(dataSourceProperties.getClass());
+        this.applicationContext.getBeanFactory().putBeanDefinition(DataSourceProperties.class.getName(),genericBeanDefinition);
+        this.applicationContext.getBeanFactory().registerSingletonInstance(DataSourceProperties.class.getName(),dataSourceProperties);
     }
     public int getOrder(){
         return this.order;

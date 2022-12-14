@@ -16,7 +16,6 @@ import java.util.logging.Logger;
  * @author youfu.wang
  * @version 1.0
  */
-@ConditionalOnBean(DataSourceProperties.class)
 @ConfigurationProperties(prefix = "jbos.datasource.tomcat")
 public class DataSourceWrapper implements DataSource{
 

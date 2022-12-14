@@ -1,11 +1,14 @@
 package com.jbosframework.boot.autoconfig.jdbc;
 
+import com.jbosframework.beans.config.InjectionMetadata;
 import com.jbosframework.boot.context.ConfigurationProperties;
-import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ConfigurableApplicationContext;
+import com.jbosframework.jdbc.support.type.TypeConverter;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * DataSourcePropertiesBuilder
@@ -27,22 +30,37 @@ public class DataSourcePropertiesBuilder {
         String prefix=configurationProperties.prefix();
         String type= StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_TYPE));
         String driverClass=StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_DRIVERCLASS));
-        dataSourceProperties=new TomcatDataSourceProperties();
+        if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
+            dataSourceProperties=new TomcatDataSourceProperties();
+        }
         dataSourceProperties.setType(type);
         dataSourceProperties.setDriverClass(driverClass);
-        loadProperties(ctx,dataSourceProperties,prefix);
+        Field[] fields=dataSourceProperties.getClass().getSuperclass().getDeclaredFields();
+        loadProperties(ctx,dataSourceProperties,fields,prefix);
+        fields=dataSourceProperties.getClass().getDeclaredFields();
+        loadProperties(ctx,dataSourceProperties,fields,prefix);
         return dataSourceProperties;
     }
 
-    private void loadProperties(ConfigurableApplicationContext ctx,DataSourceProperties dataSourceProperties,String prefix){
-        if(prefix.indexOf(".")!=-1){
-            Object properties=ctx.getEnvironment().getProperty(prefix);
-            if(properties!=null){
-                dataSourceProperties.load(properties);
+    private void loadProperties(ConfigurableApplicationContext ctx,DataSourceProperties dataSourceProperties,Field[] fields,String prefix){
+        for(Field field:fields){
+            int mod = field.getModifiers();
+            if (!Modifier.isStatic(mod) && !Modifier.isFinal(mod)) {
+                this.loadProperties(ctx,dataSourceProperties,field,prefix);
             }
-            prefix=prefix.substring(0,prefix.lastIndexOf("."));
-            this.loadProperties(ctx,dataSourceProperties,prefix);
         }
     }
-
+    private void loadProperties(ConfigurableApplicationContext ctx,DataSourceProperties dataSourceProperties,Field field,String prefix){
+        if(prefix.indexOf(".")!=-1){
+            int mod = field.getModifiers();
+            if (!Modifier.isStatic(mod) && !Modifier.isFinal(mod)) {
+                Object value= TypeConverter.convert(field.getType().getName(),ctx.getEnvironment().getProperty(prefix+"."+field.getName()));
+                if(StringUtils.isNotNUll(value)){
+                    InjectionMetadata.inject(dataSourceProperties,field,value);
+                }
+            }
+            prefix=prefix.substring(0,prefix.lastIndexOf("."));
+            this.loadProperties(ctx,dataSourceProperties,field,prefix);
+        }
+    }
 }

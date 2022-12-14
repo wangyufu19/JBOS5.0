@@ -1,4 +1,6 @@
 package com.jbosframework.jdbc.support.type;
+import com.jbosframework.utils.StringUtils;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,7 +30,21 @@ public class TypeConverter {
 	public static final String DATA_TYPE_DATE_ALIAS="Date";
 	public static final String DATA_TYPE_TIMESTAMP="java.sql.Timestamp";
 	public static final String DATA_TYPE_TIMESTAMP_ALIAS="Timestamp";
-	
+
+	public static Object convert(String type,String value){
+	    if(StringUtils.isNUll(value)){
+	    	return value;
+		}
+		if(java.lang.Integer.class.getName().equals(type)||java.lang.Integer.class.getSimpleName().equals(type)||"int".equals(type)){
+			return Integer.parseInt(value);
+		}else if(java.lang.Long.class.getName().equals(type)||java.lang.Long.class.getSimpleName().equals(type)||"long".equals(type)){
+			return Long.parseLong(value);
+		}else if(java.lang.Boolean.class.getName().equals(type)||java.lang.Boolean.class.getSimpleName().equals(type)||"boolean".equals(type)){
+			return Boolean.parseBoolean(value);
+		}else {
+			return value;
+		}
+	}
 	public static Integer convertToInteger(Object obj){
 		if(obj==null||obj.equals("")) return null;
 		return Integer.valueOf(String.valueOf(obj));		

@@ -300,6 +300,17 @@ public class StringUtils {
 			return true;
 	}
 	/**
+	 * 判断非空值
+	 * @param obj
+	 * @return
+	 */
+	public static boolean isNotNUll(Object obj){
+		if(null==obj||"null".equals(obj)||"".equals(obj)){
+			return false;
+		}else
+			return true;
+	}
+	/**
 	 * 判断是空值
 	 * @param obj
 	 * @return
