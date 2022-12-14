@@ -12,25 +12,31 @@ import java.lang.reflect.Method;
  */
 public class JBOSClassCaller {
 	private static final Log log= LogFactory.getLog(JBOSClassCaller.class);
-	/**
-	 * 调用类的方法
-	 * @param obj
-	 * @param method
-	 * @return
-	 */
+
 	public static Object call(Object obj,String method){
 		Object result=null;
-		Method methodObj;
 		try {
 			if(obj!=null){
-				methodObj = obj.getClass().getMethod(method);
-				result=methodObj.invoke(obj);
+				result=call(obj,obj.getClass().getMethod(method));
 			}
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public static Object call(Object obj,Method method){
+		Object result=null;
+		try {
+			if(obj!=null){
+				result=method.invoke(obj);
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}  catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -39,12 +45,6 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param cls
-	 * @param method
-	 * @return
-	 */
 	public static Object call(Class<?> cls,String method){
 		Object result=null;
 		Object obj=null;
@@ -70,12 +70,7 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param cls
-	 * @param method
-	 * @return
-	 */
+
 	public static Object call(String cls,String method){
 		Object result=null;		
 		Object obj=null;
@@ -87,13 +82,7 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param cls
-	 * @param method
-	 * @param args
-	 * @return
-	 */
+
 	public static Object call(String cls,String method,Object[] args){
 		Object result=null;
 		Object obj=null;
@@ -114,13 +103,7 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param cls
-	 * @param method
-	 * @param args
-	 * @return
-	 */
+
 	public static Object call(Class<?> cls,String method,Object[] args){
 		Object result=null;
 		Object obj=null;
@@ -138,13 +121,6 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param cls
-	 * @param method
-	 * @param parameterTypes
-	 * @return
-	 */
 	public static Object call(Class<?> cls,String method,Object[] parameterValues,Class<?>... parameterTypes){
 		Object result=null;
 		Object obj=null;
@@ -170,13 +146,6 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param obj
-	 * @param method
-	 * @param parameterTypes
-	 * @return
-	 */
 	public static Object call(Object obj,String method,Object[] parameterValues,Class<?>... parameterTypes){
 		Object result=null;
 		Method methodObj;
@@ -198,13 +167,23 @@ public class JBOSClassCaller {
 		}
 		return result;
 	}
-	/**
-	 * 调用类的方法
-	 * @param obj
-	 * @param method
-	 * @param args
-	 * @return
-	 */
+	public static Object call(Object obj,Method method,Object[] parameterValues,Class<?>... parameterTypes){
+		Object result=null;
+		try {
+			if(obj!=null){
+				result=method.invoke(obj,parameterValues);
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	public static Object call(Object obj,String method,Object[] args){
 		Object result=null;
 		Class<?>[] parameterTypes=null;

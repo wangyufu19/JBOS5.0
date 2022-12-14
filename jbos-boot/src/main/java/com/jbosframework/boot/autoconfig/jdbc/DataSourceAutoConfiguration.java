@@ -16,11 +16,12 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ConditionalOnClass(DataSource.class)
-@ConditionalOnMissingBean(DataSource.class)
+@Import(DataSourcePropertiesRegister.class)
 public class DataSourceAutoConfiguration{
     private static final Log logger= LogFactory.getLog(DataSourceAutoConfiguration.class);
 
     @Configuration
+    @ConditionalOnMissingBean(DataSource.class)
     @Import({Tomcat.class})
     protected static class DataSourceConnectionPool{
         DataSourceConnectionPool(){

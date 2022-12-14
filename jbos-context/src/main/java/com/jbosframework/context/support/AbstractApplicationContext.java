@@ -51,6 +51,8 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
             this.prepareRefresh();
             try {
                 this.parseBeanConfigClass(beanFactory);
+                this.finishBeanFactoryInitialization(beanFactory);
+                this.registerBeanFactoryBeanPostProcessor(beanFactory);
                 this.onRefresh();
             }catch (BeansException e){
                 e.printStackTrace();
@@ -59,7 +61,14 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         }
     }
     private void parseBeanConfigClass(ConfigurableListableBeanFactory beanFactory){
-        AnnotationBeanClassDelegate.parse(this.getEnvironment(),beanFactory);
+        AnnotationBeanClassDelegate.parse(this,beanFactory);
+    }
+    private void registerBeanFactoryBeanPostProcessor(ConfigurableListableBeanFactory beanFactory){
+        beanFactory.registerBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+        AnnotationBeanClassDelegate.registerBeanPostProcessor(beanFactory);
+    }
+    private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory){
+        AnnotationBeanClassDelegate.finishBeanFactoryInitialization(beanFactory);
     }
     public void registerShutdownHook() {
         if (this.shutdownHook == null) {
@@ -78,6 +87,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         this.closed.set(false);
         this.active.set(true);
         GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(AnnotationBeanClassParser.class);
+        genericBeanDefinition.setRole(GenericBeanDefinition.ROLE_APPLICATION);
         this.beanFactory.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
     }
     protected void onRefresh() throws BeansException {

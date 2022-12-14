@@ -13,17 +13,12 @@ import org.apache.commons.logging.LogFactory;
  * @version 5.0
  */
 public class DataSourcePropertiesBuilder {
-    private static final Log log= LogFactory.getLog(DataSourcePropertiesBuilder.class);
+    private static final Log logger= LogFactory.getLog(DataSourcePropertiesBuilder.class);
 
     public static DataSourcePropertiesBuilder getInstance(){
         return new DataSourcePropertiesBuilder();
     }
-    /**
-     * 创建一个数据源属性对象
-     * @param ctx
-     * @param configurationProperties
-     * @return
-     */
+
     public DataSourceProperties create(ConfigurableApplicationContext ctx, ConfigurationProperties configurationProperties){
         DataSourceProperties dataSourceProperties=null;
         if(configurationProperties==null){
@@ -32,22 +27,13 @@ public class DataSourcePropertiesBuilder {
         String prefix=configurationProperties.prefix();
         String type= StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_TYPE));
         String driverClass=StringUtils.replaceNull(ctx.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_DRIVERCLASS));
-
-        if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
-            dataSourceProperties=new TomcatDataSourceProperties();
-            dataSourceProperties.setType(type);
-            dataSourceProperties.setDriverClass(driverClass);
-            loadProperties(ctx,dataSourceProperties,prefix);
-        }
+        dataSourceProperties=new TomcatDataSourceProperties();
+        dataSourceProperties.setType(type);
+        dataSourceProperties.setDriverClass(driverClass);
+        loadProperties(ctx,dataSourceProperties,prefix);
         return dataSourceProperties;
     }
 
-    /**
-     * 加载数据源属性
-     * @param ctx
-     * @param dataSourceProperties
-     * @param prefix
-     */
     private void loadProperties(ConfigurableApplicationContext ctx,DataSourceProperties dataSourceProperties,String prefix){
         if(prefix.indexOf(".")!=-1){
             Object properties=ctx.getEnvironment().getProperty(prefix);

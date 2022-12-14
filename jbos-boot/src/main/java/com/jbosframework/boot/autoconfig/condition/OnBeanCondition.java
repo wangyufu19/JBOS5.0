@@ -1,7 +1,7 @@
 package com.jbosframework.boot.autoconfig.condition;
-import com.jbosframework.beans.support.BeanDefinitionRegistry;
+
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.AbstractCondition;
-import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,8 +15,8 @@ public class OnBeanCondition extends AbstractCondition {
     private static final Log logger= LogFactory.getLog(OnBeanCondition.class);
     private Annotation annotation;
 
-    public OnBeanCondition(ConfigurableEnvironment environment, BeanDefinitionRegistry registry, Annotation annotation){
-        super(environment,registry);
+    public OnBeanCondition(ConfigurableApplicationContext applicationContext, Annotation annotation){
+        super(applicationContext);
         this.annotation=annotation;
     }
     public boolean matches() {
@@ -37,7 +37,7 @@ public class OnBeanCondition extends AbstractCondition {
         }
         if(classes!=null){
             for(Class<?> cls:classes){
-                if(this.getRegistry().containsBean(cls.getName())==match){
+                if(this.getApplicationContext().getBeanFactory().containsBean(cls.getName())==match){
                     return true;
                 }
             }

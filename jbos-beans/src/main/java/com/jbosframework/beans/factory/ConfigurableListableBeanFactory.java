@@ -2,9 +2,12 @@ package com.jbosframework.beans.factory;
 
 import com.jbosframework.beans.BeansException;
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.GenericBeanDefinition;
+import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.support.AbstractBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.utils.Assert;
+import com.jbosframework.utils.JBOSClassCaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  */
 public class ConfigurableListableBeanFactory extends AbstractBeanFactory implements BeanDefinitionRegistry {
-    private static final Log log= LogFactory.getLog(ConfigurableListableBeanFactory.class);
+    private static final Log logger= LogFactory.getLog(ConfigurableListableBeanFactory.class);
 
     //XML and Annotation IoC Bean
     protected final Map<String,BeanDefinition> beanDefinitions=new ConcurrentHashMap(256);
@@ -29,21 +32,8 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
     private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap(64);
 
     private volatile List<String> beanDefinitionNames = new ArrayList(256);
-    /**
-     * 销毁Bean对象内存
-     */
-    public void destroy() {
-        singletonInstances.clear();
-        beanDefinitions.clear();
-        beanDefinitions.clear();
-        allBeanNamesByType.clear();
-        singletonBeanNamesByType.clear();
-    }
-    /**
-     * 注册Bean定义对象
-     * @param name
-     * @param beanDefinition
-     */
+
+
     public void putBeanNameOfType(String name, BeanDefinition beanDefinition) {
         Assert.notNull(beanDefinition, " BeanDefinition must not be null");
         List<BeanDefinition> beanDefinitions=null;
@@ -61,11 +51,6 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         }
     }
 
-    /**
-     * 根据类名称得到Bean定义对象
-     * @param requiredType
-     * @return
-     */
     public <T> String[] getBeanNamesOfType(Class<T> requiredType) {
         Assert.notNull(requiredType, " RequiredType must not be null");
         List<BeanDefinition> beanDefinitions=this.allBeanNamesByType.get(requiredType.getName());
@@ -79,23 +64,15 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         return null;
     }
 
-    /**
-     * 根据类名称得到Bean定义对象
-     * @param requiredType
-     * @return
-     */
     public <T> Map<String, T> getBeansOfType(Class<T> requiredType) {
         Assert.notNull(requiredType, " RequiredType must not be null");
         Map<String, T> beansTypesMap=new HashMap<String, T>();
         return beansTypesMap;
     }
-    /**
-     * 注入Bean定义对象
-     * @param beanDefinition
-     */
+
     public void putBeanDefinition(String name,BeanDefinition beanDefinition) {
-        if(log.isDebugEnabled()){
-            log.info("register bean ["+beanDefinition.getClassName()+"]");
+        if(logger.isDebugEnabled()){
+            logger.info("register bean ["+beanDefinition.getClassName()+"]");
         }
         Assert.notEmpty(name, beanDefinition.getClassName()+ " bean must not be empty");
         Assert.notNull(beanDefinition, " BeanDefinition must not be null");
@@ -112,30 +89,64 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
             }
         }
         this.putBeanNameOfType(beanDefinition.getClassName(),beanDefinition);
+        Class<?>[] interfaces=beanDefinition.getBeanClass().getInterfaces();
+        for(Class<?> interfaceCls:interfaces){
+            this.putBeanNameOfType(interfaceCls.getName(),beanDefinition);
+        }
     }
-
-    /**
-     * 得到Bean定义
-     * @param name
-     * @return
-     */
+    public void initialization(){
+        for(Map.Entry<String,BeanDefinition> entry:this.beanDefinitions.entrySet()){
+            if(entry.getValue().getRole()!=BeanDefinition.ROLE_APPLICATION&&entry.getValue().getRole()!=BeanDefinition.ROLE_MEMBER_METHOD){
+                Object bean=BeanInstanceUtils.newBeanInstance(((GenericBeanDefinition)entry.getValue()).getBeanClass());
+                this.registerSingletonInstance(entry.getKey(),bean);
+            }
+        }
+    }
+    public Object createBean(GenericBeanDefinition genericBeanDefinition) throws BeansException{
+        if(this.containsSingletonBean(genericBeanDefinition.getName())){
+            return this.getSingletonInstance(genericBeanDefinition.getName());
+        }else{
+            if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
+                return this.invokeMethodBean(genericBeanDefinition);
+            }else{
+                return BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
+            }
+        }
+    }
+    private Object invokeMethodBean(GenericBeanDefinition genericBeanDefinition){
+        Object parentBean=this.createBean((GenericBeanDefinition)genericBeanDefinition.getParent());
+        MethodMetadata methodMetadata=genericBeanDefinition.getMethodMetadata();
+        if(methodMetadata.getMethodParameters().length>0){
+            Object[] parameterValues=new Object[methodMetadata.getMethodParameters().length];
+            for(int i=0;i<methodMetadata.getMethodParameters().length;i++){
+                Object refObj=this.getBean(methodMetadata.getMethodParameters()[i].getType().getName());
+                parameterValues[i]=refObj;
+            }
+            return JBOSClassCaller.call(parentBean,methodMetadata.getMethod(),parameterValues,methodMetadata.getParameterTypes());
+        }else{
+            return JBOSClassCaller.call(parentBean,methodMetadata.getMethod());
+        }
+    }
     public BeanDefinition getBeanDefinition(String name) throws BeansException {
         BeanDefinition beanDefinition=this.beanDefinitions.get(name);
         Assert.notNull(beanDefinition, name + " BeanDefinition is not exists");
         return beanDefinition;
     }
 
-    /**
-     * 是否包含该Bean
-     * @param name
-     * @return
-     */
     public boolean containsBean(String name){
         return this.beanDefinitions.containsKey(name);
     }
 
     public List<String> getBeanDefinitionNames(){
         return this.beanDefinitionNames;
+    }
+
+    public void destroy() {
+        singletonInstances.clear();
+        beanDefinitions.clear();
+        beanDefinitions.clear();
+        allBeanNamesByType.clear();
+        singletonBeanNamesByType.clear();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jbosframework.boot.autoconfig;
-import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
+
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.ImportSelector;
 import com.jbosframework.core.io.support.JBOSFactoriesLoader;
 import com.jbosframework.utils.JBOSClassloader;
@@ -15,10 +16,10 @@ import java.util.List;
 public class AutoConfigurationRegistry implements ImportSelector {
     public static final Log logger= LogFactory.getLog(AutoConfigurationRegistry.class);
 
-    private ConfigurableListableBeanFactory beanFactory;
+    private ConfigurableApplicationContext applicationContext;
 
-    public AutoConfigurationRegistry(ConfigurableListableBeanFactory beanFactory){
-        this.beanFactory=beanFactory;
+    public AutoConfigurationRegistry(ConfigurableApplicationContext applicationContext){
+        this.applicationContext=applicationContext;
     }
     public List<String> processImports() {
       return JBOSFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class, JBOSClassloader.getDefaultClassLoader());

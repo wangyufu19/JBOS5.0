@@ -1,23 +1,16 @@
 package com.jbosframework.context.annotation;
 
-import com.jbosframework.beans.support.BeanDefinitionRegistry;
-import com.jbosframework.core.env.ConfigurableEnvironment;
+import com.jbosframework.context.ConfigurableApplicationContext;
 
 public abstract class AbstractCondition implements Condition{
-    private ConfigurableEnvironment environment;
-    private BeanDefinitionRegistry registry;
+    private ConfigurableApplicationContext applicationContext;
 
-    public AbstractCondition(ConfigurableEnvironment environment,BeanDefinitionRegistry registry){
-        this.environment=environment;
-        this.registry=registry;
+    public AbstractCondition(ConfigurableApplicationContext applicationContext){
+        this.applicationContext=applicationContext;
     }
 
-    public ConfigurableEnvironment getEnvironment() {
-        return environment;
-    }
-
-    public BeanDefinitionRegistry getRegistry() {
-        return registry;
+    public ConfigurableApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     public abstract boolean matches();

@@ -3,8 +3,6 @@ package com.jbosframework.boot.autoconfig.jdbc;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +11,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class TomcatDataSourceProperties extends DataSourceProperties{
-    private static final Log log= LogFactory.getLog(TomcatDataSourceProperties.class);
+    private static final Log logger= LogFactory.getLog(TomcatDataSourceProperties.class);
+    public static final String DATASOURCE_TYPE_TOMCAT="org.apache.tomcat.jdbc.pool.DataSource";
 
     //是否通过空闲对象清除者（如果存在的话）验证对象。如果对象验证失败，则将其从池中清除。
     // 注意：为了让 true 值生效，validationQuery 参数必须为非空字符串。该属性默认值为 false，为了运行池的清除/测试线程，必须设置该值。

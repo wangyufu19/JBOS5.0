@@ -3,6 +3,7 @@ package com.jbosframework.context.annotation;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.annotaion.AnnotationUtils;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import java.util.LinkedHashSet;
@@ -10,13 +11,13 @@ import java.util.Set;
 
 public class AnnotationComponentScanParser {
     private final ClassPathBeanDefinitionScanner scanner;
-    private ConfigurableEnvironment environment;
+    private ConfigurableApplicationContext applicationContext;
     private BeanDefinitionRegistry registry;
 
 
-    public AnnotationComponentScanParser(ConfigurableEnvironment environment,
+    public AnnotationComponentScanParser(ConfigurableApplicationContext applicationContext,
                                      BeanDefinitionRegistry registry) {
-        this.environment = environment;
+        this.applicationContext = applicationContext;
         this.registry = registry;
         this.scanner=new ClassPathBeanDefinitionScanner(registry);
         for(Class filter:IncludeFilter.DEFAULT_FILTERS){

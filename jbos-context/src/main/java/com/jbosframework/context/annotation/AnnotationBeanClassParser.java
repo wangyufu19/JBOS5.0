@@ -6,8 +6,8 @@ import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.annotaion.AnnotationUtils;
-import com.jbosframework.core.env.ConfigurableEnvironment;
 import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.ObjectUtils;
@@ -17,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -25,15 +24,15 @@ import java.util.Set;
 public class AnnotationBeanClassParser {
     public static final Log logger= LogFactory.getLog(AnnotationBeanClassParser.class);
 
-    private ConfigurableEnvironment environment;
+    private ConfigurableApplicationContext applicationContext;
     private BeanDefinitionRegistry registry;
     private AnnotationComponentScanParser componentScanParser;
 
-    public AnnotationBeanClassParser(ConfigurableEnvironment environment,
+    public AnnotationBeanClassParser(ConfigurableApplicationContext applicationContext,
                                      BeanDefinitionRegistry registry){
-        this.environment=environment;
+        this.applicationContext=applicationContext;
         this.registry=registry;
-        this.componentScanParser=new AnnotationComponentScanParser(environment,registry);
+        this.componentScanParser=new AnnotationComponentScanParser(this.applicationContext,registry);
     }
     public void parse(List<BeanDefinition> beanCandidates) {
         if(beanCandidates==null){
@@ -74,8 +73,8 @@ public class AnnotationBeanClassParser {
             GenericBeanDefinition beanDef=new GenericBeanDefinition(importClass);
             if(ImportSelector.class.isAssignableFrom(importClass)){
                 try {
-                    Class<?>[] parameterTypes={this.registry.getClass()};
-                    Object[] args={this.registry};
+                    Class<?>[] parameterTypes={ConfigurableApplicationContext.class};
+                    Object[] args={this.applicationContext};
                     Constructor<?> constructor = importClass.getDeclaredConstructor(parameterTypes);
                     Object instance = constructor.newInstance(args);
                     List<String> beanCandidates=(List<String>)JBOSClassCaller.call(instance,"processImports");
@@ -96,12 +95,15 @@ public class AnnotationBeanClassParser {
     }
     private void processMemberClass(ConfigurationClass configurationClass){
         if(configurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(configurationClass)){
-            this.registry.putBeanDefinition(configurationClass.getBeanDefinition().getName(),configurationClass.getBeanDefinition());
+            GenericBeanDefinition configurationBeanDef=configurationClass.getBeanDefinition();
+            configurationBeanDef.setRole(GenericBeanDefinition.ROLE_COMPONENT_CLASS);
+            this.registry.putBeanDefinition(configurationBeanDef.getName(),configurationBeanDef);
             Class<?>[] classes=configurationClass.getSource().getDeclaredClasses();
             if(!ObjectUtils.isEmpty(classes)){
                 for(Class<?> cls:classes){
                     GenericBeanDefinition beanDef=new GenericBeanDefinition(cls);
-                    beanDef.setParent(configurationClass.getBeanDefinition());
+                    beanDef.setRole(GenericBeanDefinition.ROLE_MEMBER_CLASS);
+                    beanDef.setParent(configurationBeanDef);
                     ConfigurationClass subConfigurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
                     if(subConfigurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(subConfigurationClass)){
                         this.parse(subConfigurationClass);
@@ -114,11 +116,11 @@ public class AnnotationBeanClassParser {
                     MethodMetadata methodMetadata=MethodMetadata.createMethodMetadata(method);
                     if(methodMetadata.isPublic()) {
                         GenericBeanDefinition methodBeanDef = new GenericBeanDefinition(method.getReturnType());
-                        methodBeanDef.setParent(configurationClass.getBeanDefinition());
+                        methodBeanDef.setRole(GenericBeanDefinition.ROLE_MEMBER_METHOD);
+                        methodBeanDef.setParent(configurationBeanDef);
                         methodBeanDef.setMethodMetadata(methodMetadata);
                         if(methodMetadata.findAnnotation(Bean.class)&&this.checkCandidateBean(methodMetadata.getMethodAnnotations())){
                             this.registry.putBeanDefinition(methodBeanDef.getName(), methodBeanDef);
-                            logger.info("class="+configurationClass.getBeanDefinition().getClassName()+"; "+method.getReturnType().getName() + ":modifier=" + method.getModifiers());
                         }
                     }
                 }
@@ -133,8 +135,8 @@ public class AnnotationBeanClassParser {
         for(Annotation annotation:annotations){
             Conditional conditional=AnnotationUtils.findAnnotation(annotation.annotationType(),Conditional.class);
             if(conditional!=null){
-                Class<?>[] parameterTypes={ConfigurableEnvironment.class,BeanDefinitionRegistry.class, Annotation.class};
-                Object[] args={this.environment,this.registry,annotation};
+                Class<?>[] parameterTypes={ConfigurableApplicationContext.class, Annotation.class};
+                Object[] args={this.applicationContext,annotation};
                 Condition condition=(Condition) JBOSClassloader.newInstance(conditional.value(),parameterTypes,args);
                 if(!condition.matches()){
                     check=false;

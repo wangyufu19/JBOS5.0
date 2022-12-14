@@ -2,32 +2,32 @@ package com.jbosframework.beans.config;
 
 import com.jbosframework.beans.annotation.Scope;
 
-import java.lang.annotation.Annotation;
-
 /**
  * AbstractBeanDefinition
  * @author youfu.wang
- * @version 1.0
  */
 public class AbstractBeanDefinition extends BeanPropertyAccessor implements BeanDefinition{
-    public static final int AUTOWIRE_NO = 0;
-    public static final int AUTOWIRE_BY_NAME = 1;
-    public static final int AUTOWIRE_BY_TYPE = 2;
-    public static final int AUTOWIRE_CONSTRUCTOR = 3;
+    private int role;
     private Class<?> beanClass;
     private String id;
     private String name;
     private BeanDefinition parent;
     private String className;
-    private boolean isMethodBean=false;
     private String scope;
-    private String initMethod;
-
 
     public AbstractBeanDefinition(){
+        this.role=BeanDefinition.ROLE_COMPONENT_CLASS;
         this.className="";
         this.scope= Scope.SCOPE_SINGLETON;
     }
+    public void setRole(int role){
+        this.role=role;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
     public void setBeanClass(Class<?> beanClass){
         this.beanClass=beanClass;
         this.setId(this.beanClass.getName());
@@ -66,15 +66,6 @@ public class AbstractBeanDefinition extends BeanPropertyAccessor implements Bean
             return true;
         return false;
     }
-
-
-    public void setIsMethodBean(boolean isMethodBean){
-        this.isMethodBean=isMethodBean;
-    }
-    public boolean isMethodBean(){
-        return this.isMethodBean;
-    }
-
     public String getId() {
         return this.id;
     }
@@ -97,13 +88,6 @@ public class AbstractBeanDefinition extends BeanPropertyAccessor implements Bean
 
     public BeanDefinition getParent() {
         return parent;
-    }
-
-    public void setInitMethod(String initMethod){
-        this.initMethod=initMethod;
-    }
-    public String getInitMethod(){
-        return this.initMethod;
     }
 
 }

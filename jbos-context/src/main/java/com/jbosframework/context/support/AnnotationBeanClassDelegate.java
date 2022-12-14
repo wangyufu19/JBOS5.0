@@ -1,17 +1,22 @@
 package com.jbosframework.context.support;
 
 import com.jbosframework.beans.config.BeanDefinition;
+import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
+import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.AnnotationBeanClassParser;
-import com.jbosframework.core.env.ConfigurableEnvironment;
+import com.jbosframework.core.annotaion.AnnotationAwareOrderComparator;
+import com.jbosframework.utils.JBOSClassloader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnnotationBeanClassDelegate {
+    private static final Log logger= LogFactory.getLog(AnnotationBeanClassDelegate.class);
 
-
-    public static void parse(ConfigurableEnvironment environment,
+    public static void parse(ConfigurableApplicationContext applicationContext,
                              ConfigurableListableBeanFactory beanFactory){
         List<BeanDefinition> beanCandidates = new ArrayList();
         List<String> candidateNames = beanFactory.getBeanDefinitionNames();
@@ -22,7 +27,39 @@ public class AnnotationBeanClassDelegate {
             BeanDefinition beanDef = beanFactory.getBeanDefinition(beanName);
             beanCandidates.add(beanDef);
         }
-        AnnotationBeanClassParser parser=new AnnotationBeanClassParser(environment,beanFactory);
+        AnnotationBeanClassParser parser=new AnnotationBeanClassParser(applicationContext,beanFactory);
         parser.parse(beanCandidates);
+    }
+
+    public static void registerBeanPostProcessor(ConfigurableListableBeanFactory beanFactory){
+        String[] beanNames=beanFactory.getBeanNamesOfType(BeanPostProcessor.class);
+        if(beanNames==null){
+            return;
+        }
+        List<BeanPostProcessor> list = new ArrayList<BeanPostProcessor>();
+        for(String beanName:beanNames){
+            try {
+                BeanPostProcessor beanPostProcessor;
+                if(beanFactory.containsSingletonBean(beanName)){
+                    beanPostProcessor=(BeanPostProcessor)beanFactory.getSingletonInstance(beanName);
+                }else{
+                    beanPostProcessor=(BeanPostProcessor)JBOSClassloader.loadClass(beanName).newInstance();
+                }
+                list.add(beanPostProcessor);
+            } catch (InstantiationException e) {
+                logger.error(e);
+            } catch (IllegalAccessException e) {
+                logger.error(e);
+            } catch (ClassNotFoundException e) {
+                logger.error(e);
+            }
+        }
+        list.sort(AnnotationAwareOrderComparator.INSTANCE);
+        for(int i=0;i<list.size();i++){
+            beanFactory.registerBeanPostProcessor(list.get(i));
+        }
+    }
+    public static void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory){
+        beanFactory.initialization();
     }
 }
