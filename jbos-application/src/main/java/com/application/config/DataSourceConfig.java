@@ -1,5 +1,6 @@
 package com.application.config;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.jdbc.DataSourceBuilder;
 import com.jbosframework.boot.context.ConfigurationProperties;
@@ -14,6 +15,8 @@ import javax.sql.DataSource;
 @Configuration
 @ConditionalOnClass(DataSource.class)
 public class DataSourceConfig {
+    @Value("${jbos.application}")
+    private String application;
     @Bean
     @ConfigurationProperties(prefix = "jbos.datasource.tomcat.default")
     public DataSource getDataSource(){

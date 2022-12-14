@@ -1,8 +1,8 @@
 server:
-  application: jbos
   port: 9080
   contextPath: /jbos
 jbos:
+  application: jbos
   profiles:
     active: dev
   #MyBatis配置

@@ -1,6 +1,6 @@
 package com.jbosframework.context.support;
 import com.jbosframework.beans.BeansException;
-import com.jbosframework.beans.annotation.AutowiredAnnotationBeanPostProcessor;
+import com.jbosframework.context.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.factory.BeanFactoryPostProcessor;

@@ -111,4 +111,9 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
             beanPostProcessor.postProcessBeforeInitialization(bean,genericBeanDefinition);
         }
     }
+    protected void dopostProcessAfterInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
+        for(BeanPostProcessor beanPostProcessor:beanPostProcessors){
+            beanPostProcessor.postProcessAfterInitialization(bean,genericBeanDefinition);
+        }
+    }
 }
