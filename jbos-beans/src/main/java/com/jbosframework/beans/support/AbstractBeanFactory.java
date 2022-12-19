@@ -87,6 +87,14 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     public void registerSingletonInstance(String name,Object object){
         synchronized (this.singletonInstances){
             this.singletonInstances.put(name,object);
+            Class<?>[] interfaces=object.getClass().getInterfaces();
+            for(Class<?> interfaceCls:interfaces){
+                this.singletonInstances.put(interfaceCls.getName(),object);
+            }
+            Class<?> superclass=object.getClass().getSuperclass();
+            if(superclass!=null){
+                this.singletonInstances.put(superclass.getName(),object);
+            }
         }
     }
 
@@ -111,7 +119,7 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
             beanPostProcessor.postProcessBeforeInitialization(bean,genericBeanDefinition);
         }
     }
-    protected void dopostProcessAfterInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
+    protected void doPostProcessAfterInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
         for(BeanPostProcessor beanPostProcessor:beanPostProcessors){
             beanPostProcessor.postProcessAfterInitialization(bean,genericBeanDefinition);
         }

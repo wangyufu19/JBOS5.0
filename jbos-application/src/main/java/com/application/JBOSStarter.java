@@ -19,6 +19,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.concurrent.*;
 
 
@@ -26,12 +27,13 @@ import java.util.concurrent.*;
 @Slf4j
 public class JBOSStarter {
 
-	public static void main(String[] args) throws IllegalAccessException, InstantiationException {
+	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
 		DataSource dataSource=ctx.getBean(DataSource.class);
 //		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
 		log.info("dataSource={}",dataSource);
+		dataSource.getConnection();
 		ctx.publishEvent(new NotifyEvent(new Object()));
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});

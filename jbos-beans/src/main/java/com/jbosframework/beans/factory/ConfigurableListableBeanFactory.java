@@ -93,6 +93,10 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         for(Class<?> interfaceCls:interfaces){
             this.putBeanNameOfType(interfaceCls.getName(),beanDefinition);
         }
+        Class<?> superclass=beanDefinition.getBeanClass().getSuperclass();
+        if(superclass!=null){
+            this.putBeanNameOfType(superclass.getName(),beanDefinition);
+        }
     }
     public void initialization(){
         for(Map.Entry<String,BeanDefinition> entry:this.beanDefinitions.entrySet()){
@@ -114,7 +118,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
             }
         }
         this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
-        this.dopostProcessAfterInitialization(bean,genericBeanDefinition);
+        this.doPostProcessAfterInitialization(bean,genericBeanDefinition);
         if(genericBeanDefinition.isSingleton()){
             this.registerSingletonInstance(genericBeanDefinition.getName(),bean);
         }

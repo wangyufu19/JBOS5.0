@@ -61,6 +61,4 @@ public abstract class DataSourceProperties {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public abstract void load(Object properties);
 }
