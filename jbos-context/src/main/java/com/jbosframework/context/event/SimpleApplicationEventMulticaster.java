@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.Executor;
 
 public class SimpleApplicationEventMulticaster extends AbstractApplicationEventMulticaster{
+    private static final Log logger= LogFactory.getLog(SimpleApplicationEventMulticaster.class);
     private Executor taskExecutor;
     private ErrorHandler errorHandler;
 
@@ -19,7 +20,7 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
     }
 
     public SimpleApplicationEventMulticaster(BeanFactory beanFactory) {
-       this.setBeanFactory(beanFactory);
+        this.setBeanFactory(beanFactory);
     }
 
 
@@ -39,7 +40,6 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
     public void multicastEvent(ApplicationEvent event) {
         Executor executor = this.getTaskExecutor();
         Iterator listeners = this.getApplicationListeners(event).iterator();
-
         while(listeners.hasNext()) {
             ApplicationListener<?> listener = (ApplicationListener)listeners.next();
             if (executor != null) {
@@ -50,7 +50,6 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
                 this.invokeListener(listener, event);
             }
         }
-
     }
     protected void invokeListener(ApplicationListener<?> listener, ApplicationEvent event) {
         ErrorHandler errorHandler = this.getErrorHandler();
@@ -64,6 +63,7 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
             this.doInvokeListener(listener, event);
         }
     }
+
     private void doInvokeListener(ApplicationListener listener, ApplicationEvent event) {
         try {
             listener.onApplicationEvent(event);

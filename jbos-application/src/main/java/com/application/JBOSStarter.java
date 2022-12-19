@@ -1,6 +1,7 @@
 package com.application;
 
 import com.application.sys.service.AsyncTaskService;
+import com.application.sys.service.NotifyEvent;
 import com.application.sys.service.UserMgrService;
 import com.application.sys.service.impl.UserMgrServiceImpl;
 import com.jbosframework.aop.AdviceConfig;
@@ -31,6 +32,7 @@ public class JBOSStarter {
 		DataSource dataSource=ctx.getBean(DataSource.class);
 //		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
 		log.info("dataSource={}",dataSource);
+		ctx.publishEvent(new NotifyEvent(new Object()));
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);

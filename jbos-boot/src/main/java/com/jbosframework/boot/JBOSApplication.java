@@ -119,14 +119,12 @@ public class JBOSApplication {
         JBOSApplicationRunListeners listeners = getRunListeners(args);
         listeners.starting();
         ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
-        //准备环境
         ConfigurableEnvironment environment = prepareEnvironment(listeners);
         context = createApplicationContext();
-        //准备上下文
         prepareContext(context, environment, listeners, applicationArguments);
-        //刷新上下文
         refreshContext(context);
         listeners.started(context);
+        listeners.running(context);
         endDate=System.currentTimeMillis();
         logger.info("Started "+JBOSApplication.class.getSimpleName()+" in "+(endDate-startDate)/1000+" seconds");
         return context;

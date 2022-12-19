@@ -61,7 +61,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
             }
             return beanNames.toArray(new String[beanNames.size()]);
         }
-        return null;
+        return new String[0];
     }
 
     public <T> Map<String, T> getBeansOfType(Class<T> requiredType) {

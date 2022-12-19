@@ -8,6 +8,7 @@ import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.context.*;
 import com.jbosframework.context.annotation.AnnotationBeanClassParser;
+import com.jbosframework.context.event.SimpleApplicationEventMulticaster;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,8 +28,8 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     private final AtomicBoolean active;
     private final AtomicBoolean closed;
     private Thread shutdownHook;
+    private final SimpleApplicationEventMulticaster initialMulticaster;
     private final Set<ApplicationListener<?>> applicationListeners;
-    private Set<EventListener> listeners;
     private ConfigurableEnvironment environment;
 
     public AbstractApplicationContext(){
@@ -36,7 +37,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         this.startupShutdownMonitor = new Object();
         this.active = new AtomicBoolean();
         this.closed = new AtomicBoolean();
-        this.listeners=new LinkedHashSet<EventListener>();
+        this.initialMulticaster=new SimpleApplicationEventMulticaster(this);
         this.applicationListeners = new LinkedHashSet();
     }
     public AbstractApplicationContext(ConfigurableListableBeanFactory beanFactory){
@@ -44,7 +45,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         this.startupShutdownMonitor = new Object();
         this.active = new AtomicBoolean();
         this.closed = new AtomicBoolean();
-        this.listeners=new LinkedHashSet<EventListener>();
+        this.initialMulticaster=new SimpleApplicationEventMulticaster(beanFactory);
         this.applicationListeners = new LinkedHashSet();
     }
     public void refresh(){
@@ -52,9 +53,10 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
             this.prepareRefresh();
             try {
                 this.parseBeanConfigClass(beanFactory);
-                this.finishBeanFactoryInitialization(beanFactory);
                 this.registerBeanFactoryBeanPostProcessor(beanFactory);
+                this.finishBeanFactoryInitialization(beanFactory);
                 this.onRefresh();
+                this.registerApplicationListener();
             }catch (BeansException e){
                 e.printStackTrace();
                 this.destroy();
@@ -68,6 +70,15 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         beanFactory.registerBeanPostProcessor(new ApplicationContextAwareProcessor(this));
         beanFactory.registerBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor(this));
         AnnotationBeanClassDelegate.registerBeanPostProcessor(beanFactory);
+    }
+    private void registerApplicationListener(){
+        for (ApplicationListener<?> listener : this.getApplicationListeners()) {
+            this.initialMulticaster.addApplicationListener(listener);
+        }
+        String[] applicationListeners=this.getBeanNamesOfType(ApplicationListener.class);
+        for(String applicationListener:applicationListeners){
+            this.initialMulticaster.addApplicationListener((ApplicationListener)this.beanFactory.getBean(applicationListener));
+        }
     }
     private void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory){
         AnnotationBeanClassDelegate.finishBeanFactoryInitialization(beanFactory);
@@ -144,7 +155,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
 
     @Override
     public void addApplicationListener(ApplicationListener<?> applicationListener) {
-
+        this.applicationListeners.add(applicationListener);
     }
 
 
@@ -185,7 +196,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
 
     @Override
     public void publishEvent(ApplicationEvent event) {
-
+        this.initialMulticaster.multicastEvent(event);
     }
     public void publishEvent(Object event) {
         this.publishEvent((ApplicationEvent)event);
@@ -218,7 +229,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
 
     @Override
     public <T> String[] getBeanNamesOfType(Class<T> requiredType) {
-        return new String[0];
+        return this.beanFactory.getBeanNamesOfType(requiredType);
     }
 
     @Override
