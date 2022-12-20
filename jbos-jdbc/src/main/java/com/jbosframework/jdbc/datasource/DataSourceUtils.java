@@ -59,23 +59,23 @@ public class DataSourceUtils {
 	 * 关闭数据源
 	 * @param dataSource
 	 */
-	public static void closeConnection(Connection connection,DataSource dataSource){
+	public static void closeConnection(Connection connection,DataSource dataSource) {
 		ConnectionHolder connectionHolder=(ConnectionHolder)TransactionSynchronizationManager.getConnectionHolder(dataSource);
-		if(connectionHolder!=null){
-			Connection connectionToUse=connectionHolder.getConnection();
-			if (connectionToUse != null) {
-				try {
-					if (!connectionToUse.isClosed()&&!connectionHolder.isTransactionActive()){
-						if(log.isDebugEnabled()) {
-							log.debug("******Datasource connection closed");
-						}
-						connectionToUse.close();
-						TransactionSynchronizationManager.removeConnectionHolder(dataSource);
+		try {
+			if(connectionHolder!=null){
+				Connection connectionToUse=connectionHolder.getConnection();
+				if (connectionToUse != null&&!connectionToUse.isClosed()&&!connectionHolder.isTransactionActive()){
+					if(log.isDebugEnabled()) {
+						log.debug("******Datasource connection closed");
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
+					connectionToUse.close();
+					TransactionSynchronizationManager.removeConnectionHolder(dataSource);
 				}
+			}else{
+				connection.close();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}	
 }

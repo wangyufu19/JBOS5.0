@@ -1,8 +1,7 @@
 package com.jbosframework.orm.mybatis;
 
-import com.jbosframework.jdbc.datasource.ConnectionHolder;
 import com.jbosframework.jdbc.datasource.DataSourceUtils;
-import com.jbosframework.transaction.support.TransactionSynchronizationManager;
+import com.jbosframework.orm.mybatis.support.SqlSessionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.executor.BatchResult;
@@ -125,7 +124,7 @@ public class SqlSessionTemplate implements SqlSession {
     }
 
     public void close() {
-
+        this.sqlSessionProxy.close();
     }
 
     public void clearCache() {
@@ -149,25 +148,18 @@ public class SqlSessionTemplate implements SqlSession {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             SqlSession sqlSession=SqlSessionTemplate.this.sqlSessionFactory.openSession(SqlSessionTemplate.this.executorType);
             Object result;
-            Connection connection=sqlSession.getConnection();
-            DataSource dataSource=sqlSessionFactory.getConfiguration().getEnvironment().getDataSource();
             try{
                 result=method.invoke(sqlSession,args);
             }catch (Throwable throwable){
                 if(sqlSession!=null){
-                    if(DataSourceUtils.isConnectionTransactional(connection,dataSource)){
-                        ConnectionHolder connectionHolder=(ConnectionHolder) TransactionSynchronizationManager.getConnectionHolder(dataSource);
-                        connectionHolder.setTransactionActive(false);
-                        TransactionSynchronizationManager.bindConnectionHolder(dataSource,connectionHolder);
-                        connection.rollback();
-                        connection.setAutoCommit(true);
-                        DataSourceUtils.closeConnection(connection,dataSource);
-                    }
+                    Connection connection=sqlSession.getConnection();
+                    connection.rollback();
+                    connection.setAutoCommit(true);
                 }
                throw throwable;
             } finally {
                 if(sqlSession!=null){
-                    sqlSession.close();
+                    SqlSessionUtils.closeSession(sqlSession,SqlSessionTemplate.this.sqlSessionFactory);
                 }
             }
             return result;
