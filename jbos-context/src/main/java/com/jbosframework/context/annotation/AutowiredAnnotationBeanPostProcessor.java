@@ -5,11 +5,9 @@ import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.InjectionMetadata;
-import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.Ordered;
 import com.jbosframework.core.jepl.JEPL;
-import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,22 +41,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor, 
                 Autowired autowired=field.getDeclaredAnnotation(Autowired.class);
                 Value value=field.getDeclaredAnnotation(Value.class);
                 if(autowired!=null){
-                    if(field.getType().isInterface()){
-                        String[] beanNames=this.applicationContext.getBeanNamesOfType(field.getType());
-                        if(beanNames.length<=0){
-                            fieldValue=this.applicationContext.getBean(field.getType().getName());
-                        }else{
-                            if(beanNames.length>1){
-                                BeanTypeException ex = new BeanTypeException("指定的类型Bean'" +field.getType() + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
-                                ex.printStackTrace();
-                                return bean;
-                            }else{
-                                fieldValue=this.applicationContext.getBean(beanNames[0]);
-                            }
-                        }
-                    }else{
-                        fieldValue=this.applicationContext.getBean(field.getType().getName());
-                    }
+                    fieldValue=this.applicationContext.getBean(field.getType().getName());
                     InjectionMetadata.inject(bean,field,fieldValue);
                 }
                 if(value!=null){

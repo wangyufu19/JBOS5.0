@@ -8,6 +8,7 @@ import com.jbosframework.beans.support.AbstractBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.utils.Assert;
 import com.jbosframework.utils.JBOSClassCaller;
+import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
@@ -27,12 +28,11 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
     //XML and Annotation IoC Bean
     protected final Map<String,BeanDefinition> beanDefinitions=new ConcurrentHashMap(256);
     //Bean Name Map
-    protected final Map<String, List<BeanDefinition>> allBeanNamesByType=new ConcurrentHashMap(64);
+    protected final Map<String, List<BeanDefinition>> allBeanNamesByType=new ConcurrentHashMap(256);
 
-    private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap(64);
+    private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap(256);
 
     private volatile List<String> beanDefinitionNames = new ArrayList(256);
-
 
     public void putBeanNameOfType(String name, BeanDefinition beanDefinition) {
         Assert.notNull(beanDefinition, " BeanDefinition must not be null");
@@ -53,9 +53,12 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
 
     public <T> String[] getBeanNamesOfType(Class<T> requiredType) {
         Assert.notNull(requiredType, " RequiredType must not be null");
-        List<BeanDefinition> beanDefinitions=this.allBeanNamesByType.get(requiredType.getName());
+        return getBeanNamesOfType(requiredType.getName());
+    }
+    private  <T> String[] getBeanNamesOfType(String name) {
+        List<BeanDefinition> beanDefinitions=this.allBeanNamesByType.get(name);
         if(beanDefinitions!=null){
-            List<String> beanNames=new ArrayList<String>(beanDefinitionNames.size());
+            List<String> beanNames=new ArrayList<String>(beanDefinitions.size());
             for(BeanDefinition beanDefinition:beanDefinitions){
                 beanNames.add(beanDefinition.getClassName());
             }
@@ -63,7 +66,6 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         }
         return new String[0];
     }
-
     public <T> Map<String, T> getBeansOfType(Class<T> requiredType) {
         Assert.notNull(requiredType, " RequiredType must not be null");
         Map<String, T> beansTypesMap=new HashMap<String, T>();
@@ -91,10 +93,12 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         this.putBeanNameOfType(beanDefinition.getClassName(),beanDefinition);
         Class<?>[] interfaces=beanDefinition.getBeanClass().getInterfaces();
         for(Class<?> interfaceCls:interfaces){
+            this.beanDefinitions.put(interfaceCls.getName(),beanDefinition);
             this.putBeanNameOfType(interfaceCls.getName(),beanDefinition);
         }
         Class<?> superclass=beanDefinition.getBeanClass().getSuperclass();
         if(superclass!=null){
+            this.beanDefinitions.put(superclass.getName(),beanDefinition);
             this.putBeanNameOfType(superclass.getName(),beanDefinition);
         }
     }
@@ -139,7 +143,17 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         }
     }
     public BeanDefinition getBeanDefinition(String name) throws BeansException {
-        BeanDefinition beanDefinition=this.beanDefinitions.get(name);
+        BeanDefinition beanDefinition=null;
+        String[] beanNames=this.getBeanNamesOfType(name);
+        if(beanNames.length>0){
+            if(beanNames.length>1){
+                BeanTypeException ex = new BeanTypeException("指定的类型Bean'" +name + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
+                ex.printStackTrace();
+                return null;
+            }else{
+                beanDefinition=this.beanDefinitions.get(beanNames[0]);
+            }
+        }
         Assert.notNull(beanDefinition, name + " BeanDefinition is not exists");
         return beanDefinition;
     }
@@ -155,9 +169,9 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
     public void destroy() {
         singletonInstances.clear();
         beanDefinitions.clear();
-        beanDefinitions.clear();
         allBeanNamesByType.clear();
         singletonBeanNamesByType.clear();
+        beanDefinitionNames.clear();
     }
 
 }

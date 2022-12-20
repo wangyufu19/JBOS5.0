@@ -38,21 +38,11 @@ public class AnnotationBeanClassDelegate {
         }
         List<BeanPostProcessor> list = new ArrayList<BeanPostProcessor>();
         for(String beanName:beanNames){
-            try {
-                BeanPostProcessor beanPostProcessor;
-                if(beanFactory.containsSingletonBean(beanName)){
-                    beanPostProcessor=(BeanPostProcessor)beanFactory.getSingletonInstance(beanName);
-                }else{
-                    beanPostProcessor=(BeanPostProcessor)JBOSClassloader.loadClass(beanName).newInstance();
-                }
-                list.add(beanPostProcessor);
-            } catch (InstantiationException e) {
-                logger.error(e);
-            } catch (IllegalAccessException e) {
-                logger.error(e);
-            } catch (ClassNotFoundException e) {
-                logger.error(e);
-            }
+            BeanPostProcessor beanPostProcessor=(BeanPostProcessor)beanFactory.getBean(beanName);;
+            list.add(beanPostProcessor);
+        }
+        for(BeanPostProcessor beanPostProcessor:beanFactory.getBeanPostProcessors()){
+            list.add(beanPostProcessor);
         }
         list.sort(AnnotationAwareOrderComparator.INSTANCE);
         for(int i=0;i<list.size();i++){

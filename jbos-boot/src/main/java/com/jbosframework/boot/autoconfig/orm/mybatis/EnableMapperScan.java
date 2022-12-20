@@ -1,4 +1,4 @@
-package com.jbosframework.boot.autoconfig.orm;
+package com.jbosframework.boot.autoconfig.orm.mybatis;
 
 import java.lang.annotation.*;
 

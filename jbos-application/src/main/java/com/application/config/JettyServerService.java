@@ -1,4 +1,4 @@
-package com.application.sys.service;
+package com.application.config;
 
 import com.application.common.httpserver.JettyHttpServer;
 import lombok.extern.slf4j.Slf4j;

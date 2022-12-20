@@ -37,7 +37,7 @@ public class DataSourcePropertiesBeanPostProcessor implements ApplicationContext
     private void doCreateDatasourceProperties(ConfigurationProperties configurationProperties){
         DataSourceProperties dataSourceProperties=DataSourcePropertiesBuilder.getInstance().create(this.applicationContext,configurationProperties);
         GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(dataSourceProperties.getClass());
-        this.applicationContext.getBeanFactory().putBeanDefinition(DataSourceProperties.class.getName(),genericBeanDefinition);
+        this.applicationContext.getBeanFactory().putBeanDefinition(dataSourceProperties.getClass().getName(),genericBeanDefinition);
         this.applicationContext.getBeanFactory().registerSingletonInstance(dataSourceProperties.getClass().getName(),dataSourceProperties);
     }
     public int getOrder(){

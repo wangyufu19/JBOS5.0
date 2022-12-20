@@ -3,6 +3,7 @@ package com.application.sys.service;
 import com.application.common.UserObject;
 import com.application.sys.pojo.UserInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ public interface UserMgrService {
 	 * @param params
 	 * @return
 	 */
-	public void getUserList(Map<String, Object> params);
+	public List<UserInfo> getUserList(Map<String, Object> params);
 	/**
 	 * 根据登录名称查询用户信息
 	 * @param username

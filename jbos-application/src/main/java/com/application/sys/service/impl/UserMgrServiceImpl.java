@@ -9,6 +9,7 @@ import com.jbosframework.orm.mybatis.annotation.Mapper;
 import com.jbosframework.utils.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,8 +27,8 @@ public class UserMgrServiceImpl implements UserMgrService {
 	 * @param params
 	 * @return
 	 */
-	public void getUserList(Map<String, Object> params) {
-		return;
+	public List<UserInfo> getUserList(Map<String, Object> params) {
+		return userMapper.getUserList();
 	}
 	/**
 	 * 根据登录名称查询用户信息

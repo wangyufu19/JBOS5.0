@@ -103,9 +103,10 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     }
 
     public void registerBeanPostProcessor(BeanPostProcessor beanPostProcessor){
-        if(!beanPostProcessors.contains(beanPostProcessor)){
-            beanPostProcessors.add(beanPostProcessor);
+        if(beanPostProcessors.contains(beanPostProcessor)){
+            beanPostProcessors.remove(beanPostProcessor);
         }
+        beanPostProcessors.add(beanPostProcessor);
     }
     public List<BeanPostProcessor> getBeanPostProcessors(){
         return beanPostProcessors;

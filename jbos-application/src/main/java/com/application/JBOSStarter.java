@@ -1,26 +1,18 @@
 package com.application;
 
-import com.application.sys.service.AsyncTaskService;
-import com.application.sys.service.NotifyEvent;
+import com.application.sys.pojo.UserInfo;
 import com.application.sys.service.UserMgrService;
 import com.application.sys.service.impl.UserMgrServiceImpl;
-import com.jbosframework.aop.AdviceConfig;
-import com.jbosframework.aop.AopProxy;
-import com.jbosframework.aop.JdkDynamicProxy;
-import com.jbosframework.boot.autoconfig.AutoConfigurationRegistry;
+import com.application.test.listener.NotifyEvent;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
-import com.jbosframework.context.ConfigurableApplicationContext;
-import com.jbosframework.context.annotation.AnnotationConfigApplicationContext;
-import com.jbosframework.context.annotation.ImportSelector;
-import com.jbosframework.context.support.AbstractApplicationContext;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.concurrent.*;
+import java.util.List;
 
 
 @JBOSBootApplication
@@ -30,11 +22,11 @@ public class JBOSStarter {
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		DataSource dataSource=ctx.getBean(DataSource.class);
-//		UserMgrService userMgrService=ctx.getBean(UserMgrServiceImpl.class);
-		log.info("dataSource={}",dataSource);
-		dataSource.getConnection();
 		ctx.publishEvent(new NotifyEvent(new Object()));
+		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
+		log.info("userMgrService={}",userMgrService);
+        List<UserInfo> userInfos=userMgrService.getUserList(null);
+        log.info("userInfos={}",userInfos);
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);

@@ -1,6 +1,5 @@
 package com.application.config;
 
-import com.application.sys.service.JettyServerService;
 import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.context.annotation.Configuration;
 import lombok.extern.slf4j.Slf4j;

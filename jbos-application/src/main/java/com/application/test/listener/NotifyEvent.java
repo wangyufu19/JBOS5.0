@@ -1,4 +1,4 @@
-package com.application.sys.service;
+package com.application.test.listener;
 
 import com.jbosframework.context.ApplicationEvent;
 
