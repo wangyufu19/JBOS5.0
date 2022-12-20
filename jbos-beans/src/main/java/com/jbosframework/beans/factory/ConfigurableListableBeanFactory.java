@@ -9,6 +9,7 @@ import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.utils.Assert;
 import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.utils.StringUtils;
+import com.jbosframework.utils.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
@@ -93,13 +94,17 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         this.putBeanNameOfType(beanDefinition.getClassName(),beanDefinition);
         Class<?>[] interfaces=beanDefinition.getBeanClass().getInterfaces();
         for(Class<?> interfaceCls:interfaces){
-            this.beanDefinitions.put(interfaceCls.getName(),beanDefinition);
-            this.putBeanNameOfType(interfaceCls.getName(),beanDefinition);
+            if(!TypeConverter.isPrimitiveType(interfaceCls)){
+                this.beanDefinitions.put(interfaceCls.getName(),beanDefinition);
+                this.putBeanNameOfType(interfaceCls.getName(),beanDefinition);
+            }
         }
         Class<?> superclass=beanDefinition.getBeanClass().getSuperclass();
         if(superclass!=null){
-            this.beanDefinitions.put(superclass.getName(),beanDefinition);
-            this.putBeanNameOfType(superclass.getName(),beanDefinition);
+            if(!TypeConverter.isPrimitiveType(superclass)){
+                this.beanDefinitions.put(superclass.getName(),beanDefinition);
+                this.putBeanNameOfType(superclass.getName(),beanDefinition);
+            }
         }
     }
     public void initialization(){

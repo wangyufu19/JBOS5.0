@@ -1,5 +1,4 @@
-package com.jbosframework.jdbc.support.type;
-import com.jbosframework.utils.StringUtils;
+package com.jbosframework.utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -110,6 +109,8 @@ public class TypeConverter {
 		}else if(TypeConverter.DATA_TYPE_DATE.equals(className)){
 			return true;
 		}else if(TypeConverter.DATA_TYPE_TIMESTAMP.equals(className)){
+			return true;
+		}else if(java.lang.Object.class.getName().equals(className)){
 			return true;
 		}
 		return false;

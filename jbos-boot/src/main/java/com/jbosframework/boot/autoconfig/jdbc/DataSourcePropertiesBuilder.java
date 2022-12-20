@@ -3,7 +3,7 @@ package com.jbosframework.boot.autoconfig.jdbc;
 import com.jbosframework.beans.config.InjectionMetadata;
 import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.context.ConfigurableApplicationContext;
-import com.jbosframework.jdbc.support.type.TypeConverter;
+import com.jbosframework.utils.TypeConverter;
 import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
