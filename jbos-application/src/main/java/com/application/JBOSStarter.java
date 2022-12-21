@@ -26,6 +26,8 @@ public class JBOSStarter {
 		ApplicationContext ctx=jbosApplication.start(args);
 		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
 		asyncTaskService.doTask1();
+		asyncTaskService.doTask2();
+//		asyncTaskService.doTask3();
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);

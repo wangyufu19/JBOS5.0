@@ -32,7 +32,7 @@ public class AsyncTaskService {
         log.info("******doTask2");
         return new AsyncResult<Boolean>(true);
     }
-    @Async
+    @Async("asyncExecutor")
     public Future<Boolean> doTask3()  {
         try {
             Thread.sleep(1000);

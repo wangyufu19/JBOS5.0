@@ -10,9 +10,9 @@ import java.util.concurrent.*;
  */
 public class SimpleAsyncTaskExecutor implements AsyncTaskExecutor {
     private static int corePoolSize=10;
-    private static int maxPoolSize= Ordered.HIGHEST_PRECEDENCE;
+    private static int maxPoolSize= Ordered.LOWEST_PRECEDENCE;
     private static long keepAliveSeconds=60;
-    private static int queueCapacity= Ordered.HIGHEST_PRECEDENCE;
+    private static int queueCapacity= Ordered.LOWEST_PRECEDENCE;
 
     private static class SimpleThreadPoolTaskExecutorHolder{
         private final static Executor executor=new ThreadPoolExecutor(
