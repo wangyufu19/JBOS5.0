@@ -25,12 +25,12 @@ public class DataSourcePropertiesBeanPostProcessor implements ApplicationContext
         }
         GenericBeanDefinition genericBeanDefinition=(GenericBeanDefinition)beanDefinition;
         if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
-            if(genericBeanDefinition.getMethodMetadata().findAnnotation(ConfigurationProperties.class)){
+            if(genericBeanDefinition.getMethodMetadata().isAnnotation(ConfigurationProperties.class)){
                 ConfigurationProperties configurationProperties=genericBeanDefinition.getMethodMetadata().getMethod().getDeclaredAnnotation(ConfigurationProperties.class);
                 this.doCreateDatasourceProperties(configurationProperties);
             }
         }else{
-            if(genericBeanDefinition.getMetadata().findAnnotation(ConfigurationProperties.class)){
+            if(genericBeanDefinition.getMetadata().isAnnotation(ConfigurationProperties.class)){
                 ConfigurationProperties configurationProperties=genericBeanDefinition.getBeanClass().getDeclaredAnnotation(ConfigurationProperties.class);
                 this.doCreateDatasourceProperties(configurationProperties);
             }

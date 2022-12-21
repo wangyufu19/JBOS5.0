@@ -56,7 +56,7 @@ public class MethodMetadata {
     public boolean isPublic(){
         return (method.getModifiers()& (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC)) == Modifier.PUBLIC;
     }
-    public boolean findAnnotation(Class<?> cls){
+    public boolean isAnnotation(Class<?> cls){
         if(methodAnnotations==null){
             return false;
         }
@@ -66,5 +66,16 @@ public class MethodMetadata {
             }
         }
         return false;
+    }
+    public Annotation findAnnotation(Class<?> cls){
+        if(methodAnnotations==null){
+            return null;
+        }
+        for(Annotation annotation:methodAnnotations){
+            if(annotation.annotationType().getName().equals(cls.getName())){
+                return annotation;
+            }
+        }
+        return null;
     }
 }

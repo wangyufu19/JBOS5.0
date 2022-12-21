@@ -30,18 +30,19 @@ public class TypeConverter {
 	public static final String DATA_TYPE_TIMESTAMP="java.sql.Timestamp";
 	public static final String DATA_TYPE_TIMESTAMP_ALIAS="Timestamp";
 
-	public static Object convert(String type,String value){
+	public static Object convert(String type,Object value){
 	    if(StringUtils.isNUll(value)){
-	    	return value;
+	    	return null;
 		}
+		String result=String.valueOf(value);
 		if(java.lang.Integer.class.getName().equals(type)||java.lang.Integer.class.getSimpleName().equals(type)||"int".equals(type)){
-			return Integer.parseInt(value);
+			return Integer.parseInt(result);
 		}else if(java.lang.Long.class.getName().equals(type)||java.lang.Long.class.getSimpleName().equals(type)||"long".equals(type)){
-			return Long.parseLong(value);
+			return Long.parseLong(result);
 		}else if(java.lang.Boolean.class.getName().equals(type)||java.lang.Boolean.class.getSimpleName().equals(type)||"boolean".equals(type)){
-			return Boolean.parseBoolean(value);
+			return Boolean.parseBoolean(result);
 		}else {
-			return value;
+			return result;
 		}
 	}
 	public static Integer convertToInteger(Object obj){

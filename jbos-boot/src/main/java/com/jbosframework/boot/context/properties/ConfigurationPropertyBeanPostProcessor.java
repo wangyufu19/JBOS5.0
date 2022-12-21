@@ -16,11 +16,11 @@ public class ConfigurationPropertyBeanPostProcessor implements BeanPostProcessor
     public Object postProcessBeforeInitialization(Object bean, BeanDefinition beanDefinition){
         GenericBeanDefinition genericBeanDefinition=(GenericBeanDefinition)beanDefinition;
         if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
-            if(genericBeanDefinition.getMethodMetadata().findAnnotation(ConfigurationProperties.class)){
+            if(genericBeanDefinition.getMethodMetadata().isAnnotation(ConfigurationProperties.class)){
 
             }
         }else{
-            if(genericBeanDefinition.getMetadata().findAnnotation(ConfigurationProperties.class)){
+            if(genericBeanDefinition.getMetadata().isAnnotation(ConfigurationProperties.class)){
 
             }
         }

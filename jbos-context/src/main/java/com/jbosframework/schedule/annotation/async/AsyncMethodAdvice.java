@@ -1,13 +1,12 @@
-package com.jbosframework.schedule;
+package com.jbosframework.schedule.annotation.async;
 import com.jbosframework.aop.MethodAdvisor;
 import com.jbosframework.beans.factory.BeanFactory;
-import com.jbosframework.schedule.annotation.Async;
 import com.jbosframework.schedule.concurrent.AsyncTaskExecutor;
 import com.jbosframework.schedule.concurrent.SimpleAsyncTaskExecutor;
+import com.jbosframework.utils.StringUtils;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
@@ -17,7 +16,7 @@ import java.util.concurrent.Callable;
  * @version 5.0
  */
 public class AsyncMethodAdvice extends MethodAdvisor {
-    private static final Log log= LogFactory.getLog(AsyncMethodAdvice.class);
+    private static final Log logger= LogFactory.getLog(AsyncMethodAdvice.class);
     private BeanFactory beanFactory;
 
 
@@ -32,10 +31,12 @@ public class AsyncMethodAdvice extends MethodAdvisor {
         if(async==null){
             return null;
         }
+        AsyncTaskExecutor asyncTaskExecutor=null;
         String refAsync=async.value();
-        AsyncTaskExecutor asyncTaskExecutor=(AsyncTaskExecutor)beanFactory.getBean(refAsync);
-        if(asyncTaskExecutor==null){
+        if(StringUtils.isNUll(async.value())){
             asyncTaskExecutor=new SimpleAsyncTaskExecutor();
+        }else{
+            asyncTaskExecutor=(AsyncTaskExecutor)beanFactory.getBean(refAsync);
         }
         return asyncTaskExecutor.submit(new Callable<Object>() {
             @Override

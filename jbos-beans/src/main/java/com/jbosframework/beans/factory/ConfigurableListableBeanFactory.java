@@ -61,7 +61,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         if(beanDefinitions!=null){
             List<String> beanNames=new ArrayList<String>(beanDefinitions.size());
             for(BeanDefinition beanDefinition:beanDefinitions){
-                beanNames.add(beanDefinition.getClassName());
+                beanNames.add(((GenericBeanDefinition)beanDefinition).getName());
             }
             return beanNames.toArray(new String[beanNames.size()]);
         }
@@ -91,7 +91,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
                 this.beanDefinitionNames = updatedDefinitions;
             }
         }
-        this.putBeanNameOfType(beanDefinition.getClassName(),beanDefinition);
+        this.putBeanNameOfType(name,beanDefinition);
         Class<?>[] interfaces=beanDefinition.getBeanClass().getInterfaces();
         for(Class<?> interfaceCls:interfaces){
             if(!TypeConverter.isPrimitiveType(interfaceCls)){

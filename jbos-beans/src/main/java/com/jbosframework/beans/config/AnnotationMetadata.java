@@ -19,7 +19,7 @@ public class AnnotationMetadata {
     public void setAnnotations(Annotation[] annotations) {
         this.annotations = annotations;
     }
-    public boolean findAnnotation(Class<?> cls){
+    public boolean isAnnotation(Class<?> cls){
         if(annotations==null){
             return false;
         }
@@ -29,5 +29,16 @@ public class AnnotationMetadata {
             }
         }
         return false;
+    }
+    public Annotation findAnnotation(Class<?> cls){
+        if(annotations==null){
+            return null;
+        }
+        for(Annotation annotation:annotations){
+            if(annotation.annotationType().getName().equals(cls.getName())){
+                return annotation;
+            }
+        }
+        return null;
     }
 }

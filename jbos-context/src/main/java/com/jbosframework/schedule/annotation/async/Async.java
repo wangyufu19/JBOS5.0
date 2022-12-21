@@ -1,4 +1,4 @@
-package com.jbosframework.schedule.annotation;
+package com.jbosframework.schedule.annotation.async;
 
 import java.lang.annotation.*;
 

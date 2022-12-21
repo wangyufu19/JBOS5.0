@@ -11,6 +11,7 @@ import com.jbosframework.core.annotaion.AnnotationUtils;
 import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.ObjectUtils;
+import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -57,7 +58,7 @@ public class AnnotationBeanClassParser {
                 GenericBeanDefinition beanDef=(GenericBeanDefinition)beanDefinitions.next();
                 configurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
                 if(this.checkCandidateBean(configurationClass)){
-                    this.registry.putBeanDefinition(beanDef.getName(),beanDef);
+                    this.registryBeanDefinition(beanDef);
                     this.parse(configurationClass);
                 }
             }
@@ -67,7 +68,7 @@ public class AnnotationBeanClassParser {
         if(AnnotationUtils.isComponent(configurationClass.source,Configuration.class)&&this.checkCandidateBean(configurationClass)){
             GenericBeanDefinition configurationBeanDef=configurationClass.getBeanDefinition();
             configurationBeanDef.setRole(GenericBeanDefinition.ROLE_COMPONENT_CLASS);
-            this.registry.putBeanDefinition(configurationBeanDef.getName(),configurationBeanDef);
+            this.registryBeanDefinition(configurationBeanDef);
 
             Class<?>[] classes=configurationClass.getSource().getDeclaredClasses();
             if(!ObjectUtils.isEmpty(classes)){
@@ -76,7 +77,7 @@ public class AnnotationBeanClassParser {
                     beanDef.setRole(GenericBeanDefinition.ROLE_MEMBER_CLASS);
                     beanDef.setParent(configurationBeanDef);
                     ConfigurationClass subConfigurationClass=new ConfigurationClass(beanDef.getBeanClass(),beanDef);
-                    if(subConfigurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(subConfigurationClass)){
+                    if(subConfigurationClass.getMetadata().isAnnotation(Configuration.class)&&this.checkCandidateBean(subConfigurationClass)){
                         this.parse(subConfigurationClass);
                     }
                 }
@@ -91,13 +92,12 @@ public class AnnotationBeanClassParser {
                         methodBeanDef.setRole(GenericBeanDefinition.ROLE_MEMBER_METHOD);
                         methodBeanDef.setParent(configurationBeanDef);
                         methodBeanDef.setMethodMetadata(methodMetadata);
-                        if(methodMetadata.findAnnotation(Bean.class)&&this.checkCandidateBean(methodMetadata.getMethodAnnotations())){
-                            this.registry.putBeanDefinition(methodBeanDef.getName(), methodBeanDef);
+                        if(methodMetadata.isAnnotation(Bean.class)&&this.checkCandidateBean(methodMetadata.getMethodAnnotations())){
+                            this.registryBeanDefinition(methodBeanDef);
                         }
                     }
                 }
             }
-
         }
     }
     private void processImports(ConfigurationClass configurationClass){
@@ -176,5 +176,17 @@ public class AnnotationBeanClassParser {
             }
         }
     }
-
+    private void registryBeanDefinition(GenericBeanDefinition genericBeanDefinition){
+        Bean bean;
+        if(genericBeanDefinition.getRole()==GenericBeanDefinition.ROLE_MEMBER_METHOD){
+            MethodMetadata methodMetadata=genericBeanDefinition.getMethodMetadata();
+            bean=(Bean) methodMetadata.findAnnotation(Bean.class);
+        }else{
+            bean=(Bean) genericBeanDefinition.getMetadata().findAnnotation(Bean.class);
+        }
+        if(StringUtils.isNotNUll(bean)&&StringUtils.isNotNUll(bean.value())){
+            genericBeanDefinition.setName(bean.value());
+        }
+        this.registry.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
+    }
 }

@@ -8,6 +8,7 @@ import com.jbosframework.beans.config.InjectionMetadata;
 import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.Ordered;
 import com.jbosframework.core.jepl.JEPL;
+import com.jbosframework.utils.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,7 +52,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor, 
                         propertyName=propertyName.substring(0,propertyName.indexOf(JEPL.JEPL_PATTERN_SUFFIX));
                     }
                     fieldValue=this.applicationContext.getEnvironment().getProperty(propertyName);
-                    InjectionMetadata.inject(bean,field,fieldValue);
+                    InjectionMetadata.inject(bean,field,TypeConverter.convert(field.getType().getName(),fieldValue));
                 }
             }
         }

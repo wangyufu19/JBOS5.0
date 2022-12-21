@@ -28,7 +28,7 @@ public class IncludeFilter {
 		}
 		Class[] filters=include.toArray(new Class[0]);
 		for(int i=0;i<filters.length;i++) {
-			if(metadata.findAnnotation(filters[i])) {
+			if(metadata.isAnnotation(filters[i])) {
 				match=true;
 				break;
 			}

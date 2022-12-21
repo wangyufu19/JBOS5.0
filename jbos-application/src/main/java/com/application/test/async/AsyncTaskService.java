@@ -1,7 +1,7 @@
-package com.application.config;
+package com.application.test.async;
 
 import com.jbosframework.beans.annotation.Component;
-import com.jbosframework.schedule.annotation.Async;
+import com.jbosframework.schedule.annotation.async.Async;
 import com.jbosframework.schedule.annotation.Scheduled;
 import com.jbosframework.schedule.concurrent.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
