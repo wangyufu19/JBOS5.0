@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * @version 5.0
  */
 public class TransactionMethodAdvice extends MethodAdvisor {
-    private static final Log log= LogFactory.getLog(TransactionMethodAdvice.class);
+    private static final Log logger= LogFactory.getLog(TransactionMethodAdvice.class);
 
     private BeanFactory beanFactory;
     private TransactionStatus transactionStatus;

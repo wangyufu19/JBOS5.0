@@ -7,11 +7,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
+
 
 public class SqlSessionUtils {
 
-    public static void closeSession(SqlSession sqlSession, SqlSessionFactory sqlSessionFactory) throws SQLException {
+    public static void closeSession(SqlSession sqlSession, SqlSessionFactory sqlSessionFactory) {
         DataSource dataSource=sqlSessionFactory.getConfiguration().getEnvironment().getDataSource();
         DataSourceUtils.closeConnection(sqlSession.getConnection(),dataSource);
     }

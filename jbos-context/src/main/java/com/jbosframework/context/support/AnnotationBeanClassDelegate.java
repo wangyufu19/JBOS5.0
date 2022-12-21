@@ -6,10 +6,8 @@ import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
 import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.AnnotationBeanClassParser;
 import com.jbosframework.core.annotaion.AnnotationAwareOrderComparator;
-import com.jbosframework.utils.JBOSClassloader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 

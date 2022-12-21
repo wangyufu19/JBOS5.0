@@ -21,17 +21,55 @@ public class AnnotationUtils {
             return false;
         }
     }
-
+    public static <A extends Annotation> A[] findAnnotations(Class<?> clazz, @Nullable Class<A> annotationType) {
+        Assert.notNull(clazz, "Class must not be null");
+        if (annotationType == null) {
+            return null;
+        } else {
+            Set<Annotation> visited = new HashSet<>();
+            findAnnotationComponent(clazz, annotationType, visited);
+            A[] result=visited.toArray((A[])new Annotation[visited.size()]);
+            return result;
+        }
+    }
     public static <A extends Annotation> A findAnnotation(Class<?> clazz, @Nullable Class<A> annotationType) {
         Assert.notNull(clazz, "Class must not be null");
         if (annotationType == null) {
             return null;
         } else {
-            A result = findAnnotationComponent(clazz, annotationType, (Set<Annotation>) new HashSet());
+            A result = findAnnotationComponent(clazz, annotationType);
             return result;
         }
     }
     private static <A extends Annotation> A findAnnotationComponent(Class<?> clazz, Class<A> annotationType, Set<Annotation> visited) {
+        try {
+            A annotation = clazz.getDeclaredAnnotation(annotationType);
+            if (annotation != null) {
+                visited.add(annotation);
+            }
+            Annotation[] annotations=getDeclaredAnnotations(clazz);
+            for(int i=0;i<annotations.length;i++){
+                annotation=(A)annotations[i];
+                Class<? extends Annotation> declaredType=annotation.annotationType();
+                if(!isInJavaLangAnnotationPackage(declaredType)){
+                    annotation = findAnnotationComponent(declaredType, annotationType, visited);
+                    if (annotation != null) {
+                        visited.add(annotation);
+                    }
+                }
+            }
+        }catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return null;
+        }
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null && superclass != Object.class) {
+            return findAnnotationComponent(superclass, annotationType, visited);
+        } else {
+            return null;
+        }
+    }
+    private static <A extends Annotation> A findAnnotationComponent(Class<?> clazz, Class<A> annotationType) {
         try {
             A annotation = clazz.getDeclaredAnnotation(annotationType);
             if (annotation != null) {
@@ -42,7 +80,7 @@ public class AnnotationUtils {
                 annotation=(A)annotations[i];
                 Class<? extends Annotation> declaredType=annotation.annotationType();
                 if(!isInJavaLangAnnotationPackage(declaredType)){
-                    annotation = findAnnotationComponent(declaredType, annotationType, visited);
+                    annotation = findAnnotationComponent(declaredType, annotationType);
                     if (annotation != null) {
                         return annotation;
                     }
@@ -54,7 +92,7 @@ public class AnnotationUtils {
         }
         Class<?> superclass = clazz.getSuperclass();
         if (superclass != null && superclass != Object.class) {
-            return findAnnotationComponent(superclass, annotationType, visited);
+            return findAnnotationComponent(superclass, annotationType);
         } else {
             return null;
         }

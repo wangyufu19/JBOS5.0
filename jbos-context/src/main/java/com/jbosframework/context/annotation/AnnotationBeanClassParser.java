@@ -63,41 +63,12 @@ public class AnnotationBeanClassParser {
             }
         }
     }
-    private void processImports(ConfigurationClass configurationClass){
-        Import importAnnotation=(Import) AnnotationUtils.findAnnotation(configurationClass.getSource(),Import.class);
-        if(importAnnotation==null){
-            return;
-        }
-        Class[] importClasses=importAnnotation.value();
-        for(Class importClass:importClasses){
-            GenericBeanDefinition beanDef=new GenericBeanDefinition(importClass);
-            if(ImportSelector.class.isAssignableFrom(importClass)){
-                try {
-                    Class<?>[] parameterTypes={ConfigurableApplicationContext.class};
-                    Object[] args={this.applicationContext};
-                    Constructor<?> constructor = importClass.getDeclaredConstructor(parameterTypes);
-                    Object instance = constructor.newInstance(args);
-                    List<String> beanCandidates=(List<String>)JBOSClassCaller.call(instance,"processImports");
-                    if(!ObjectUtils.isEmpty(beanCandidates)){
-                        for(String beanCandidate:beanCandidates){
-                            Class CandidateClass=JBOSClassloader.loadClass(beanCandidate);
-                            beanDef=new GenericBeanDefinition(CandidateClass);
-                            this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
-                        }
-                    }
-                }  catch (Throwable ex) {
-                    throw new IllegalArgumentException("Cannot instantiate " + importClass.getName(), ex);
-                }
-            }else{
-                this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
-            }
-        }
-    }
     private void processMemberClass(ConfigurationClass configurationClass){
-        if(configurationClass.getMetadata().findAnnotation(Configuration.class)&&this.checkCandidateBean(configurationClass)){
+        if(AnnotationUtils.isComponent(configurationClass.source,Configuration.class)&&this.checkCandidateBean(configurationClass)){
             GenericBeanDefinition configurationBeanDef=configurationClass.getBeanDefinition();
             configurationBeanDef.setRole(GenericBeanDefinition.ROLE_COMPONENT_CLASS);
             this.registry.putBeanDefinition(configurationBeanDef.getName(),configurationBeanDef);
+
             Class<?>[] classes=configurationClass.getSource().getDeclaredClasses();
             if(!ObjectUtils.isEmpty(classes)){
                 for(Class<?> cls:classes){
@@ -110,6 +81,7 @@ public class AnnotationBeanClassParser {
                     }
                 }
             }
+
             Method[] methods=configurationClass.getSource().getDeclaredMethods();
             if(!ObjectUtils.isEmpty(methods)){
                 for(Method method:methods){
@@ -123,6 +95,39 @@ public class AnnotationBeanClassParser {
                             this.registry.putBeanDefinition(methodBeanDef.getName(), methodBeanDef);
                         }
                     }
+                }
+            }
+
+        }
+    }
+    private void processImports(ConfigurationClass configurationClass){
+        Annotation[] importAnnotations=AnnotationUtils.findAnnotations(configurationClass.getSource(),Import.class);
+        if(importAnnotations==null||importAnnotations.length<=0){
+            return;
+        }
+        for(Annotation importAnnotation:importAnnotations){
+            Class[] importClasses=((Import)importAnnotation).value();
+            for(Class importClass:importClasses){
+                GenericBeanDefinition beanDef=new GenericBeanDefinition(importClass);
+                if(ImportSelector.class.isAssignableFrom(importClass)){
+                    try {
+                        Class<?>[] parameterTypes={ConfigurableApplicationContext.class};
+                        Object[] args={this.applicationContext};
+                        Constructor<?> constructor = importClass.getDeclaredConstructor(parameterTypes);
+                        Object instance = constructor.newInstance(args);
+                        List<String> beanCandidates=(List<String>)JBOSClassCaller.call(instance,"processImports");
+                        if(!ObjectUtils.isEmpty(beanCandidates)){
+                            for(String beanCandidate:beanCandidates){
+                                Class CandidateClass=JBOSClassloader.loadClass(beanCandidate);
+                                beanDef=new GenericBeanDefinition(CandidateClass);
+                                this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
+                            }
+                        }
+                    }  catch (Throwable ex) {
+                        throw new IllegalArgumentException("Cannot instantiate " + importClass.getName(), ex);
+                    }
+                }else{
+                    this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
                 }
             }
         }
