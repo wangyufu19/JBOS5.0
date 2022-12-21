@@ -5,7 +5,6 @@ import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.context.annotation.ImportSelector;
 import com.jbosframework.core.Ordered;
 import com.jbosframework.jdbc.datasource.DataSourceTransactionManager;
-import javax.sql.DataSource;
 import java.util.List;
 
 public class TransactionManagerRegister implements ImportSelector, Ordered {
@@ -17,10 +16,8 @@ public class TransactionManagerRegister implements ImportSelector, Ordered {
     }
 
     public List<String> processImports() {
-        DataSourceTransactionManager dataSourceTransactionManager=new DataSourceTransactionManager(this.applicationContext.getBean(DataSource.class));
         GenericBeanDefinition genericBeanDefinition=new GenericBeanDefinition(DataSourceTransactionManager.class);
         this.applicationContext.getBeanFactory().putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);
-        this.applicationContext.getBeanFactory().registerSingletonInstance(DataSourceTransactionManager.class.getName(),dataSourceTransactionManager);
         TransactionBeanProcessor transactionBeanProcessor=new TransactionBeanProcessor();
         this.applicationContext.getBeanFactory().putBeanDefinition(
                 transactionBeanProcessor.getClass().getName(),

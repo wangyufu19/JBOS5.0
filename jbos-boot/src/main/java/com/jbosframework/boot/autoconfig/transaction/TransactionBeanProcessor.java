@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  */
 public class TransactionBeanProcessor implements ApplicationContextAware, BeanPostProcessor, Ordered {
     private static final Log logger= LogFactory.getLog(TransactionBeanProcessor.class);
-    private int order=Ordered.HIGHEST_PRECEDENCE+20;
+    private int order=Ordered.HIGHEST_PRECEDENCE+2000;
     private ConfigurableApplicationContext applicationContext;
 
     public void setApplicationContext(ApplicationContext applicationContext){
@@ -33,10 +33,9 @@ public class TransactionBeanProcessor implements ApplicationContextAware, BeanPo
     }
     public Object postProcessBeforeInitialization(Object bean,BeanDefinition beanDefinition){
         boolean isTransactionalBean=false;
-        Object target = bean;
         Class<?> cls=bean.getClass();
         if(cls==null){
-            return target;
+            return bean;
         }
         Transactional transactional = cls.getDeclaredAnnotation(Transactional.class);
         if(transactional!=null){
@@ -44,7 +43,7 @@ public class TransactionBeanProcessor implements ApplicationContextAware, BeanPo
         }else{
             Method[] methods=cls.getDeclaredMethods();
             if(methods==null){
-                return target;
+                return bean;
             }
             for(Method method:methods) {
                 transactional = method.getDeclaredAnnotation(Transactional.class);
@@ -61,8 +60,8 @@ public class TransactionBeanProcessor implements ApplicationContextAware, BeanPo
             adviceConfig.setTarget(bean);
             adviceConfig.setMethodAdvisor(transactionMethodAdvice);
             AopProxy aopProxy = new CglibProxy(adviceConfig);
-            target=aopProxy.getProxy();
+            bean=aopProxy.getProxy();
         }
-        return target;
+        return bean;
     }
 }

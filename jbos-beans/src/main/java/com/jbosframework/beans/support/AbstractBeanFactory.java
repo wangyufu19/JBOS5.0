@@ -115,10 +115,12 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     public abstract boolean containsBean(String name);
 
     public abstract BeanDefinition getBeanDefinition(String name) throws BeansException;
-    protected void doPostProcessBeforeInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
+    protected Object doPostProcessBeforeInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
+        Object target=bean;
         for(BeanPostProcessor beanPostProcessor:beanPostProcessors){
-            beanPostProcessor.postProcessBeforeInitialization(bean,genericBeanDefinition);
+            target=beanPostProcessor.postProcessBeforeInitialization(target,genericBeanDefinition);
         }
+        return target;
     }
     protected void doPostProcessAfterInitialization(Object bean,GenericBeanDefinition genericBeanDefinition){
         for(BeanPostProcessor beanPostProcessor:beanPostProcessors){

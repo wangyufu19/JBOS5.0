@@ -1,4 +1,5 @@
 package com.jbosframework.jdbc.datasource;
+import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.transaction.DefaultTransactionStatus;
 import com.jbosframework.transaction.TransactionDefinition;
 import com.jbosframework.transaction.TransactionManager;
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
  * @version 5.0
  */
 public class DataSourceTransactionManager implements TransactionManager {
+	@Autowired
 	private DataSource dataSource;
 	/**
 	 * 构造方法

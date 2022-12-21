@@ -126,7 +126,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
                 bean=BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
             }
         }
-        this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
+        bean=this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
         this.doPostProcessAfterInitialization(bean,genericBeanDefinition);
         if(genericBeanDefinition.isSingleton()){
             this.registerSingletonInstance(genericBeanDefinition.getName(),bean);

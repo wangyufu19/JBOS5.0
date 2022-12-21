@@ -20,6 +20,9 @@ public class DataSourcePropertiesBeanPostProcessor implements ApplicationContext
         this.applicationContext=(ConfigurableApplicationContext)applicationContext;
     }
     public Object postProcessBeforeInitialization(Object bean, BeanDefinition beanDefinition){
+        if(this.applicationContext.getBeanFactory().containsSingletonBean(beanDefinition.getClassName())){
+            return bean;
+        }
         GenericBeanDefinition genericBeanDefinition=(GenericBeanDefinition)beanDefinition;
         if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
             if(genericBeanDefinition.getMethodMetadata().findAnnotation(ConfigurationProperties.class)){

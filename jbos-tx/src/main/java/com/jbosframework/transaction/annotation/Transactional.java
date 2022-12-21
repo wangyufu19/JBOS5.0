@@ -13,5 +13,5 @@ public @interface Transactional {
 
     int timeout() default -1;
 
-    Class<? extends Throwable> rollbackFor() ;
+    Class<? extends Throwable> rollbackFor() default DefaultTransactionRollBack.class;
 }

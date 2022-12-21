@@ -6,6 +6,7 @@ import com.application.sys.service.UserMgrService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Service;
 import com.jbosframework.orm.mybatis.annotation.Mapper;
+import com.jbosframework.transaction.annotation.Transactional;
 import com.jbosframework.utils.StringUtils;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class UserMgrServiceImpl implements UserMgrService {
 	 * @param params
 	 * @return
 	 */
+	@Transactional
 	public List<UserInfo> getUserList(Map<String, Object> params) {
 		return userMapper.getUserList();
 	}
