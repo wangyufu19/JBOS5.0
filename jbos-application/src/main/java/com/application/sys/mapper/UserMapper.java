@@ -32,4 +32,5 @@ public interface UserMapper{
 	 * @param parameterObject
 	 */
 	public void updateUserInfo(Map<String, Object> parameterObject);
+	public void updateUser(Map<String, Object> parameterObject);
 }

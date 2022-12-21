@@ -25,8 +25,9 @@ public class JBOSStarter {
 		ctx.publishEvent(new NotifyEvent(new Object()));
 		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
 		log.info("userMgrService={}",userMgrService);
-        List<UserInfo> userInfos=userMgrService.getUserList(null);
-        log.info("userInfos={}",userInfos);
+		userMgrService.updateUserInfo(null);
+        //List<UserInfo> userInfos=userMgrService.getUserList(null);
+        //log.info("userInfos={}",userInfos);
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);

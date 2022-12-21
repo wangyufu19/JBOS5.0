@@ -7,6 +7,9 @@
         FROM JBOS_USER A
     </select>
     <update id="updateUserInfo"  parameterType="java.util.Map">
-        UPDATE JBOS_ROLE SET PARENTID='1' WHERE ID='0fc09c65-7667-450c-bcb3-a5a9f2350e7e'
+        UPDATE JBOS_ROLE SET PARENTID='3' WHERE ID='0fc09c65-7667-450c-bcb3-a5a9f2350e7e'
+    </update>
+    <update id="updateUser" parameterType="java.util.Map">
+         UPDATE JBOS_USER SET USERNAME='1' WHERE ID='1b15b830-e01e-46b0-9f77-cbedb5745e0a'
     </update>
 </mapper>

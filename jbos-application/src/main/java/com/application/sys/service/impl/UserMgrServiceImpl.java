@@ -6,6 +6,8 @@ import com.application.sys.service.UserMgrService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Service;
 import com.jbosframework.orm.mybatis.annotation.Mapper;
+import com.jbosframework.transaction.annotation.Isolation;
+import com.jbosframework.transaction.annotation.Propagation;
 import com.jbosframework.transaction.annotation.Transactional;
 import com.jbosframework.utils.StringUtils;
 
@@ -69,8 +71,9 @@ public class UserMgrServiceImpl implements UserMgrService {
 	 * 更新用户信息
 	 * @param user
 	 */
-	//@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,timeout=36000,rollbackFor=Exception.class)
 	public void updateUserInfo(UserInfo user){
 		userMapper.updateUserInfo(null);
+		userMapper.updateUser(null);
 	}
 }
