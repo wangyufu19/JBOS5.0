@@ -24,6 +24,7 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
     private volatile WebServer webServer;
     private ServletContextInitializer initializer;
 
+
     public AnnotationConfigServletWebServerApplicationContext(){
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.scanner = new ClassPathBeanDefinitionScanner(this);
@@ -50,8 +51,6 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
             ServletWebServerFactory factory = new TomcatServletWebServer(this);
             this.webServer = factory.getWebServer(initializer);
             this.webServer.start();
-
         }
     }
-
 }

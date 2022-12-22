@@ -31,6 +31,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     private final SimpleApplicationEventMulticaster initialMulticaster;
     private final Set<ApplicationListener<?>> applicationListeners;
     private ConfigurableEnvironment environment;
+    private Class<?> jbosBootClass;
 
     public AbstractApplicationContext(){
         this.beanFactory = new ConfigurableListableBeanFactory();
@@ -263,5 +264,11 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
         }
 
         return sb.toString();
+    }
+    public void setJbosBootClass(Class<?> jbosBootClass){
+        this.jbosBootClass=jbosBootClass;
+    }
+    public Class<?> getJbosBootClass(){
+        return this.jbosBootClass;
     }
 }

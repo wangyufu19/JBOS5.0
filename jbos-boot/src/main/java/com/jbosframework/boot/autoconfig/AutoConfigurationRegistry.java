@@ -22,6 +22,6 @@ public class AutoConfigurationRegistry implements ImportSelector {
         this.applicationContext=applicationContext;
     }
     public List<String> processImports() {
-      return JBOSFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class, JBOSClassloader.getDefaultClassLoader());
+        return JBOSFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class, JBOSClassloader.getDefaultClassLoader());
     }
 }

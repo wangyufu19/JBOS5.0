@@ -4,7 +4,6 @@ import javax.servlet.ServletContext;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.context.ApplicationContextFactory;
 import com.jbosframework.utils.JBOSClassloader;
-import com.jbosframework.web.context.WebAnnotationApplicationContext;
 /**
  * ContextLoaderServlet
  * @author youfu.wang
@@ -19,7 +18,7 @@ public class ContextLoaderServlet extends HttpServlet{
 		defaultAppConfig="com.AppConfig";		
 	}
 
-	public void destory(){		
+	public void destroy(){
 		ApplicationContextFactory.getApplicationContext().destroy();
 	}
 	public void init(){

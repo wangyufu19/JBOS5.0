@@ -141,6 +141,7 @@ public class JBOSApplication {
                                 ConfigurableEnvironment environment,
                                 JBOSApplicationRunListeners listeners,
                                 ApplicationArguments applicationArguments) {
+        context.setJbosBootClass(this.jbosBootClass);
         context.setEnvironment(environment);
         applyInitializers(context);
         listeners.contextPrepared(context);
@@ -242,5 +243,9 @@ public class JBOSApplication {
     }
     public ResourceLoader getResourceLoader() {
         return this.resourceLoader;
+    }
+
+    public Class<?> getJbosBootClass() {
+        return jbosBootClass;
     }
 }

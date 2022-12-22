@@ -1,6 +1,4 @@
 package com.jbosframework.boot.web.servlet;
-
-import com.jbosframework.boot.web.servlet.context.WebContext;
 import com.jbosframework.context.ApplicationContext;
 
 /**

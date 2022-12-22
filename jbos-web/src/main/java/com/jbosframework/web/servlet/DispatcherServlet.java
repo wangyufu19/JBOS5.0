@@ -21,12 +21,12 @@ public class DispatcherServlet extends JBOSServlet{
 		this.doDispatch(request, response);		
 	}
 	protected void doDispatch(HttpServletRequest request,HttpServletResponse response) throws Exception {
-		DispatchHandler requestDispatchtHandler=null;
+		DispatchHandler requestDispatchHandler=null;
 		try{
-			requestDispatchtHandler=this.getRequestHandler(request, response);
-			requestDispatchtHandler.setServletContext(servletContext);
-			requestDispatchtHandler.setApplicationContext(this.getApplicationContext());
-			requestDispatchtHandler.handle();			
+			requestDispatchHandler=this.getRequestHandler(request, response);
+			requestDispatchHandler.setServletContext(servletContext);
+			requestDispatchHandler.setApplicationContext(this.getApplicationContext());
+			requestDispatchHandler.handle();
 		}catch(Exception ex){
 			throw ex;
 		}

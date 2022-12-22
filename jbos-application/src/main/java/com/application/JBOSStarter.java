@@ -9,12 +9,17 @@ import com.application.test.listener.NotifyEvent;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
+import com.jbosframework.core.io.support.JBOSFactoriesLoader;
 import com.jbosframework.schedule.annotation.async.EnableAsync;
+import com.jbosframework.utils.JBOSClassloader;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -22,12 +27,12 @@ import java.util.List;
 @Slf4j
 public class JBOSStarter {
 
-	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException {
+	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException, IOException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
-		List<UserInfo> userInfos=userMgrService.getUserList(null);
-		log.info("userInfos={}",userInfos);
+//		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
+//		List<UserInfo> userInfos=userMgrService.getUserList(null);
+//		log.info("userInfos={}",userInfos);
 //		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
 //		asyncTaskService.doTask1();
 //		asyncTaskService.doTask2();
@@ -37,8 +42,8 @@ public class JBOSStarter {
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);
 //        UserMgrService userMgrService=(UserMgrService)aopProxy.getProxy();
 //        userMgrService.getUserInfoByLoginName("");
-		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
-		aspectInvoker.invoke();
+//		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
+//		aspectInvoker.invoke();
 
     }
 

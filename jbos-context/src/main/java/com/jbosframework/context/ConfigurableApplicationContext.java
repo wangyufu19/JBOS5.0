@@ -40,4 +40,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext{
     boolean isActive();
 
     ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
+
+    void setJbosBootClass(Class<?> jbosBootClass);
+    Class<?> getJbosBootClass();
 }
