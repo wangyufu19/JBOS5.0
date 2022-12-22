@@ -2,12 +2,12 @@ package com.jbosframework.context.annotation.aspectj;
 
 import com.jbosframework.aop.aspectj.support.AspectMetadata;
 import com.jbosframework.context.ConfigurableApplicationContext;
-import org.eclipse.jetty.util.ConcurrentHashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class AspectjApplicationContext {
-    protected final Set<AspectMetadata> aspectMetadataMap=new ConcurrentHashSet();
+    protected final Map<String,AspectMetadata> aspectMetadataMap=new ConcurrentHashMap(256);
 
     private ConfigurableApplicationContext applicationContext;
 
@@ -15,13 +15,17 @@ public class AspectjApplicationContext {
         this.applicationContext=applicationContext;
     }
 
-    public void putAspectMetadata(AspectMetadata aspectMetadata){
-        aspectMetadataMap.add(aspectMetadata);
+    public void putAspectMetadata(String pointcut,AspectMetadata aspectMetadata){
+        aspectMetadataMap.put(pointcut,aspectMetadata);
     }
     public AspectMetadata getMetadata(String pointcut){
-        return null;
+        return aspectMetadataMap.get(pointcut);
     }
     public boolean contains(String pointcut){
-        return false;
+        if(aspectMetadataMap.containsKey(pointcut)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

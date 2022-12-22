@@ -82,7 +82,7 @@ public class AspectjProxyRegistry implements ImportBeanDefinitionSelector {
         metadata.setAdviceConfig(adviceConfig);
         if(StringUtils.isNotNUll(metadata.getPointcut())){
             AspectjApplicationContext aspectjApplicationContext=new AspectjApplicationContext(this.applicationContext);
-            aspectjApplicationContext.putAspectMetadata(metadata);
+            aspectjApplicationContext.putAspectMetadata(metadata.getPointcut(),metadata);
             AspectjBeanPostProcessor aspectjBeanPostProcessor=new AspectjBeanPostProcessor(aspectjApplicationContext);
             this.applicationContext.getBeanFactory().registerBeanPostProcessor(aspectjBeanPostProcessor);
         }
