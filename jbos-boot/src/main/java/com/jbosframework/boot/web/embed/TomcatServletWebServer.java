@@ -2,6 +2,7 @@ package com.jbosframework.boot.web.embed;
 
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.servlet.AbstractServletWebServer;
+import com.jbosframework.boot.web.servlet.context.WebContext;
 import com.jbosframework.boot.web.servlet.server.ServletContextInitializer;
 import com.jbosframework.boot.web.servlet.server.ServletWebServerFactory;
 import com.jbosframework.context.ConfigurableApplicationContext;
@@ -18,6 +19,8 @@ import org.apache.catalina.startup.Tomcat;
 public class TomcatServletWebServer extends AbstractServletWebServer implements ServletWebServerFactory {
     private String protocol="org.apache.coyote.http11.Http11NioProtocol";
     private ConfigurableApplicationContext applicationContext;
+
+
     public TomcatServletWebServer(ConfigurableApplicationContext applicationContext) {
         super(8080);
         this.applicationContext=applicationContext;
@@ -37,9 +40,9 @@ public class TomcatServletWebServer extends AbstractServletWebServer implements 
         tomcat.setPort(this.getPort());
         tomcat.setBaseDir(this.getBaseDir());
         tomcat.getHost().setAutoDeploy(false);
+        WebServer webServer=new TomcatWebServer(applicationContext,tomcat);
         Context context=tomcat.addContext("",this.getBaseDir());
-        context.getServletContext().setAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE,this.getApplicationContext());
-        WebServer webServer=new TomcatWebServer(tomcat);
+        webServer.setWebContext(new TomcatWebContext(context));
         return webServer;
     }
 }

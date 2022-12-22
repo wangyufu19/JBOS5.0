@@ -1,5 +1,6 @@
 package com.jbosframework.boot.web.servlet;
 
+import com.jbosframework.boot.web.servlet.context.WebContext;
 import com.jbosframework.context.ApplicationContext;
 
 /**
@@ -7,7 +8,7 @@ import com.jbosframework.context.ApplicationContext;
  * @author youfu.wang
  * @version 1.0
  */
-public class AbstractServletWebServer {
+public abstract class AbstractServletWebServer {
     private int port=8080;
     private String baseDir="";
     private String contextPath="";

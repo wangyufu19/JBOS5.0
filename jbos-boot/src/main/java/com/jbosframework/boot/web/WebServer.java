@@ -1,5 +1,6 @@
 package com.jbosframework.boot.web;
 
+import com.jbosframework.boot.web.servlet.context.WebContext;
 import org.apache.catalina.LifecycleException;
 
 /**
@@ -8,7 +9,9 @@ import org.apache.catalina.LifecycleException;
  * @version 1.0
  */
 public interface WebServer {
-    public void start() throws LifecycleException;
-    public void stop() throws LifecycleException;
-    public int getPort();
+    void start() throws LifecycleException;
+    void stop() throws LifecycleException;
+    int getPort();
+    void setWebContext(WebContext webContext);
+    WebContext getWebContext();
 }

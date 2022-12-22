@@ -50,6 +50,7 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
             ServletWebServerFactory factory = new TomcatServletWebServer(this);
             this.webServer = factory.getWebServer(initializer);
             this.webServer.start();
+
         }
     }
 
