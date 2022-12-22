@@ -1,6 +1,5 @@
 package com.jbosframework.context.annotation;
 
-import com.jbosframework.beans.config.AnnotationMetadata;
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.support.*;

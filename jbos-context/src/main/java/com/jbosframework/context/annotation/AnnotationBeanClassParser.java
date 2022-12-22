@@ -109,8 +109,8 @@ public class AnnotationBeanClassParser {
             Class[] importClasses=((Import)importAnnotation).value();
             for(Class importClass:importClasses){
                 GenericBeanDefinition beanDef=new GenericBeanDefinition(importClass);
-                if(ImportSelector.class.isAssignableFrom(importClass)){
-                    try {
+                try {
+                    if(ImportSelector.class.isAssignableFrom(importClass)){
                         Class<?>[] parameterTypes={ConfigurableApplicationContext.class};
                         Object[] args={this.applicationContext};
                         Constructor<?> constructor = importClass.getDeclaredConstructor(parameterTypes);
@@ -123,11 +123,18 @@ public class AnnotationBeanClassParser {
                                 this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
                             }
                         }
-                    }  catch (Throwable ex) {
-                        throw new IllegalArgumentException("Cannot instantiate " + importClass.getName(), ex);
+                    }else if(ImportBeanDefinitionSelector.class.isAssignableFrom(importClass)){
+                        Class<?>[] parameterTypes={ConfigurableApplicationContext.class};
+                        Object[] args={this.applicationContext};
+                        Constructor<?> constructor = importClass.getDeclaredConstructor(parameterTypes);
+                        Object instance = constructor.newInstance(args);
+                        Object[] methodArgs={configurationClass};
+                        JBOSClassCaller.call(instance,"processImport",methodArgs);
+                    }else{
+                        this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
                     }
-                }else{
-                    this.parse(new ConfigurationClass(beanDef.getBeanClass(),beanDef));
+                }  catch (Throwable ex) {
+                    throw new IllegalArgumentException("Cannot instantiate " + importClass.getName(), ex);
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.jbosframework.aop;
 
 import org.aopalliance.aop.Advice;
-
 import java.lang.reflect.Method;
 /**
  * MethodBeforeAdvice
