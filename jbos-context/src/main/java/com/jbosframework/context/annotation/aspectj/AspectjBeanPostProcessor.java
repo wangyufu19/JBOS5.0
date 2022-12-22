@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 public class AspectjBeanPostProcessor implements BeanPostProcessor,Ordered {
     private static final Log logger= LogFactory.getLog(AsyncBeanPostProcessor.class);
     private AspectjApplicationContext aspectjApplicationContext;
-    private int order=Ordered.HIGHEST_PRECEDENCE+40;
+    private int order=Ordered.HIGHEST_PRECEDENCE+50;
 
     public AspectjBeanPostProcessor(AspectjApplicationContext aspectjApplicationContext){
         this.aspectjApplicationContext=aspectjApplicationContext;

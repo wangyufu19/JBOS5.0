@@ -18,9 +18,11 @@ import java.util.Set;
 public class AspectjProxyRegistry implements ImportBeanDefinitionSelector {
     private static final Log logger= LogFactory.getLog(AspectjProxyRegistry.class);
     private ConfigurableApplicationContext applicationContext;
+    private AspectjApplicationContext aspectjApplicationContext;
 
     public AspectjProxyRegistry(ConfigurableApplicationContext applicationContext){
         this.applicationContext=applicationContext;
+        aspectjApplicationContext=new AspectjApplicationContext(this.applicationContext);
     }
 
     public void processImport(AnnotationBeanClassParser.ConfigurationClass configurationClass){
@@ -34,6 +36,8 @@ public class AspectjProxyRegistry implements ImportBeanDefinitionSelector {
                 this.registryAspectjMetadata(beanDefinition);
             }
         }
+        AspectjBeanPostProcessor aspectjBeanPostProcessor=new AspectjBeanPostProcessor(aspectjApplicationContext);
+        this.applicationContext.getBeanFactory().registerBeanPostProcessor(aspectjBeanPostProcessor);
     }
     private void registryAspectjMetadata(BeanDefinition beanDefinition){
         this.applicationContext.getBeanFactory().putBeanDefinition(beanDefinition.getClassName(),beanDefinition);
@@ -81,10 +85,7 @@ public class AspectjProxyRegistry implements ImportBeanDefinitionSelector {
         adviceConfig.setMethodAdvisor(aspectjMethodAdvice);
         metadata.setAdviceConfig(adviceConfig);
         if(StringUtils.isNotNUll(metadata.getPointcut())){
-            AspectjApplicationContext aspectjApplicationContext=new AspectjApplicationContext(this.applicationContext);
             aspectjApplicationContext.putAspectMetadata(metadata.getPointcut(),metadata);
-            AspectjBeanPostProcessor aspectjBeanPostProcessor=new AspectjBeanPostProcessor(aspectjApplicationContext);
-            this.applicationContext.getBeanFactory().registerBeanPostProcessor(aspectjBeanPostProcessor);
         }
     }
 }

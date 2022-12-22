@@ -3,6 +3,7 @@ package com.application;
 import com.application.sys.pojo.UserInfo;
 import com.application.sys.service.UserMgrService;
 import com.application.sys.service.impl.UserMgrServiceImpl;
+import com.application.test.aspect.AspectInvoker;
 import com.application.test.async.AsyncTaskService;
 import com.application.test.listener.NotifyEvent;
 import com.jbosframework.boot.autoconfig.JBOSBootApplication;
@@ -24,15 +25,20 @@ public class JBOSStarter {
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
-		asyncTaskService.doTask1();
-		asyncTaskService.doTask2();
+		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
+		List<UserInfo> userInfos=userMgrService.getUserList(null);
+		log.info("userInfos={}",userInfos);
+//		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
+//		asyncTaskService.doTask1();
+//		asyncTaskService.doTask2();
 //		asyncTaskService.doTask3();
 //        AdviceConfig adviceConfig=new AdviceConfig();
 //        adviceConfig.setProxyInterfaces(new Class[]{UserMgrService.class});
 //        JdkDynamicProxy aopProxy=new JdkDynamicProxy(adviceConfig);
 //        UserMgrService userMgrService=(UserMgrService)aopProxy.getProxy();
 //        userMgrService.getUserInfoByLoginName("");
+		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
+		aspectInvoker.invoke();
 
     }
 

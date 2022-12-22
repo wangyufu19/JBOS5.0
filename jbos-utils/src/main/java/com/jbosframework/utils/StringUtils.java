@@ -316,7 +316,7 @@ public class StringUtils {
 	 * @return
 	 */
 	public static boolean isNUll(Object obj){
-		if(null==obj){
+		if(null==obj||obj.equals("null")){
 			return true;
 		}else
 			return false;

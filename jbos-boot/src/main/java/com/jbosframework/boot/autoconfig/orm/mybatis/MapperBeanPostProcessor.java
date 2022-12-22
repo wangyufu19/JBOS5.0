@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class MapperBeanPostProcessor implements ApplicationContextAware,BeanPostProcessor,Ordered {
-    private int order= Ordered.LOWEST_PRECEDENCE+1000;
+    private int order= Ordered.LOWEST_PRECEDENCE+40;
     private ConfigurableApplicationContext applicationContext;
 
     public void setApplicationContext(ApplicationContext applicationContext){
