@@ -10,7 +10,6 @@ import com.jbosframework.core.Ordered;
 import com.jbosframework.schedule.annotation.async.AsyncBeanPostProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import java.lang.reflect.Method;
 
 public class AspectjBeanPostProcessor implements BeanPostProcessor,Ordered {
@@ -29,7 +28,6 @@ public class AspectjBeanPostProcessor implements BeanPostProcessor,Ordered {
         Object target=bean;
         PointcutMethodMatcher pointcutMethodMatcher=new PointcutMethodMatcher(this.aspectjApplicationContext);
         if(pointcutMethodMatcher.match(target)){
-            //判断是否切面AOP代理Bean
             target=pointcutMethodMatcher.getAspectAopProxy(target);
         }
         return target;
