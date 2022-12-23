@@ -2,7 +2,6 @@ package com.jbosframework.web.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.jbosframework.web.mvc.dispatcher.DispatchHandler;
-import com.jbosframework.web.servlet.JBOSServlet;
 /**
  * DispatcherServlet
  * @author youfu.wang

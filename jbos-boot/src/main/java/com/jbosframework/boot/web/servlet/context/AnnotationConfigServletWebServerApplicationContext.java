@@ -1,5 +1,6 @@
 package com.jbosframework.boot.web.servlet.context;
 
+import com.jbosframework.boot.web.JBOSServletInitializer;
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.embed.TomcatServletWebServer;
 import com.jbosframework.boot.web.servlet.server.ServletContextInitializer;
@@ -9,6 +10,7 @@ import com.jbosframework.context.annotation.AnnotatedBeanDefinitionReader;
 import com.jbosframework.context.annotation.AnnotationConfigRegistry;
 import com.jbosframework.context.annotation.ClassPathBeanDefinitionScanner;
 import com.jbosframework.web.context.support.GenericWebApplicationContext;
+import com.jbosframework.web.servlet.WebInitializer;
 import org.apache.catalina.LifecycleException;
 
 import javax.servlet.ServletContext;
@@ -22,12 +24,13 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
     private final AnnotatedBeanDefinitionReader reader;
     private final ClassPathBeanDefinitionScanner scanner;
     private volatile WebServer webServer;
-    private ServletContextInitializer initializer;
+    private WebInitializer initializer;
 
 
     public AnnotationConfigServletWebServerApplicationContext(){
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.scanner = new ClassPathBeanDefinitionScanner(this);
+        this.initializer=new JBOSServletInitializer();
     }
     public void registry(Class<?>... classes) {
 
