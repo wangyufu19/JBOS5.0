@@ -6,11 +6,14 @@ import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.JsonUtils;
 import com.jbosframework.web.mvc.annotation.RequestBody;
+import com.jbosframework.web.mvc.annotation.RequestParam;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
 import com.jbosframework.web.mvc.data.Representation;
 import com.jbosframework.web.utils.TypeConverter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,8 +46,19 @@ public class RequestParameter {
                     parameterValues[i]=representation;
                 }else if(type.getName().equals(Map.class.getName())){
                     RequestBody requestBody=parameter.getAnnotation(RequestBody.class);
+                    RequestParam requestParam=parameter.getAnnotation(RequestParam.class);
                     if(requestBody!=null){
                         parameterValues[i]=JsonUtils.fromJson(representation.getRequestBody(representation.getRequest().getCharacterEncoding()),Map.class);
+                    }
+                    if(requestParam!=null){
+                        Map<String,Object> requestMap=new HashMap();
+                        String parameterName;
+                        Enumeration<String> parameterNames=representation.getRequest().getParameterNames();
+                        while(parameterNames.hasMoreElements()){
+                            parameterName=parameterNames.nextElement();
+                            requestMap.put(parameterName,representation.getRequest().getParameter(parameterName));
+                        }
+                        parameterValues[i]=requestMap;
                     }
                 }else if(TypeConverter.isPrimitiveType(type.getName())){
                     parameterValues[i]=representation.getParameter(parameter.getName(),true);

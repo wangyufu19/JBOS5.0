@@ -5,7 +5,7 @@ import com.jbosframework.web.mvc.dispatcher.DispatchHandler;
 /**
  * DispatcherServlet
  * @author youfu.wang
- * @version 1.0
+ * @version 5.0
  */
 public class DispatcherServlet extends JBOSServlet{
 	
@@ -16,7 +16,6 @@ public class DispatcherServlet extends JBOSServlet{
 			logger.debug("DispatcherServlet with name '" + getServletName() + "' received request for [" +
 					request.getRequestURI() + "]");
 		}
-		//处理控制器分发
 		this.doDispatch(request, response);		
 	}
 	protected void doDispatch(HttpServletRequest request,HttpServletResponse response) throws Exception {
@@ -31,9 +30,9 @@ public class DispatcherServlet extends JBOSServlet{
 		}
 	}	
 	protected DispatchHandler getRequestHandler(HttpServletRequest request,HttpServletResponse response){
-		DispatchHandler requestDispatchtHandler=null;
-		requestDispatchtHandler=new DispatchHandler(request,response);
-		return requestDispatchtHandler;
+		DispatchHandler requestDispatchHandler=null;
+		requestDispatchHandler=new DispatchHandler(request,response);
+		return requestDispatchHandler;
 	}
 	
 }

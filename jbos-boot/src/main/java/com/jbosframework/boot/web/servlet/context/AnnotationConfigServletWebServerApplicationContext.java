@@ -3,7 +3,6 @@ package com.jbosframework.boot.web.servlet.context;
 import com.jbosframework.boot.web.JBOSServletInitializer;
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.embed.TomcatServletWebServer;
-import com.jbosframework.boot.web.servlet.server.ServletContextInitializer;
 import com.jbosframework.boot.web.servlet.server.ServletWebServerFactory;
 import com.jbosframework.context.ApplicationContextException;
 import com.jbosframework.context.annotation.AnnotatedBeanDefinitionReader;

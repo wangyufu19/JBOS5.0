@@ -1,11 +1,13 @@
 package com.application.sys.controller;
 import com.application.common.UserObject;
 import com.application.common.utils.Return;
+import com.application.sys.pojo.UserInfo;
 import com.application.sys.service.UserMgrService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.web.mvc.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +42,7 @@ public class UserMgrController extends  BaseController{
     //@ApiOperation("查询用户数据列表")
     public Return getUserList(@RequestParam Map<String, Object> params){
         Map<String, Object> retDatas=new HashMap<String, Object>();
-        return Return.ok().put("retDatas", retDatas);
+        List<UserInfo> userInfos=userMgrService.getUserList(params);
+        return Return.ok().put("userInfos", userInfos);
     }
 }

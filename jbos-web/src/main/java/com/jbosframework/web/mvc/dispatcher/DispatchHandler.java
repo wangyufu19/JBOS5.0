@@ -147,7 +147,7 @@ public class DispatchHandler {
 	protected Object getRequestController(ApplicationContext applicationContext,String s){	
 		Object obj=null;
 		if(s==null) return null;
-		//obj=applicationContext.getBeanDefinition(s);
+		obj=applicationContext.getBeanDefinition(s);
 		if(obj==null){
 			if(s.indexOf(".form")!=-1){		
 				if(s.startsWith("/")){
@@ -156,8 +156,8 @@ public class DispatchHandler {
 					s=s.substring(0, s.indexOf(".form"));
 				}				
 			}
-			//obj=applicationContext.getBeanDefinition(s);
-			//obj=obj!=null?obj:applicationContext.getBeanDefinition("/"+s);
+			obj=applicationContext.getBeanDefinition(s);
+			obj=obj!=null?obj:applicationContext.getBeanDefinition("/"+s);
 		}				
 		return obj;
 	}

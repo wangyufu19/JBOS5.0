@@ -2,8 +2,7 @@ package com.jbosframework.boot.web.embed;
 
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.servlet.AbstractServletWebServer;
-import com.jbosframework.boot.web.servlet.context.WebContext;
-import com.jbosframework.boot.web.servlet.server.ServletContextInitializer;
+import com.jbosframework.boot.web.servlet.WebContextBeanPostProcessor;
 import com.jbosframework.boot.web.servlet.server.ServletWebServerFactory;
 import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.web.context.support.GenericWebApplicationContext;
@@ -47,6 +46,8 @@ public class TomcatServletWebServer extends AbstractServletWebServer implements 
         webServer.setWebContext(new TomcatWebContext(context));
         webServer.getWebContext().addServletMappingDecoded(this.getContextPath(),DispatcherServlet.class);
 
+        WebContextBeanPostProcessor webContextBeanPostProcessor=new WebContextBeanPostProcessor(this.applicationContext,context);
+        this.applicationContext.getBeanFactory().registerBeanPostProcessor(webContextBeanPostProcessor);
         return webServer;
     }
 }

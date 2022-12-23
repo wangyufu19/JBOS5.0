@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  */
 public class TransactionBeanProcessor implements ApplicationContextAware, BeanPostProcessor, Ordered {
     private static final Log logger= LogFactory.getLog(TransactionBeanProcessor.class);
-    private int order=Ordered.HIGHEST_PRECEDENCE+2000;
+    private int order=Ordered.HIGHEST_PRECEDENCE+60;
     private ConfigurableApplicationContext applicationContext;
 
     public void setApplicationContext(ApplicationContext applicationContext){

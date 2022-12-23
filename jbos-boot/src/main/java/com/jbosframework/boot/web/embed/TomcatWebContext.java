@@ -1,7 +1,6 @@
 package com.jbosframework.boot.web.embed;
 
 import com.jbosframework.boot.web.servlet.context.WebContext;
-import com.jbosframework.web.servlet.DispatcherServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
 

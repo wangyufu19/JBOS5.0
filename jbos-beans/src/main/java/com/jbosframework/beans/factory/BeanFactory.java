@@ -1,4 +1,6 @@
 package com.jbosframework.beans.factory;
+import com.jbosframework.beans.config.BeanDefinition;
+
 import java.util.Map;
 
 /**
@@ -7,6 +9,8 @@ import java.util.Map;
  * @version 1.0
  */
 public interface BeanFactory {
+
+	public BeanDefinition getBeanDefinition(String name);
 
 	public Object getBean(String name);
 
