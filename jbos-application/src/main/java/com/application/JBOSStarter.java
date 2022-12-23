@@ -30,9 +30,9 @@ public class JBOSStarter {
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException, IOException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-//		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
-//		List<UserInfo> userInfos=userMgrService.getUserList(null);
-//		log.info("userInfos={}",userInfos);
+		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
+		List<UserInfo> userInfos=userMgrService.getUserList(null);
+		log.info("userInfos={}",userInfos);
 //		AsyncTaskService asyncTaskService=ctx.getBean(AsyncTaskService.class);
 //		asyncTaskService.doTask1();
 //		asyncTaskService.doTask2();

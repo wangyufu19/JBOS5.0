@@ -1,5 +1,6 @@
 package com.jbosframework.boot.web.servlet.context;
 
+import com.jbosframework.boot.context.properties.ConfigurationPropertyBeanPostProcessor;
 import com.jbosframework.boot.web.JBOSServletInitializer;
 import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.embed.TomcatServletWebServer;
@@ -40,6 +41,7 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
     }
     protected void onRefresh() {
         super.onRefresh();
+        this.getBeanFactory().registerBeanPostProcessor(new ConfigurationPropertyBeanPostProcessor(this));
         try {
             createWebServer();
         } catch (Throwable ex) {

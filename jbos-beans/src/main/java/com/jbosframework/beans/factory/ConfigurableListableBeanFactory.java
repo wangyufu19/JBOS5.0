@@ -110,15 +110,14 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
     public void initialization(){
         for(Map.Entry<String,BeanDefinition> entry:this.beanDefinitions.entrySet()){
             if(entry.getValue().getRole()!=BeanDefinition.ROLE_APPLICATION&&entry.getValue().getRole()!=BeanDefinition.ROLE_MEMBER_METHOD){
-                Object bean=BeanInstanceUtils.newBeanInstance(((GenericBeanDefinition)entry.getValue()).getBeanClass());
-                this.registerSingletonInstance(entry.getKey(),bean);
+                this.createBean((GenericBeanDefinition)entry.getValue());
             }
         }
     }
     public Object createBean(GenericBeanDefinition genericBeanDefinition) throws BeansException{
         Object bean;
         if(this.containsSingletonBean(genericBeanDefinition.getName())){
-            bean=this.getSingletonInstance(genericBeanDefinition.getName());
+            return this.getSingletonInstance(genericBeanDefinition.getName());
         }else{
             if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
                 bean=this.invokeMethodBean(genericBeanDefinition);
