@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
-    @Value("${server.tomcat.contextPath}")
+    @Value("${server.contextPath}")
     private String contextPath;
 
     @Bean

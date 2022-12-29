@@ -46,6 +46,7 @@ public class AuthController extends BaseController{
 			String authedPwd=StringUtils.replaceNull(loginInfo.get("PASSWORD"));
 			String salt=StringUtils.replaceNull(loginInfo.get("SALT"));
 			String userStatus=StringUtils.replaceNull(loginInfo.get("USER_STATUS"));
+			String saltPwd=ShiroUtils.md5(password,salt);
 			if(!authedPwd.equals(ShiroUtils.md5(password,salt))){
 				return Return.error("用户名称或密码不正确");
 			}
