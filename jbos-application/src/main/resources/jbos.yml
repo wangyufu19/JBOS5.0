@@ -5,13 +5,14 @@ jbos:
   application: jbos
   profiles:
     active: dev
-  #MyBatis配置
   mybatis:
     mapperLocations: classpath:mapper/**/*.xml
     logImpl: LOG4J
-
   executor:
     corePoolSize: 4
     maxPoolSize: 10
     keepAliveSeconds: 60
     queueCapacity: 200
+  quartz:
+    threadPool:
+      threadCount: 100

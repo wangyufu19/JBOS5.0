@@ -11,7 +11,7 @@ public class MapPropertySource extends EnumerablePropertySource<Map<String, Stri
     }
     @Nullable
     public Object getProperty(String name) {
-        return ((Map)this.source).get(name);
+        return this.source.get(name);
     }
 
     public boolean containsProperty(String name) {

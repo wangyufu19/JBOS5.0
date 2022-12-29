@@ -55,8 +55,8 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
             try {
                 this.parseBeanConfigClass(beanFactory);
                 this.registerBeanFactoryBeanPostProcessor(beanFactory);
-                this.finishBeanFactoryInitialization(beanFactory);
                 this.onRefresh();
+                this.finishBeanFactoryInitialization(beanFactory);
                 this.registerApplicationListener();
             }catch (BeansException e){
                 e.printStackTrace();

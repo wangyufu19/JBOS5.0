@@ -6,6 +6,7 @@ import com.application.sys.service.UserAuthService;
 import com.application.sys.service.UserTokenService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.beans.annotation.Component;
 import com.jbosframework.utils.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author youfu.wang
  * @date 2020-12-09
  */
-@Bean
+@Component
 public class AuthRealm extends AuthorizingRealm {
     @Autowired
     private UserTokenService userTokenService;

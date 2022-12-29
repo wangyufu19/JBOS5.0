@@ -18,9 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @Slf4j
 public class ScheduleConfig {
-    @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(){
-        return new SchedulerFactoryBean();
-    }
+
 
 }

@@ -11,6 +11,8 @@ import com.jbosframework.core.Ordered;
 import com.jbosframework.utils.JBOSClassloader;
 import com.jbosframework.utils.StringUtils;
 import com.jbosframework.utils.TypeConverter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -20,6 +22,7 @@ import java.lang.reflect.Modifier;
  * @author youfu.wang
  */
 public class ConfigurationPropertyBeanPostProcessor implements BeanPostProcessor, Ordered {
+    private static final Log logger= LogFactory.getLog(ConfigurationPropertyBeanPostProcessor.class);
     private int order=Ordered.HIGHEST_PRECEDENCE+1;
     private ConfigurableApplicationContext applicationContext;
 
@@ -41,6 +44,8 @@ public class ConfigurationPropertyBeanPostProcessor implements BeanPostProcessor
                 loadProperties(configurationPropertiesObject,fields,prefix);
                 fields=configurationPropertiesObject.getClass().getDeclaredFields();
                 loadProperties(configurationPropertiesObject,fields,prefix);
+                this.applicationContext.getBeanFactory().putBeanDefinition(configurationPropertiesClass.getName(),new GenericBeanDefinition(configurationPropertiesClass));
+                this.applicationContext.getBeanFactory().registerSingletonInstance(configurationPropertiesClass.getName(),configurationPropertiesObject);
             }
         }
         return bean;

@@ -4,7 +4,6 @@ import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.context.ConfigurableApplicationContext;
 import com.jbosframework.core.Ordered;
-import com.jbosframework.schedule.annotation.Scheduled;
 import java.lang.reflect.Method;
 import java.util.Map;
 import com.jbosframework.schedule.annotation.async.AsyncBeanPostProcessor;
@@ -13,6 +12,7 @@ import com.jbosframework.schedule.quartz.SchedulerFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
+import org.quartz.impl.StdScheduler;
 
 /**
  * ScheduleBeanProcessor
@@ -59,14 +59,17 @@ public class ScheduleBeanPostProcessor implements BeanPostProcessor,Ordered {
                         .withSchedule(CronScheduleBuilder.cronSchedule(cron))
                         .forJob(job.getKey())
                         .build();
-                SchedulerFactoryBean schedulerFactoryBean=this.applicationContext.getBean(SchedulerFactoryBean.class);
-                if(schedulerFactoryBean!=null){
+
+                Scheduler scheduler=(Scheduler)this.applicationContext.getBean(SchedulerFactoryBean.class.getName());
+
+                if(scheduler!=null){
                     try {
-                        schedulerFactoryBean.getScheduler().scheduleJob(job,trigger);
+                        scheduler.scheduleJob(job,trigger);
                     } catch (SchedulerException e) {
                         e.printStackTrace();
                     }
                 }
+
             }
         }
         return bean;

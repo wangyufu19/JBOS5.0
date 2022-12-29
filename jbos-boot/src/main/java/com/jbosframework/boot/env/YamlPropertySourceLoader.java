@@ -28,6 +28,7 @@ public class YamlPropertySourceLoader implements PropertySourceLoader {
                     "Attempted to load " + name + " but snakeyaml was not found on the classpath");
         }
         List<Map<String, Object>> loaded = new OriginTrackedYamlLoader(resource).load();
+
         if (loaded.isEmpty()) {
             return Collections.emptyList();
         }

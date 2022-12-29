@@ -6,7 +6,7 @@ package com.jbosframework.beans.factory;
  * @version 5.0
  */
 public interface FactoryBean<T> {
-    T getObject() throws Exception;
+    T getObject();
 
     Class<?> getObjectType();
 

@@ -109,11 +109,12 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
     }
     public void initialization(){
         for(Map.Entry<String,BeanDefinition> entry:this.beanDefinitions.entrySet()){
-            if(entry.getValue().getRole()!=BeanDefinition.ROLE_APPLICATION&&entry.getValue().getRole()!=BeanDefinition.ROLE_MEMBER_METHOD){
+            if(entry.getValue().getRole()!=BeanDefinition.ROLE_APPLICATION){
                 this.createBean((GenericBeanDefinition)entry.getValue());
             }
         }
     }
+
     public Object createBean(GenericBeanDefinition genericBeanDefinition) throws BeansException{
         Object bean;
         if(this.containsSingletonBean(genericBeanDefinition.getName())){
@@ -125,6 +126,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
                 bean=BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
             }
         }
+        bean=this.invokeInterfaces(bean);
         bean=this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
         this.doPostProcessAfterInitialization(bean,genericBeanDefinition);
         if(genericBeanDefinition.isSingleton()){
@@ -145,6 +147,16 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         }else{
             return JBOSClassCaller.call(parentBean,methodMetadata.getMethod());
         }
+    }
+    private Object invokeInterfaces(Object bean){
+        Object target=bean;
+        if(InitializingBean.class.isAssignableFrom(bean.getClass())){
+            target=((InitializingBean) target).afterPropertiesSet(target);
+        }
+        if(FactoryBean.class.isAssignableFrom(bean.getClass())){
+            target=((FactoryBean) target).getObject();
+        }
+        return target;
     }
     public BeanDefinition getBeanDefinition(String name) throws BeansException {
         BeanDefinition beanDefinition=null;
