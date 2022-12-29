@@ -12,7 +12,6 @@ import com.jbosframework.context.annotation.ClassPathBeanDefinitionScanner;
 import com.jbosframework.web.context.support.GenericWebApplicationContext;
 import com.jbosframework.web.servlet.WebInitializer;
 import org.apache.catalina.LifecycleException;
-
 import javax.servlet.ServletContext;
 
 

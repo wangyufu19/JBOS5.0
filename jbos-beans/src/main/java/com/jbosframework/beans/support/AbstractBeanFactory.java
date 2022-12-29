@@ -5,6 +5,7 @@ import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.factory.BeanTypeException;
 import com.jbosframework.utils.Assert;
+import com.jbosframework.utils.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,6 +39,16 @@ public abstract class AbstractBeanFactory implements ConfigurableBeanFactory {
     }
 
     private <T> T doGetBean(String name,Class<T> requiredType){
+        if(requiredType!=null){
+            String[] beanNames=this.getBeanNamesOfType(requiredType);
+            if(beanNames.length>0){
+                if(beanNames.length>1){
+                    BeanTypeException ex = new BeanTypeException("指定的类型Bean'" +name + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
+                    ex.printStackTrace();
+                    return null;
+                }
+            }
+        }
         BeanDefinition beanDefinition=this.getBeanDefinition(name);
         Object obj=this.createBean((GenericBeanDefinition)beanDefinition);
         T bean=this.convertBean(obj,requiredType);

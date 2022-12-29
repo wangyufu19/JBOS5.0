@@ -192,6 +192,7 @@ public class AnnotationBeanClassParser {
             bean=(Bean) genericBeanDefinition.getMetadata().findAnnotation(Bean.class);
         }
         if(StringUtils.isNotNUll(bean)&&StringUtils.isNotNUll(bean.value())){
+            genericBeanDefinition.setId(bean.value());
             genericBeanDefinition.setName(bean.value());
         }
         this.registry.putBeanDefinition(genericBeanDefinition.getName(),genericBeanDefinition);

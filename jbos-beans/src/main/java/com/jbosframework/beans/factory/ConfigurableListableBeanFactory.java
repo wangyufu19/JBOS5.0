@@ -91,7 +91,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
                 this.beanDefinitionNames = updatedDefinitions;
             }
         }
-        this.putBeanNameOfType(name,beanDefinition);
+        this.putBeanNameOfType(beanDefinition.getBeanClass().getName(),beanDefinition);
         Class<?>[] interfaces=beanDefinition.getBeanClass().getInterfaces();
         for(Class<?> interfaceCls:interfaces){
             if(!TypeConverter.isPrimitiveType(interfaceCls)){
@@ -159,17 +159,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
         return target;
     }
     public BeanDefinition getBeanDefinition(String name) throws BeansException {
-        BeanDefinition beanDefinition=null;
-        String[] beanNames=this.getBeanNamesOfType(name);
-        if(beanNames.length>0){
-            if(beanNames.length>1){
-                BeanTypeException ex = new BeanTypeException("指定的类型Bean'" +name + "' available:找到多个实现Bean["+ StringUtils.stringArrayToTokenize(beanNames,",") +"]");
-                ex.printStackTrace();
-                return null;
-            }else{
-                beanDefinition=this.beanDefinitions.get(beanNames[0]);
-            }
-        }
+        BeanDefinition beanDefinition=this.beanDefinitions.get(name);
         Assert.notNull(beanDefinition, name + " BeanDefinition is not exists");
         return beanDefinition;
     }

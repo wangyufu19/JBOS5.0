@@ -21,5 +21,7 @@ public class TomcatWebContext implements WebContext {
         context.addServletMappingDecoded(contextPath+"/*", servletClass.getSimpleName());
     }
 
-
+    public Context getContext() {
+        return context;
+    }
 }
