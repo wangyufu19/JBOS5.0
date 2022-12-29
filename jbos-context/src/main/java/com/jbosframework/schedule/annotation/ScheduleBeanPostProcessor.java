@@ -12,7 +12,7 @@ import com.jbosframework.schedule.quartz.SchedulerFactoryBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
-import org.quartz.impl.StdScheduler;
+
 
 /**
  * ScheduleBeanProcessor
