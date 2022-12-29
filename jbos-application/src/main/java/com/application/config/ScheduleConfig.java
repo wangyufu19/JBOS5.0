@@ -3,6 +3,8 @@ package com.application.config;
 import com.application.sys.service.UserAuthService;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Bean;
+import com.jbosframework.boot.autoconfig.condition.ConditionalOnMissingBean;
+import com.jbosframework.boot.autoconfig.quartz.QuartzProperties;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.schedule.annotation.EnableScheduling;
 import com.jbosframework.schedule.quartz.SchedulerFactoryBean;
@@ -18,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @Slf4j
 public class ScheduleConfig {
-
+    @Bean
+    public SchedulerFactoryBean schedulerFactoryBean(QuartzProperties quartzProperties){
+        return new SchedulerFactoryBean();
+    }
 
 }
