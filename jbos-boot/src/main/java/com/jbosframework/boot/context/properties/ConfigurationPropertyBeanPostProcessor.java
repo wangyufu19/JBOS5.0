@@ -4,6 +4,8 @@ import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.BeanPostProcessor;
 import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.config.InjectionMetadata;
+import com.jbosframework.boot.autoconfig.jdbc.DataSourceProperties;
+import com.jbosframework.boot.autoconfig.jdbc.TomcatDataSourceProperties;
 import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.boot.context.EnableConfigurationProperties;
 import com.jbosframework.context.ConfigurableApplicationContext;
@@ -14,6 +16,7 @@ import com.jbosframework.utils.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -38,17 +41,30 @@ public class ConfigurationPropertyBeanPostProcessor implements BeanPostProcessor
             for(Class configurationPropertiesClass:configurationPropertiesClasses){
                 Object configurationPropertiesObject=JBOSClassloader.newInstance(configurationPropertiesClass);
                 ConfigurationProperties configurationProperties=(ConfigurationProperties)configurationPropertiesClass.getDeclaredAnnotation(ConfigurationProperties.class);
-                String prefix=configurationProperties.prefix();
-
-                Field[] fields=configurationPropertiesObject.getClass().getSuperclass().getDeclaredFields();
-                loadProperties(configurationPropertiesObject,fields,prefix);
-                fields=configurationPropertiesObject.getClass().getDeclaredFields();
-                loadProperties(configurationPropertiesObject,fields,prefix);
-                this.applicationContext.getBeanFactory().putBeanDefinition(configurationPropertiesClass.getName(),new GenericBeanDefinition(configurationPropertiesClass));
-                this.applicationContext.getBeanFactory().registerSingletonInstance(configurationPropertiesClass.getName(),configurationPropertiesObject);
+                this.loadProperties(configurationPropertiesObject,configurationProperties);
+            }
+        }
+        if(genericBeanDefinition.getRole()==BeanDefinition.ROLE_MEMBER_METHOD){
+            if(genericBeanDefinition.getMethodMetadata().isAnnotation(ConfigurationProperties.class)) {
+                ConfigurationProperties configurationProperties = genericBeanDefinition.getMethodMetadata().getMethod().getDeclaredAnnotation(ConfigurationProperties.class);
+                if(DataSource.class.isAssignableFrom(bean.getClass())){
+                    String type= StringUtils.replaceNull(applicationContext.getEnvironment().getProperty(DataSourceProperties.DATASOURCE_TYPE));
+                    if (DataSourceProperties.DATASOURCE_TYPE_TOMCAT.equals(type)){
+                        this.loadProperties(new TomcatDataSourceProperties(),configurationProperties);
+                    }
+                }
             }
         }
         return bean;
+    }
+    private void loadProperties(Object configurationPropertiesObject,ConfigurationProperties configurationProperties){
+        String prefix=configurationProperties.prefix();
+        Field[] fields=configurationPropertiesObject.getClass().getSuperclass().getDeclaredFields();
+        loadProperties(configurationPropertiesObject,fields,prefix);
+        fields=configurationPropertiesObject.getClass().getDeclaredFields();
+        loadProperties(configurationPropertiesObject,fields,prefix);
+        this.applicationContext.getBeanFactory().putBeanDefinition(configurationPropertiesObject.getClass().getName(),new GenericBeanDefinition(configurationPropertiesObject.getClass()));
+        this.applicationContext.getBeanFactory().registerSingletonInstance(configurationPropertiesObject.getClass().getName(),configurationPropertiesObject);
     }
     private void loadProperties(Object configurationPropertiesObject, Field[] fields, String prefix){
         for(Field field:fields){

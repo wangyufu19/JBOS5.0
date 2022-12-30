@@ -30,6 +30,7 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.scanner = new ClassPathBeanDefinitionScanner(this);
         this.initializer=new JBOSServletInitializer();
+        this.getBeanFactory().registerBeanPostProcessor(new ConfigurationPropertyBeanPostProcessor(this));
     }
     public void registry(Class<?>... classes) {
 
@@ -40,7 +41,6 @@ public class AnnotationConfigServletWebServerApplicationContext extends GenericW
     }
     protected void onRefresh() {
         super.onRefresh();
-        this.getBeanFactory().registerBeanPostProcessor(new ConfigurationPropertyBeanPostProcessor(this));
         try {
             createWebServer();
         } catch (Throwable ex) {

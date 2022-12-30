@@ -16,7 +16,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ConditionalOnClass(DataSource.class)
-@Import(DataSourcePropertiesRegister.class)
 public class DataSourceAutoConfiguration{
     private static final Log logger= LogFactory.getLog(DataSourceAutoConfiguration.class);
 
