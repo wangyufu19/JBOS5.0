@@ -1,9 +1,6 @@
 package com.application.config;
 
-import com.application.sys.service.UserAuthService;
-import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.beans.annotation.Bean;
-import com.jbosframework.boot.autoconfig.condition.ConditionalOnMissingBean;
 import com.jbosframework.boot.autoconfig.quartz.QuartzProperties;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.schedule.annotation.EnableScheduling;
