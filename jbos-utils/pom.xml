@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>jbos-utils</artifactId>
+    <version>5.0</version>
 
     <properties>
         <ant.version>1.8.1</ant.version>
@@ -23,4 +24,5 @@
             <version>${ant.version}</version>
         </dependency>
     </dependencies>
+
 </project>

@@ -157,23 +157,10 @@
 
 
     <build>
-        <finalName>jbos</finalName>
-        <defaultGoal>compile</defaultGoal>
-        <resources>
-            <!-- mapper.xml文件在java目录下 -->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -182,8 +169,6 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 </project>

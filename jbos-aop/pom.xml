@@ -11,11 +11,12 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>jbos-aop</artifactId>
+    <version>5.0</version>
+
     <properties>
         <aopalliance.version>1.0</aopalliance.version>
         <aspectj.version>1.8.13</aspectj.version>
         <cglib.version>3.2.5</cglib.version>
-
     </properties>
     <dependencies>
         <dependency>
