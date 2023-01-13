@@ -41,7 +41,7 @@ public class BaseController {
 	 * 开始分页
 	 * @param page
 	 */
-	public void doStargPage(Map<String, Object> page){
+	public void doStartPage(Map<String, Object> page){
 		int pageNum=Integer.parseInt(StringUtils.replaceNull(page.get("page")));
 		int pageSize=Integer.parseInt(StringUtils.replaceNull(page.get("limit")));
 		PageHelper.startPage(pageNum,pageSize);
@@ -55,5 +55,8 @@ public class BaseController {
 	public void doFinishPage(Return ret, List datas){
 		PageInfo pageInfo=new PageInfo(datas);
 		ret.put("page",pageInfo);
+	}
+	public void clearPage(){
+		PageHelper.clearPage();
 	}
 }

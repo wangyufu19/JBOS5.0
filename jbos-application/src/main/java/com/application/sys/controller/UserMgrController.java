@@ -42,9 +42,15 @@ public class UserMgrController extends  BaseController{
     //@ApiOperation("查询用户数据列表")
     public Return getUserList(@RequestParam Map<String, Object> params){
         Return ret=Return.ok();
-        this.doStargPage(params);
-        List<UserInfo> userInfos=userMgrService.getUserList(params);
-        this.doFinishPage(ret,userInfos);
+        try {
+            this.doStartPage(params);
+            List<UserInfo> userInfos = userMgrService.getUserList(params);
+            this.doFinishPage(ret, userInfos);
+        }catch (Exception e){
+            ret=Return.error(e.getMessage());
+        }finally {
+            this.clearPage();
+        }
         return ret;
     }
 }
