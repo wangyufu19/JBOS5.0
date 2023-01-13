@@ -41,9 +41,8 @@ public class MapperBeanPostProcessor implements ApplicationContextAware,BeanPost
             if (!Modifier.isStatic(mod) && !Modifier.isFinal(mod)&&field.getType().isInterface()) {
                 SqlSessionFactory sqlSessionFactory=(SqlSessionFactory)this.applicationContext.getBean(SqlSessionFactory.class.getName());
                 if(this.isMapperBean(sqlSessionFactory,field.getType())){
-                    MapperProxyFactory mapperProxyFactory=new MapperProxyFactory(field.getType());
                     SqlSession sqlSession=new SqlSessionTemplate(sqlSessionFactory);
-                    fieldValue=mapperProxyFactory.newInstance(sqlSession);
+                    fieldValue=sqlSession.getMapper(field.getType());
                     InjectionMetadata.inject(bean,field,fieldValue);
                 }
             }
