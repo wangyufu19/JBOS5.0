@@ -27,7 +27,9 @@ public class CommonAnnotationBeanPostProcessor implements BeanPostProcessor, Ord
     public CommonAnnotationBeanPostProcessor(ConfigurableApplicationContext applicationContext){
         this.applicationContext=applicationContext;
     }
-
+    public int getOrder() {
+        return order;
+    }
     public Object postProcessBeforeInitialization(Object bean, BeanDefinition beanDefinition){
         Method[] methods=bean.getClass().getDeclaredMethods();
         if(ObjectUtils.isEmpty(methods)) {

@@ -48,6 +48,7 @@ public class UserMgrController extends  BaseController{
             this.doFinishPage(ret, userInfos);
         }catch (Exception e){
             ret=Return.error(e.getMessage());
+            e.printStackTrace();
         }finally {
             this.clearPage();
         }

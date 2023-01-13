@@ -4,7 +4,6 @@ import com.jbosframework.beans.annotation.Bean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnBean;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnClass;
 import com.jbosframework.boot.autoconfig.condition.ConditionalOnMissingBean;
-import com.jbosframework.boot.context.ConfigurationProperties;
 import com.jbosframework.boot.context.EnableConfigurationProperties;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.Import;
