@@ -18,7 +18,6 @@
             <artifactId>jbos-context</artifactId>
             <version>${jbos.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.jbosframework.web</groupId>
             <artifactId>jbos-web</artifactId>
@@ -35,6 +34,11 @@
             <artifactId>jbos-orm</artifactId>
             <version>5.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>${pagehelper.version}</version>
         </dependency>
     </dependencies>
 

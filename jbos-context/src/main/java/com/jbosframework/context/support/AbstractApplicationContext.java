@@ -8,6 +8,7 @@ import com.jbosframework.beans.factory.ConfigurableListableBeanFactory;
 import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.context.*;
 import com.jbosframework.context.annotation.AnnotationBeanClassParser;
+import com.jbosframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import com.jbosframework.context.event.SimpleApplicationEventMulticaster;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
@@ -70,6 +71,7 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     private void registerBeanFactoryBeanPostProcessor(ConfigurableListableBeanFactory beanFactory){
         beanFactory.registerBeanPostProcessor(new ApplicationContextAwareProcessor(this));
         beanFactory.registerBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor(this));
+        beanFactory.registerBeanPostProcessor(new CommonAnnotationBeanPostProcessor(this));
         AnnotationBeanClassDelegate.registerBeanPostProcessor(beanFactory);
     }
     private void registerApplicationListener(){

@@ -44,11 +44,7 @@ public class SqlSessionFactoryBean {
 	public void setLogImpl(String logImpl){
 		this.logImpl=logImpl;
 	}
-	/**
-	 * 构建SqlSessionFactory
-	 * @return
-	 */
-	public SqlSessionFactory build() throws IOException {
+	public SqlSessionFactory build() {
 		if(sqlSessionFactory==null){
 			synchronized (SqlSessionFactory.class) {
 				if(sqlSessionFactory==null){
@@ -61,12 +57,17 @@ public class SqlSessionFactoryBean {
 					}
 
 					PathMatchResourceSupport pathMatchResourceSupport=new PathMatchResourceSupport();
-					Resource[] resources=pathMatchResourceSupport.getResources(mapperLocations);
-					if(resources!=null){
-						for(Resource resource:resources){
-							XMLMapperBuilder mapperParser = new XMLMapperBuilder(resource.getInputStream(), configuration, resource.getFileName(), configuration.getSqlFragments());
-							mapperParser.parse();
+					Resource[] resources= new Resource[0];
+					try {
+						resources = pathMatchResourceSupport.getResources(mapperLocations);
+						if(resources!=null){
+							for(Resource resource:resources){
+								XMLMapperBuilder mapperParser = new XMLMapperBuilder(resource.getInputStream(), configuration, resource.getFileName(), configuration.getSqlFragments());
+								mapperParser.parse();
+							}
 						}
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 					sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 				}

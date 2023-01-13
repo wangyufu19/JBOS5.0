@@ -14,7 +14,7 @@ import com.jbosframework.web.filter.DelegatingFilterProxy;
 @Configuration
 public class FilterConfig {
 
-    @Bean("shiroFilterRegistry")
+    //@Bean("shiroFilterRegistry")
     public FilterRegistryBean shiroFilterRegistry(){
         FilterRegistryBean filterRegistryBean=new FilterRegistryBean();
         filterRegistryBean.setFilter(new DelegatingFilterProxy("shiroFilter"));

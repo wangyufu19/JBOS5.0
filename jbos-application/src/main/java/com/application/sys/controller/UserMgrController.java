@@ -41,8 +41,10 @@ public class UserMgrController extends  BaseController{
     @RequestMapping(value="/getUserList", method = RequestMethod.GET)
     //@ApiOperation("查询用户数据列表")
     public Return getUserList(@RequestParam Map<String, Object> params){
-        Map<String, Object> retDatas=new HashMap<String, Object>();
+        Return ret=Return.ok();
+        this.doStargPage(params);
         List<UserInfo> userInfos=userMgrService.getUserList(params);
-        return Return.ok().put("userInfos", userInfos);
+        this.doFinishPage(ret,userInfos);
+        return ret;
     }
 }

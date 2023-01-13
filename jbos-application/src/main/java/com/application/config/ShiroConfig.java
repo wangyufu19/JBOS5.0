@@ -19,7 +19,7 @@ import java.util.Map;
  * @author youfu.wang
  * @version 5.0
  */
-@Configuration
+//@Configuration
 public class ShiroConfig {
     @Value("${server.contextPath}")
     private String contextPath;
