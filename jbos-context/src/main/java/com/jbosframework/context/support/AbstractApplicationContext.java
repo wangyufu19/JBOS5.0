@@ -9,6 +9,7 @@ import com.jbosframework.beans.support.BeanDefinitionRegistry;
 import com.jbosframework.context.*;
 import com.jbosframework.context.annotation.AnnotationBeanClassParser;
 import com.jbosframework.context.annotation.CommonAnnotationBeanPostProcessor;
+import com.jbosframework.context.event.ContextClosedEvent;
 import com.jbosframework.context.event.SimpleApplicationEventMulticaster;
 import com.jbosframework.core.env.ConfigurableEnvironment;
 import org.apache.commons.logging.Log;
@@ -125,6 +126,13 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Closing " + this);
             }
+
+            try {
+                this.publishEvent((ApplicationEvent)(new ContextClosedEvent(this)));
+            } catch (Throwable var3) {
+                this.logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", var3);
+            }
+            this.destroy();
             this.active.set(false);
         }
     }
@@ -256,16 +264,6 @@ public abstract class AbstractApplicationContext implements ConfigurableApplicat
     public void destroy() {
         this.active.set(false);
         this.beanFactory.destroy();
-    }
-    public String toString() {
-        StringBuilder sb = new StringBuilder(this.getDisplayName());
-        sb.append(", started on ").append(new Date(this.getStartupDate()));
-        ApplicationContext parent = this.getParent();
-        if (parent != null) {
-            sb.append(", parent: ").append(parent.getDisplayName());
-        }
-
-        return sb.toString();
     }
     public void setJbosBootClass(Class<?> jbosBootClass){
         this.jbosBootClass=jbosBootClass;
