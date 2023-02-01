@@ -45,7 +45,7 @@ public class ChannelBuffer {
 	 * @throws IOException 
 	 */
 	public byte[] read(int capacity) throws IOException {	
-		byte[] totoalBytes=new byte[capacity];	
+		byte[] totalBytes=new byte[capacity];
 		int destPos=0;
 		ByteBuffer byteBuffer=null;	
 		//可读取字节长度
@@ -63,12 +63,12 @@ public class ChannelBuffer {
 			byteBuffer.clear();
 			readBytes=socketChannel.read(byteBuffer);
 	    	if(readBytes>0){
-	    		System.arraycopy(byteBuffer.array(), 0, totoalBytes, destPos, readBytes);
+	    		System.arraycopy(byteBuffer.array(), 0, totalBytes, destPos, readBytes);
 				destPos=destPos+readBytes;
 				remainingLength=remainingLength-readBytes;
 	    	}			
 		}
-		return totoalBytes;
+		return totalBytes;
 	}	 
 	/**
 	 * 写入字节
