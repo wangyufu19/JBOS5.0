@@ -29,6 +29,12 @@ public class ThreadPoolConfig {
     private TimeUnit unit = DEFAULT_TIME_UNIT;
     // 使用有界队列
     private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
-    // 线程工厂类
-    private ThreadFactory threadFactory = new DefaultThreadFactory("JBOS_TP", false);
+    //线程池名称
+    private String poolName;
+    //守护线程
+    private boolean daemon=false;
+
+    public ThreadFactory getThreadFactory(){
+        return new DefaultThreadFactory(this.poolName, this.daemon);
+    }
 }

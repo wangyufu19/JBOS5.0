@@ -27,11 +27,8 @@ public final class ThreadPoolFactoryUtil {
         return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix);
     }
 
-    public static ExecutorService createThreadPoolIfAbsent(String threadNamePrefix, ThreadPoolConfig threadPoolConfig) {
-        return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix);
-    }
-
     public static ExecutorService createThreadPoolIfAbsent(ThreadPoolConfig threadPoolConfig, String threadNamePrefix) {
+        threadPoolConfig.setPoolName(threadNamePrefix);
         ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(threadPoolConfig));
         // 如果 threadPool 被 shutdown 的话就重新创建一个
         if (threadPool.isShutdown() || threadPool.isTerminated()) {
@@ -73,13 +70,13 @@ public final class ThreadPoolFactoryUtil {
      * @param daemon           指定是否为 Daemon Thread(守护线程)
      * @return ThreadFactory
      */
-    public static ThreadFactory createThreadFactory(String threadNamePrefix, Boolean daemon) {
+    public static ThreadFactory createThreadFactory(String threadNamePrefix, boolean daemon) {
         threadNamePrefix = threadNamePrefix + '-' + poolId.incrementAndGet() + '-';
         if (threadNamePrefix != null) {
-            if (daemon != null) {
+            if (daemon) {
                 return new ThreadFactoryBuilder()
                         .setNameFormat(threadNamePrefix + "-%d")
-                        .setDaemon(daemon).build();
+                        .setDaemon(true).build();
             } else {
                 return new ThreadFactoryBuilder().setNameFormat(threadNamePrefix + "-%d").build();
             }
@@ -101,6 +98,6 @@ public final class ThreadPoolFactoryUtil {
             log.info("Number of Tasks : [{}]", threadPool.getCompletedTaskCount());
             log.info("Number of Tasks in Queue: {}", threadPool.getQueue().size());
             log.info("===========================================");
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 }
