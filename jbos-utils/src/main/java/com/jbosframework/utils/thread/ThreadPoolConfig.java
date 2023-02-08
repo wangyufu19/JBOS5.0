@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 @Setter
@@ -28,4 +29,6 @@ public class ThreadPoolConfig {
     private TimeUnit unit = DEFAULT_TIME_UNIT;
     // 使用有界队列
     private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
+    //线程池名称前缀
+    private ThreadFactory threadFactory = new DefaultThreadFactory("JBOS_TP", false);
 }

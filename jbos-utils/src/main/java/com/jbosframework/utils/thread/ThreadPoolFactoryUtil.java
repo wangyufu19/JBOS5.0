@@ -24,19 +24,19 @@ public final class ThreadPoolFactoryUtil {
 
     public static ExecutorService createThreadPoolIfAbsent(String threadNamePrefix) {
         ThreadPoolConfig threadPoolConfig = new ThreadPoolConfig();
-        return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix, false);
+        return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix);
     }
 
     public static ExecutorService createThreadPoolIfAbsent(String threadNamePrefix, ThreadPoolConfig threadPoolConfig) {
-        return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix, false);
+        return createThreadPoolIfAbsent(threadPoolConfig, threadNamePrefix);
     }
 
-    public static ExecutorService createThreadPoolIfAbsent(ThreadPoolConfig threadPoolConfig, String threadNamePrefix, Boolean daemon) {
-        ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(threadPoolConfig, threadNamePrefix, daemon));
+    public static ExecutorService createThreadPoolIfAbsent(ThreadPoolConfig threadPoolConfig, String threadNamePrefix) {
+        ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(threadPoolConfig));
         // 如果 threadPool 被 shutdown 的话就重新创建一个
         if (threadPool.isShutdown() || threadPool.isTerminated()) {
             THREAD_POOLS.remove(threadNamePrefix);
-            threadPool = createThreadPool(threadPoolConfig, threadNamePrefix, daemon);
+            threadPool = createThreadPool(threadPoolConfig);
             THREAD_POOLS.put(threadNamePrefix, threadPool);
         }
         return threadPool;
@@ -60,11 +60,10 @@ public final class ThreadPoolFactoryUtil {
         });
     }
 
-    private static ExecutorService createThreadPool(ThreadPoolConfig threadPoolConfig, String threadNamePrefix, Boolean daemon) {
-        ThreadFactory threadFactory = new DefaultThreadFactory(threadNamePrefix, daemon);
+    private static ExecutorService createThreadPool(ThreadPoolConfig threadPoolConfig) {
         return new ThreadPoolExecutor(threadPoolConfig.getCorePoolSize(), threadPoolConfig.getMaxPoolSize(),
                 threadPoolConfig.getKeepAliveTime(), threadPoolConfig.getUnit(), threadPoolConfig.getWorkQueue(),
-                threadFactory);
+                threadPoolConfig.getThreadFactory());
     }
 
     /**
