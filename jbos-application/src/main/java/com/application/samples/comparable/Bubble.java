@@ -1,13 +1,15 @@
-package com.application.common.comparable;
+package com.application.samples.comparable;
 
-public class Insertion<T extends Comparable<T>> extends Sort<T> {
+public class Bubble<T extends Comparable<T>> extends Sort<T> {
 
     @Override
     public void sort(T[] nums) {
         int N = nums.length;
-        for (int i = 1; i < N; i++) {
-            for (int j = i; j > 0 && less(nums[j], nums[j - 1]); j--) {
-                swap(nums, j, j - 1);
+        for (int i = 0; i<N ;i++) {
+            for (int j = 0; j < N-1; j++) {
+                if (less(nums[j + 1], nums[j])) {
+                    swap(nums, j, j + 1);
+                }
             }
         }
     }
@@ -18,8 +20,8 @@ public class Insertion<T extends Comparable<T>> extends Sort<T> {
             System.out.print(i);
         }
         System.out.println("");
-        Insertion insertion=new Insertion();
-        insertion.sort(arr);
+        Bubble bubble=new Bubble();
+        bubble.sort(arr);
         System.out.println("排序后");
         for (int i:arr){
             System.out.print(i);

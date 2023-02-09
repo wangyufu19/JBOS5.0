@@ -1,4 +1,4 @@
-package com.application.common.algorithm;
+package com.application.samples.algorithm;
 
 public interface MyStack<Item> extends Iterable<Item> {
 

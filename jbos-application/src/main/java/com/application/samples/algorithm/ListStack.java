@@ -1,4 +1,4 @@
-package com.application.common.algorithm;
+package com.application.samples.algorithm;
 
 import java.util.Iterator;
 

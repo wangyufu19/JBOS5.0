@@ -1,4 +1,4 @@
-package com.application.common.comparable;
+package com.application.samples.comparable;
 
 public class Selection <T extends Comparable<T>> extends Sort<T> {
 

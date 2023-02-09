@@ -1,4 +1,4 @@
-package com.application.common.comparable;
+package com.application.samples.comparable;
 
 public abstract class Sort<T extends Comparable<T>> {
 
