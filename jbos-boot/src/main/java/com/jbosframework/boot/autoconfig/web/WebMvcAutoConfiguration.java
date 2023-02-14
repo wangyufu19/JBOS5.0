@@ -1,4 +1,4 @@
-package com.jbosframework.web.mvc.annotation;
+package com.jbosframework.boot.autoconfig.web;
 
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.context.annotation.Import;

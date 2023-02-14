@@ -1,4 +1,4 @@
-package com.jbosframework.web.mvc.annotation;
+package com.jbosframework.boot.autoconfig.web;
 
 import com.jbosframework.beans.config.BeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
@@ -8,6 +8,10 @@ import com.jbosframework.context.annotation.AnnotationBeanClassParser;
 import com.jbosframework.context.annotation.ClassPathBeanDefinitionScanner;
 import com.jbosframework.context.annotation.ImportBeanDefinitionSelector;
 import com.jbosframework.utils.StringUtils;
+import com.jbosframework.web.mvc.annotation.Controller;
+import com.jbosframework.web.mvc.annotation.RequestMapping;
+import com.jbosframework.web.mvc.annotation.RestController;
+import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
