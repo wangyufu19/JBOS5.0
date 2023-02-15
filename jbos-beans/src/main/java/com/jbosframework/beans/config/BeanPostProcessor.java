@@ -5,7 +5,7 @@ package com.jbosframework.beans.config;
  */
 public interface BeanPostProcessor  {
 
-    default Object postProcessBeforeInitialization(Object bean,BeanDefinition beanDefinition){
+    default Object postProcessBeforeInitialization(Object bean,BeanDefinition beanDefinition) {
         return bean;
     }
 

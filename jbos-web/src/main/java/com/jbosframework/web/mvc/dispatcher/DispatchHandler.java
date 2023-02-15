@@ -10,6 +10,9 @@ import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassCaller;
 import com.jbosframework.web.mvc.annotation.ResponseBody;
+import com.jbosframework.web.servlet.DefaultHandlerMapping;
+import com.jbosframework.web.servlet.HandlerExecutionChain;
+import com.jbosframework.web.servlet.HandlerMapping;
 import com.jbosframework.web.utils.WebUtils;
 import com.jbosframework.web.mvc.annotation.RequestMethod;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
@@ -30,35 +33,31 @@ public class DispatchHandler {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private Dispatcher dispatcher;
-	/**
-	 * 构造方法
-	 * @param request
-	 * @param response
-	 */
+
 	public DispatchHandler(HttpServletRequest request,HttpServletResponse response){
 		this.request=request;
 		this.response=response;
 		dispatcher=new Dispatcher(this.request,this.response);
 	}	
-	/**
-	 * 设置ServletContext
-	 * @param servletContext
-	 */
+
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
-	/**
-	 * 设置ApplicationContext
-	 * @param applicationContext
-	 */
+
 	public void setApplicationContext(ApplicationContext applicationContext){
 		this.applicationContext=applicationContext;
 	}
-	/**
-	 * 处理分发
-	 * @throws Exception
-	 */
+	private HandlerExecutionChain geHandlerExecutionChain(){
+		return new DefaultHandlerMapping(this.applicationContext).getHandlerExecutionChain(this.request,this.response);
+	}
 	public void handle() throws Exception{
+		try{
+			HandlerExecutionChain handlerExecutionChain=this.geHandlerExecutionChain();
+			handlerExecutionChain.applyPreHandle();
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw e;
+		}
 		Object controller=null;
 		String requestUri = WebUtils.getRequestPath(request);
 		controller=this.getRequestController(applicationContext,requestUri);
@@ -89,13 +88,7 @@ public class DispatchHandler {
 			}
 		}
 	}
-	/**
-	 * 处理请求
-	 * @param applicationContext
-	 * @param webAnnotationBean
-	 * @return
-	 * @throws Exception
-	 */
+
 	private void doHandle(String requestUri,ApplicationContext applicationContext,WebAnnotationBean webAnnotationBean) throws Exception{
 		Object obj=null;
 		Object ret=null;
@@ -138,12 +131,6 @@ public class DispatchHandler {
 		}
 	}
 
-	/**
-	 * 得到请求控制器对象
-	 * @param applicationContext
-	 * @param s
-	 * @return
-	 */
 	protected Object getRequestController(ApplicationContext applicationContext,String s){	
 		Object obj=null;
 		if(s==null) return null;

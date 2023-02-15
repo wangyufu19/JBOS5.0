@@ -1,5 +1,8 @@
 package com.jbosframework.beans.factory;
 import com.jbosframework.utils.JBOSClassloader;
+
+import java.lang.reflect.Modifier;
+
 /**
  * BeanInstanceUtils
  * @author youfu.wang
@@ -30,7 +33,13 @@ public class BeanInstanceUtils {
 		try {
 			if(cls==null) return null;
 			if(!cls.isInterface()){
-				obj=cls.newInstance();
+				if(cls.isMemberClass()){
+					if(Modifier.isStatic(cls.getModifiers())){
+						obj=cls.newInstance();
+					}
+				}else{
+					obj=cls.newInstance();
+				}
 			}			
 		}  catch (InstantiationException e) {
 			e.printStackTrace();

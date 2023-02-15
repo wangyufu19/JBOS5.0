@@ -44,7 +44,7 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
             }else{
                 beanDefinitions=new ArrayList<BeanDefinition>();
             }
-            if(beanDefinitions!=null){
+            if(beanDefinitions!=null&&!beanDefinitions.contains(beanDefinition)){
                 beanDefinitions.add(beanDefinition);
                 allBeanNamesByType.remove(name);
                 allBeanNamesByType.put(name,beanDefinitions);
@@ -125,6 +125,9 @@ public class ConfigurableListableBeanFactory extends AbstractBeanFactory impleme
             }else{
                 bean=BeanInstanceUtils.newBeanInstance(genericBeanDefinition.getBeanClass());
             }
+        }
+        if(null==bean){
+           return null;
         }
         bean=this.invokeInterfaces(bean);
         bean=this.doPostProcessBeforeInitialization(bean,genericBeanDefinition);
