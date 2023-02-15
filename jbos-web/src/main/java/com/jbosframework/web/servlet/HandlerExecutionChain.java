@@ -5,7 +5,6 @@ import com.jbosframework.utils.ObjectUtils;
 import com.jbosframework.web.mvc.ModelAndView;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -20,12 +19,12 @@ public class HandlerExecutionChain {
     private List<HandlerInterceptor> interceptorList;
     private int interceptorIndex;
 
+
     public HandlerExecutionChain(HttpServletRequest request,HttpServletResponse response){
         this.request=request;
         this.response=response;
         this.interceptorIndex=-1;
     }
-
     public void addInterceptor(HandlerInterceptor interceptor) {
         if(this.interceptorList==null){
             this.interceptorList = new ArrayList();
@@ -34,7 +33,7 @@ public class HandlerExecutionChain {
     }
     public HandlerInterceptor[] getInterceptors() {
         if (this.interceptorList != null) {
-            return (HandlerInterceptor[])this.interceptorList.toArray(new HandlerInterceptor[0]);
+            return this.interceptorList.toArray(new HandlerInterceptor[0]);
         }
         return new HandlerInterceptor[0];
     }
