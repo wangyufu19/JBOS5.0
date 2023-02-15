@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +27,9 @@ public class HandlerExecutionChain {
     }
 
     public void addInterceptor(HandlerInterceptor interceptor) {
+        if(this.interceptorList==null){
+            this.interceptorList = new ArrayList();
+        }
         this.interceptorList.add(interceptor);
     }
     public HandlerInterceptor[] getInterceptors() {
@@ -48,7 +52,7 @@ public class HandlerExecutionChain {
         }
         return true;
     }
-    void applyPostHandle(@Nullable ModelAndView mv) throws Exception {
+    public void applyPostHandle(@Nullable ModelAndView mv) throws Exception {
         HandlerInterceptor[] interceptors = this.getInterceptors();
         if (!ObjectUtils.isEmpty(interceptors)) {
             for(int i = interceptors.length - 1; i >= 0; --i) {

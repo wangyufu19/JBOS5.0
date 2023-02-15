@@ -22,14 +22,13 @@ public class InterceptorRegistry {
         return registration;
     }
     public List<InterceptorRegistration> getInterceptors() {
-        return (List)this.registrations.stream().sorted(INTERCEPTOR_ORDER_COMPARATOR).map(InterceptorRegistration::getInterceptor).collect(Collectors.toList());
+        return this.registrations.stream().sorted(INTERCEPTOR_ORDER_COMPARATOR).collect(Collectors.toList());
     }
     static {
         INTERCEPTOR_ORDER_COMPARATOR = OrderComparator.INSTANCE.withSourceProvider((object) -> {
             if (object instanceof InterceptorRegistration) {
-                InterceptorRegistration interceptorRegistration = (InterceptorRegistration)object;
-                ((InterceptorRegistration)object).getClass();
-                return interceptorRegistration.getOrder();
+                InterceptorRegistration registration = (InterceptorRegistration)object;
+                return registration.getOrder();
             } else {
                 return null;
             }

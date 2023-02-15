@@ -54,6 +54,7 @@ public class DispatchHandler {
 		try{
 			HandlerExecutionChain handlerExecutionChain=this.geHandlerExecutionChain();
 			handlerExecutionChain.applyPreHandle();
+			handlerExecutionChain.applyPostHandle(null);
 		}catch (Exception e){
 			logger.error(e.getMessage());
 			throw e;

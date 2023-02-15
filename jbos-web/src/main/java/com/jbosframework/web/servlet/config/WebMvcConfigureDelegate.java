@@ -4,17 +4,15 @@ import java.util.List;
 
 
 public class WebMvcConfigureDelegate {
-    private List<WebMvcConfigurer> configurers;
+    private InterceptorRegistry registry=new InterceptorRegistry();
 
-    public WebMvcConfigureDelegate(List<WebMvcConfigurer> configurers){
-        this.configurers=configurers;
-    }
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(List<WebMvcConfigurer> configurers) {
         for(Iterator<WebMvcConfigurer> it=configurers.iterator();it.hasNext();){
             WebMvcConfigurer webMvcConfigurer=it.next();
             webMvcConfigurer.addInterceptors(registry);
         }
     }
-
-
+    public InterceptorRegistry getInterceptorRegistry() {
+        return registry;
+    }
 }

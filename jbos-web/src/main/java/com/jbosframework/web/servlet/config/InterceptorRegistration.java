@@ -25,6 +25,13 @@ public class InterceptorRegistration {
     }
 
 
+    public InterceptorRegistration addPathPatterns(String... patterns) {
+        return this.addPathPatterns(Arrays.asList(patterns));
+    }
+    public InterceptorRegistration addPathPatterns(List<String> patterns) {
+        this.includePatterns.addAll(patterns);
+        return this;
+    }
     public InterceptorRegistration excludePathPatterns(String... patterns) {
         return this.excludePathPatterns(Arrays.asList(patterns));
     }
@@ -38,7 +45,14 @@ public class InterceptorRegistration {
         this.pathMatcher = pathMatcher;
         return this;
     }
-
+    public boolean isMatch(String requestUri){
+        for(String includePattern:includePatterns){
+            if(this.pathMatcher.match(includePattern,requestUri)){
+                return true;
+            }
+        }
+        return false;
+    }
     public InterceptorRegistration order(int order) {
         this.order = order;
         return this;

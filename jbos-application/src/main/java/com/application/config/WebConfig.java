@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 public class WebConfig implements WebMvcConfigurer {
 
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TokenInterceptor());
+        registry.addInterceptor(new TokenInterceptor())
+                .addPathPatterns("/**");
     }
     public class TokenInterceptor implements HandlerInterceptor {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
