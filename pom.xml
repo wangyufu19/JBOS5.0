@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jbos.version>5.0</jbos.version>
         <java.version>1.8</java.version>
-        <tomcat.version>8.5.37</tomcat.version>
+        <tomcat.version>10.0.4</tomcat.version>
         <jettyVersion>9.3.9.v20160517</jettyVersion>
         <shiro.version>1.4.0</shiro.version>
         <yaml.version>1.23</yaml.version>
