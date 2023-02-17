@@ -14,7 +14,7 @@
     <properties>
         <lombok.version>1.18.4</lombok.version>
         <slf4j.version>1.6.1</slf4j.version>
-        <mysql.version>8.0.11</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
     <dependencies>
