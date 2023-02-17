@@ -28,7 +28,7 @@ public class WebMvcAutoConfiguration{
         @Bean
         public WebMvcConfigureDelegate webMvcConfigureDelegate(){
             WebMvcConfigureDelegate delegate=new WebMvcConfigureDelegate();
-            delegate.addInterceptors(configurers);
+            delegate.addRegistry(configurers);
             return delegate;
         }
     }

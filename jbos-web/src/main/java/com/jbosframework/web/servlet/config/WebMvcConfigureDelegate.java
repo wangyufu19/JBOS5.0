@@ -4,15 +4,22 @@ import java.util.List;
 
 
 public class WebMvcConfigureDelegate {
-    private InterceptorRegistry registry=new InterceptorRegistry();
+    private InterceptorRegistry interceptorRegistry=new InterceptorRegistry();
+    private CorsRegistry corsRegistry=new CorsRegistry();
 
-    public void addInterceptors(List<WebMvcConfigurer> configurers) {
+    public void addRegistry(List<WebMvcConfigurer> configurers) {
         for(Iterator<WebMvcConfigurer> it=configurers.iterator();it.hasNext();){
             WebMvcConfigurer webMvcConfigurer=it.next();
-            webMvcConfigurer.addInterceptors(registry);
+            webMvcConfigurer.addCorsMappings(corsRegistry);
+            webMvcConfigurer.addInterceptors(interceptorRegistry);
         }
     }
-    public InterceptorRegistry getInterceptorRegistry() {
-        return registry;
+
+    public CorsRegistry getCorsRegistry() {
+        return corsRegistry;
     }
+    public InterceptorRegistry getInterceptorRegistry() {
+        return interceptorRegistry;
+    }
+
 }

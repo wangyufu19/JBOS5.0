@@ -54,7 +54,7 @@ public class BaseController {
 	 */
 	public void doFinishPage(Return ret, List datas){
 		PageInfo pageInfo=new PageInfo(datas);
-		ret.put("page",pageInfo);
+		ret.setData(pageInfo);
 	}
 	public void clearPage(){
 		PageHelper.clearPage();

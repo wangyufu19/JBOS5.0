@@ -1,6 +1,6 @@
 server:
-  port: 9080
-  contextPath: /jbos
+  port: 8060
+  contextPath: /api
 jbos:
   application: jbos
   profiles:

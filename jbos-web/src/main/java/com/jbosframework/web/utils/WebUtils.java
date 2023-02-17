@@ -1,11 +1,14 @@
 package com.jbosframework.web.utils;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Map;
 
+import com.jbosframework.utils.ObjectUtils;
 import com.jbosframework.web.servlet.JBOSServlet;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,10 +23,7 @@ public class WebUtils {
 
 	private static final String ISO_ENCODING="iso-8859-1";
 	private static final String SERVER_TOMCAT="Tomcat";
-	/**
-	 * 得到请求路径
-	 * @return
-	 */
+
 	public static String getRequestPath(HttpServletRequest request) {
 		String s = null;
 		s = (String) request
@@ -38,11 +38,7 @@ public class WebUtils {
 			s = request.getServletPath();
 		return s;
 	}
-	/**
-	 * 是否Multipart
-	 * @param request
-	 * @return
-	 */
+
 	public static boolean isMultipartRequest(HttpServletRequest request){
 		String contentType = request.getContentType();
 		if (contentType != null) {
@@ -118,7 +114,6 @@ public class WebUtils {
 		return result.toString();
 	}
 	private static boolean isTomcat(){
-		
 		if(JBOSServlet.SERVER_INFO.toLowerCase().indexOf(SERVER_TOMCAT)!=-1){
 			return true;
 		}else{

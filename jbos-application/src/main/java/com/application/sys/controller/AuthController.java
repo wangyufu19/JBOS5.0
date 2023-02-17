@@ -5,11 +5,20 @@ import com.application.common.shiro.ShiroUtils;
 import com.application.common.utils.Return;
 import com.application.sys.service.UserAuthService;
 import com.application.sys.service.UserTokenService;
+import com.google.code.kaptcha.Producer;
 import com.jbosframework.beans.annotation.Autowired;
 import com.jbosframework.utils.StringUtils;
 import com.jbosframework.web.mvc.annotation.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 用户认证类
@@ -17,10 +26,12 @@ import java.util.Map;
  * @date 2019-01-29
  */
 @RestController
-@RequestMapping("/sys/auth")
+@RequestMapping("/auth")
 @Slf4j
 //@Api("用户认证接口")
 public class AuthController extends BaseController{
+	@Autowired
+	private Producer producer;
 	@Autowired
 	private UserAuthService userAuthService;
 	@Autowired
@@ -33,6 +44,7 @@ public class AuthController extends BaseController{
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	//@ApiOperation("用户登录")
 	public Return login(@RequestBody Map<String, Object> params) {
+		Return ret=Return.ok();
 		String username= StringUtils.replaceNull(params.get("username"));
 		String password=StringUtils.replaceNull(params.get("password"));
 		String accessToken="";
@@ -58,7 +70,8 @@ public class AuthController extends BaseController{
 			log.error(e.getMessage(),e);
 			return Return.error("用户认证失败");
 		}
-		return Return.ok().put("accessToken",accessToken);
+		ret.setData("accessToken");
+		return ret;
 	}
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	//@ApiOperation("用户登出")
@@ -73,5 +86,26 @@ public class AuthController extends BaseController{
 			return Return.error("用户登出失败");
 		}
 		return Return.ok();
+	}
+	/**
+	 * 登录验证码
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/captcha")
+
+	public Return captcha() throws IOException {
+		Return res=Return.ok();
+		ByteArrayOutputStream out=new ByteArrayOutputStream();
+		String text=producer.createText();
+		BufferedImage image=producer.createImage(text);
+		ImageIO.write(image,"jpg",out);
+		String captchaToken= UUID.randomUUID().toString();
+		String captchaSrc= Base64.encodeBase64String(out.toByteArray());
+		Map<String,Object> captcha=new HashMap();
+		captcha.put("captchaToken",captchaToken);
+		captcha.put("captchaSrc",captchaSrc);
+		res.setData(captcha);
+		return res;
 	}
 }

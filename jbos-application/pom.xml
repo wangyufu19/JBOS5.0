@@ -15,6 +15,7 @@
         <lombok.version>1.18.4</lombok.version>
         <slf4j.version>1.6.1</slf4j.version>
         <mysql.version>8.0.11</mysql.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
     </properties>
     <dependencies>
         <dependency>
@@ -120,6 +121,11 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>${kaptcha.version}</version>
+        </dependency>
 
     </dependencies>
 </project>

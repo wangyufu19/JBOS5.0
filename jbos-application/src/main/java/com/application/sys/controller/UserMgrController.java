@@ -29,8 +29,10 @@ public class UserMgrController extends  BaseController{
     @RequestMapping(value="/info", method = RequestMethod.GET)
     //@ApiOperation("得到用户信息")
     public Return getUserInfo(){
+        Return ret=Return.ok();
         UserObject userObject=this.getUserObject();
-        return Return.ok().put("user",userObject);
+        ret.setData(userObject);
+        return ret;
     }
     /**
      * 查询用户数据列表

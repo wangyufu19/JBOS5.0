@@ -55,15 +55,15 @@ public class JBOSStarter {
 //        userMgrService.getUserInfoByLoginName("");
 //		AspectInvoker aspectInvoker=ctx.getBean(AspectInvoker.class);
 //		aspectInvoker.invoke();
-    }
+	}
 
-    @Setter
-    @Getter
-    public static class ResponseResult<T>{
-	    private int code;
-	    private String message;
-	    private T data;
+	@Setter
+	@Getter
+	public static class ResponseResult<T>{
+		private int code;
+		private String message;
+		private T data;
 
-    }
+	}
 }
 

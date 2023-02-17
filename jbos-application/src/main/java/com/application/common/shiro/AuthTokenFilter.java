@@ -47,7 +47,7 @@ public class AuthTokenFilter extends AuthenticatingFilter {
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
             httpResponse.setContentType("application/json;charset=UTF-8");
-            String json =JsonUtils.toJson(Return.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
+            String json =JsonUtils.toJson(Return.error(HttpStatus.SC_UNAUTHORIZED+"", "invalid token"));
             httpResponse.getWriter().print(json);
             return false;
         }
@@ -63,7 +63,7 @@ public class AuthTokenFilter extends AuthenticatingFilter {
             log.error(e.getMessage(),e);
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            Return r = Return.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
+            Return r = Return.error(HttpStatus.SC_UNAUTHORIZED+"", throwable.getMessage());
             String json = JsonUtils.toJson(r);
             httpResponse.getWriter().print(json);
         } catch (Exception e1) {
