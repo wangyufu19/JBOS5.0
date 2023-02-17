@@ -14,7 +14,7 @@
     <version>5.0</version>
 
     <properties>
-        <ant.version>1.8.1</ant.version>
+        <ant.version>1.10.9</ant.version>
     </properties>
 
     <dependencies>
