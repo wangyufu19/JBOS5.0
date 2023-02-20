@@ -31,7 +31,7 @@ public class FilterConfig {
         filterRegistryBean.setUrlPattern("/*");
         return filterRegistryBean;
     }
-    @Bean("corsFilter")
+    //@Bean("corsFilter")
     public FilterRegistryBean corsFilter(){
         FilterRegistryBean filterRegistryBean=new FilterRegistryBean();
         filterRegistryBean.setFilter(new CorsFilter());

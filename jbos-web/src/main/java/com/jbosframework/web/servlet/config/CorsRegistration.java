@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CorsRegistration {
-    private static final String DEFAULT_PATH_PATTERN="/*";
+    public static final String DEFAULT_PATH_PATTERN="/**";
     private final String pathPattern;
     private final List<String> allowedOrigins = new ArrayList();
     private boolean allowCredentials=true;

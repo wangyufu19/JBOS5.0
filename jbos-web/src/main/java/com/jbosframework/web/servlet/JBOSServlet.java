@@ -27,8 +27,11 @@ public abstract class JBOSServlet extends HttpServlet{
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException{
 		handleRequest(request,response);
 	}
-	public void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException{		
+	public void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException {
 		handleRequest(request,response);
+	}
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		this.handleRequest(request,response);
 	}
 	public void handleRequest(HttpServletRequest request,HttpServletResponse response) throws ServletException{		
 		try{

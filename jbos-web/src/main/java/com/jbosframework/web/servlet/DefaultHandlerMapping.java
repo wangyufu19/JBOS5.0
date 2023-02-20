@@ -4,6 +4,9 @@ import com.jbosframework.beans.config.GenericBeanDefinition;
 import com.jbosframework.beans.config.MethodMetadata;
 import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.utils.JBOSClassCaller;
+import com.jbosframework.web.cors.CorsProcessor;
+import com.jbosframework.web.cors.CorsUtils;
+import com.jbosframework.web.cors.DefaultCorsProcessor;
 import com.jbosframework.web.mvc.annotation.RequestMethod;
 import com.jbosframework.web.mvc.annotation.ResponseBody;
 import com.jbosframework.web.mvc.annotation.WebAnnotationBean;
@@ -51,6 +54,14 @@ public class DefaultHandlerMapping implements HandlerMapping{
         if(controller instanceof GenericBeanDefinition) {
             WebAnnotationBean webAnnotationBean = (WebAnnotationBean) controller;
             if(this.isValidMethod(request,webAnnotationBean.getRequestMethod())){
+                //处理CORS
+                CorsProcessor processor = new DefaultCorsProcessor(this.applicationContext);
+                if (CorsUtils.isCorsRequest(request)) {
+                    boolean isValid=processor.processRequest(request,response);
+                    if (!isValid||CorsUtils.isPreFlightRequest(request)) {
+                        return;
+                    }
+                }
                 ret=this.doHandle(request,response,webAnnotationBean);
                 //处理响应
                 MethodMetadata methodMetadata=webAnnotationBean.getMethodMetadata();

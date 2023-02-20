@@ -16,27 +16,7 @@ public class DispatcherServlet extends JBOSServlet{
 			logger.debug("DispatcherServlet with name '" + getServletName() + "' received request for [" +
 					request.getRequestURI() + "]");
 		}
-//		System.out.println("Origin="+request.getHeader("Origin"));
-//		System.out.println("method="+request.getMethod().toUpperCase());
-//		System.out.println("Access-Control-Request-Headers="+request.getHeader("Access-Control-Request-Headers"));
-//		System.out.println("Access-Control-Request-Method="+request.getHeader("Access-Control-Request-Method"));
-//		if(this.isCorsRequest(request)){
-//			response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-//			response.setHeader("Access-Control-Allow-Methods", "*");
-//			response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
-//			response.setHeader("Access-Control-Allow-Credentials", "true");
-//			response.setHeader("Access-Control-Max-Age", "3600");
-//		}
-//		if(this.isPreFlightRequest(request)){
-//			return;
-//		}
 		this.doDispatch(request, response);		
-	}
-	private boolean isCorsRequest(HttpServletRequest request){
-		return request.getHeader("Origin")!=null;
-	}
-	private boolean isPreFlightRequest(HttpServletRequest request){
-		return isCorsRequest(request)&&"OPTIONS".equals(request.getMethod().toUpperCase())&&request.getHeader("Access-Control-Request-Method")!=null;
 	}
 	protected void doDispatch(HttpServletRequest request,HttpServletResponse response) throws Exception {
 		DispatchHandler requestDispatchHandler=null;
