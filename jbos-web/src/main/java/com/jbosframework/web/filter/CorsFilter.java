@@ -24,11 +24,6 @@ public class CorsFilter extends AbstractFilterBean {
              applicationContext=(ApplicationContext)servletRequest.getServletContext().getAttribute(ContextLoaderServlet.APPLICATION_CONTEXT_ATTRIBUTE);
         }
         CorsProcessor processor = new DefaultCorsProcessor(applicationContext);
-        System.out.println("Origin=" + request.getHeader("Origin"));
-        System.out.println("method=" + request.getMethod().toUpperCase());
-        System.out.println("Access-Control-Request-Headers=" + request.getHeader("Access-Control-Request-Headers"));
-        System.out.println("Access-Control-Request-Method=" + request.getHeader("Access-Control-Request-Method"));
-
         if (CorsUtils.isCorsRequest(request)) {
             boolean isValid=processor.processRequest(request,response);
             if (!isValid||CorsUtils.isPreFlightRequest(request)) {
