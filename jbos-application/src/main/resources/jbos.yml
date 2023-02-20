@@ -5,6 +5,10 @@ jbos:
   application: jbos
   profiles:
     active: dev
+  security:
+    filter:
+      loginUri: /login
+      excludeUri: /api/auth/**,/demo/**
   mybatis:
     mapperLocations: classpath:mapper/**/*.xml
     logImpl: LOG4J

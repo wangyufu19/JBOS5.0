@@ -46,6 +46,11 @@ public class InterceptorRegistration {
         return this;
     }
     public boolean isMatch(String requestUri){
+        for(String excludePattern:excludePatterns){
+            if(this.pathMatcher.match(excludePattern,requestUri)){
+                return false;
+            }
+        }
         for(String includePattern:includePatterns){
             if(this.pathMatcher.match(includePattern,requestUri)){
                 return true;

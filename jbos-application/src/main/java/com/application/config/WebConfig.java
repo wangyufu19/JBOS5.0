@@ -2,6 +2,7 @@ package com.application.config;
 
 import com.application.common.utils.JacksonUtils;
 import com.application.common.utils.Return;
+import com.jbosframework.beans.annotation.Value;
 import com.jbosframework.context.annotation.Configuration;
 import com.jbosframework.web.servlet.HandlerInterceptor;
 import com.jbosframework.web.servlet.config.CorsRegistry;
@@ -14,6 +15,9 @@ import java.io.PrintWriter;
 @Slf4j
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    @Value("${jbos.security.filter.excludeUri}")
+    private String excludeUri;
+
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
@@ -21,10 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .maxAge(3600);
     }
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new TokenInterceptor())
-//                .addPathPatterns("/**");
-//    }
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new TokenInterceptor())
+                .excludePathPatterns(excludeUri.split(","))
+                .addPathPatterns("/**");
+    }
     public class TokenInterceptor implements HandlerInterceptor {
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             log.info("uri={}",request.getRequestURI());
