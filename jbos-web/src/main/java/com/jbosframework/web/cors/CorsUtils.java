@@ -5,6 +5,7 @@ import com.jbosframework.web.http.HttpMethod;
 import javax.servlet.http.HttpServletRequest;
 
 public class CorsUtils {
+    public static final String X_AUTH_CORS="x-auth-cors";
     public CorsUtils() {
     }
 

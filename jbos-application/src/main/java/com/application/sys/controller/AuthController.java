@@ -41,7 +41,7 @@ public class AuthController extends BaseController{
 	 * @return
 	 */
     @ResponseBody
-	@RequestMapping(value = "/login", method = {RequestMethod.OPTIONS,RequestMethod.POST})
+	@RequestMapping(value = "/login", method = {RequestMethod.POST})
 	//@ApiOperation("用户登录")
 	public Return login(@RequestBody Map<String, Object> params) {
 		Return ret=Return.ok();

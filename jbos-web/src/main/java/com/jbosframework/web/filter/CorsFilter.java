@@ -25,6 +25,7 @@ public class CorsFilter extends AbstractFilterBean {
         }
         CorsProcessor processor = new DefaultCorsProcessor(applicationContext);
         if (CorsUtils.isCorsRequest(request)) {
+            request.setAttribute(CorsUtils.X_AUTH_CORS,"true");
             boolean isValid=processor.processRequest(request,response);
             if (!isValid||CorsUtils.isPreFlightRequest(request)) {
                 return;
