@@ -156,11 +156,11 @@ public class Reactor implements Runnable {
 				 }
 			}
 		}
-		public void send() throws IOException{
-			//写入读取事件返回结果   
-    		idataExchange.write(eventCallback.returnResult());
-    		selectionKey.interestOps(SelectionKey.OP_READ);  
-    	    state = READING;  
+		public void send() throws IOException{//写入读取事件返回结果
+			idataExchange.write(eventCallback.returnResult());
+			selectionKey.interestOps(SelectionKey.OP_READ);
+			state = READING;
+
 		}
     }
     public static void main(String[] args) throws IOException{

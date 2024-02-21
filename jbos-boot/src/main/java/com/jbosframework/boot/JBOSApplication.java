@@ -114,7 +114,7 @@ public class JBOSApplication {
 
     public ApplicationContext start(String... args)  {
         long startDate=System.currentTimeMillis();
-        long endDate=startDate;
+        long endDate;
         ConfigurableApplicationContext context = null;
         JBOSApplicationRunListeners listeners = getRunListeners(args);
         listeners.starting();

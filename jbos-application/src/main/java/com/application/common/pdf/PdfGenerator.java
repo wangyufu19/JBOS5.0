@@ -9,11 +9,12 @@ import java.io.IOException;
 public class PdfGenerator {
 
     public static  void main(String[] args) throws IOException, DocumentException {
+        String userDir = System.getProperty("user.dir");
         PdfGenerator pg=new PdfGenerator();
         Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("D:/eclipse-workspace/差旅报销单.pdf"));
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(userDir+"/差旅报销单.pdf"));
         document.open();
-        String imagePath = "D:/eclipse-workspace/JBOS5.0/src/main/resources/zxing/1561715279191.jpg";
+        String imagePath = userDir+"/zxing/1694136583670.jpg";
         Image image1 = Image.getInstance(imagePath);
         //设置图片位置的x轴和y周
         image1.setAbsolutePosition(50f, 740f);

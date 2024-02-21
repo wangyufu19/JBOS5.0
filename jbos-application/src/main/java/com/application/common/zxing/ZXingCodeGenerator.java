@@ -246,8 +246,12 @@ public class ZXingCodeGenerator {
     public static void main(String[] args){
         String content = "http://localhost:8080";
         String imageName=System.currentTimeMillis()+".jpg";
-        String imagePath = "D:/eclipse-workspace/JBOS5.0/src/main/resources/zxing/"+imageName;
+        String userDir = System.getProperty("user.dir");
+        String imagePath = userDir+"/zxing/"+imageName;
         File file = new File(imagePath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
         ZXingCodeGenerator zg=new ZXingCodeGenerator();
         BufferedImage bim = zg.getQR_CODEBufferedImage(content, BarcodeFormat.QR_CODE, 32, 32, zg.getDecodeHintType());
         try {

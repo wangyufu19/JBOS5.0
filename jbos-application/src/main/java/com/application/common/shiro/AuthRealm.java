@@ -52,6 +52,7 @@ public class AuthRealm extends AuthorizingRealm {
             userObject.setUserStatus(StringUtils.replaceNull(userAuthInfo.get("USERSTATUS")));
         }
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userObject,accessToken,getName());
+
         return info;
     }
 }

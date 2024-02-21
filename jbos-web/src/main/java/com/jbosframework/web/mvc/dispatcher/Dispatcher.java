@@ -110,11 +110,11 @@ public class Dispatcher {
 		return;
 	}
 	
-	public void doDispatcher404(String reqeustURI) throws IOException{
-		String msg="The requested resource "+reqeustURI+" is not available";		
+	public void doDispatcher404(String requestURI) throws IOException{
+		String msg="The requested resource "+requestURI+" is not available";
 		response.sendError(SC_404,msg);   	
 	}
-	public void doDispatcher500(String reqeustURI) throws IOException{	
-		response.sendError(SC_500,reqeustURI);   	
+	public void doDispatcher500(String requestURI) throws IOException{
+		response.sendError(SC_500,requestURI);
 	}
 }

@@ -8,8 +8,8 @@ import com.jbosframework.context.ApplicationContext;
  */
 public abstract class AbstractServletWebServer {
     private int port=8080;
-    private String baseDir="";
-    private String contextPath="";
+    private String baseDir;
+    private String contextPath;
     private ApplicationContext applicationContext;
     public AbstractServletWebServer(){
 

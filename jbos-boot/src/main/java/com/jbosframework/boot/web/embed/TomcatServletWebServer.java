@@ -4,9 +4,9 @@ import com.jbosframework.boot.web.WebServer;
 import com.jbosframework.boot.web.servlet.AbstractServletWebServer;
 import com.jbosframework.boot.web.servlet.FilterRegistryBean;
 import com.jbosframework.boot.web.servlet.ServletRegistryBean;
-import com.jbosframework.boot.web.servlet.WebContextBeanPostProcessor;
 import com.jbosframework.boot.web.servlet.server.ServletWebServerFactory;
 import com.jbosframework.context.ConfigurableApplicationContext;
+import com.jbosframework.utils.ObjectUtils;
 import com.jbosframework.web.context.support.GenericWebApplicationContext;
 import com.jbosframework.web.filter.DelegatingFilterProxy;
 import com.jbosframework.web.servlet.DispatcherServlet;
@@ -55,10 +55,17 @@ public class TomcatServletWebServer extends AbstractServletWebServer implements 
         webServer.setWebContext(new TomcatWebContext(context));
         webServer.getWebContext().addServletMappingDecoded(this.getContextPath(),DispatcherServlet.class);
         String[] filterRegistryBeans=this.applicationContext.getBeanNamesOfType(FilterRegistryBean.class);
-        if(filterRegistryBeans!=null){
+        String[] servletRegistryBeans=this.applicationContext.getBeanNamesOfType(ServletRegistryBean.class);
+        if(!ObjectUtils.isEmpty(filterRegistryBeans)) {
             for(String filterRegistryBean:filterRegistryBeans){
                 Object bean=this.applicationContext.getBean(filterRegistryBean);
                 this.addFilterRegistryBean(context,bean);
+            }
+        }
+        if(!ObjectUtils.isEmpty(servletRegistryBeans)) {
+            for(String servletRegistryBean:servletRegistryBeans){
+                Object bean=this.applicationContext.getBean(servletRegistryBean);
+                this.addServletRegistryBean(context,bean);
             }
         }
         return webServer;
@@ -85,8 +92,10 @@ public class TomcatServletWebServer extends AbstractServletWebServer implements 
             mapping.setFilterName(filterName);
             mapping.addURLPattern(filterRegistryBean.getUrlPattern());
             context.addFilterMap(mapping);
-
-        }else if(bean instanceof ServletRegistryBean){
+        }
+    }
+    private void addServletRegistryBean(Context context,Object bean){
+        if(bean instanceof ServletRegistryBean){
             ServletRegistryBean servletRegistryBean=(ServletRegistryBean)bean;
             Wrapper wrapper = context.createWrapper();
             wrapper.setName(servletRegistryBean.getName());

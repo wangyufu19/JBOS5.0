@@ -11,9 +11,11 @@ import com.jbosframework.context.ApplicationContext;
 import com.jbosframework.boot.JBOSApplication;
 import com.jbosframework.core.io.support.JBOSFactoriesLoader;
 import com.jbosframework.schedule.annotation.async.EnableAsync;
+import com.jbosframework.schedule.concurrent.ThreadPoolTaskExecutor;
 import com.jbosframework.utils.JBOSClassloader;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
@@ -40,7 +42,7 @@ public class JBOSStarter {
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException, SQLException, IOException {
 		JBOSApplication jbosApplication=new JBOSApplication(JBOSStarter.class);
 		ApplicationContext ctx=jbosApplication.start(args);
-//		ctx.publishEvent(new NotifyEvent(new Object()));
+		ctx.publishEvent(new NotifyEvent(new Object()));
 //		UserMgrService userMgrService=ctx.getBean(UserMgrService.class);
 //		List<UserInfo> userInfos=userMgrService.getUserList(null);
 //		log.info("userInfos={}",userInfos);
